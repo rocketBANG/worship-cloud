@@ -38,20 +38,20 @@ export function removeSong(songName) {
   return {type: REMOVE_SONG, songName}
 }
 
-export function updateSongOrder(songsongName, order) {
-  return { type: UPDATE_SONG_ORDER, songsongName, order }
+export function updateSongOrder(songName, order) {
+  return { type: UPDATE_SONG_ORDER, songName, order }
 }
 
-export function updateTitle(songsongName, title) {
-  return { type: UPDATE_SONG_TITLE, songsongName, title }
+export function updateTitle(songName, title) {
+  return { type: UPDATE_SONG_TITLE, songName, title }
 }
 
-export function addVerse(songsongName, text, numVerses, verseType = VerseTypes.NO_CHORUS) {
-    return {type: ADD_VERSE, songsongName, text, numVerses, verseType}
+export function addVerse(songName, text, verseId, verseType = VerseTypes.NO_CHORUS) {
+    return {type: ADD_VERSE, songName, text, verseId, verseType}
 }
 
-export function removeVerse(verseIndex, songsongName) {
-  return {type: REMOVE_VERSE, songsongName, verseIndex}
+export function removeVerse(verseId, songName) {
+  return {type: REMOVE_VERSE, songName, verseId}
 }
 
 export function updateVerse(index, text) {

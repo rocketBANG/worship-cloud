@@ -27,9 +27,10 @@ class App extends Component {
     store.dispatch(addSong("Amazing Grace"));
     store.dispatch(addSong("Awesome Grace"));
     store.dispatch(updateTitle("Amazing Grace", "Hello"));
-    store.dispatch(addVerse("Amazing Grace", "hey there", store.getState().verses.length));
-    store.dispatch(addVerse("Amazing Grace", "hi there", store.getState().verses.length));
-    store.dispatch(removeVerse(0, "Amazing Grace"));
+    store.dispatch(addVerse("Amazing Grace", "hey there", "verse1"));
+    store.dispatch(addVerse("Amazing Grace", "hi there", "verse2"));
+    store.dispatch(removeVerse("verse1", "Amazing Grace"));
+    console.log("removed verse");
     store.dispatch(removeSong("Amazing Grace"));
     
     this.handleClick = this.handleClick.bind(this);    
