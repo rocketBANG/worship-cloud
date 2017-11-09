@@ -1,4 +1,4 @@
-import { ADD_VERSE } from "./actions";
+import { ADD_VERSE, UPDATE_VERSE, UPDATE_VERSE_TYPE, REMOVE_VERSE } from "./actions";
 
 export function verses(verses = [], action) {
     switch (action.type) {
@@ -6,10 +6,36 @@ export function verses(verses = [], action) {
             return [
                 ...verses,
                 {
-                    text: action.verseText,
+                    text: action.text,
                     type: action.verseType,
                 }
             ]
+
+        case UPDATE_VERSE:
+            return verses.map((verse, index) => {
+                if (index === action.index) {
+                    return Object.assign({}, verse, {
+                        text: action.text
+                    })
+                }
+                return verse
+            })
+            
+        case UPDATE_VERSE_TYPE:
+            return verses.map((verse, index) => {
+                if (index === action.index) {
+                    return Object.assign({}, verse, {
+                        type: action.verseType
+                    })
+                }
+                return verse
+            })
+
+        case REMOVE_VERSE:
+            return verses.filter(function(verse, index) {
+                return index !== action.verseIndex;
+            });
+
         default:
             return verses;
     }

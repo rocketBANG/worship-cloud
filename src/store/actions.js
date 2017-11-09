@@ -11,10 +11,10 @@ export const UPDATE_SONG_TITLE = 'UPDATE_TITLE'
 
 //SONGS + VERSES
 export const ADD_VERSE = 'ADD_VERSE'
+export const REMOVE_VERSE = 'REMOVE_VERSE'
 
 //VERSES
 export const UPDATE_VERSE = 'UPDATE_VERSE'
-export const REMOVE_VERSE = 'REMOVE_VERSE'
 export const UPDATE_VERSE_TYPE = 'UPDATE_VERSE_TYPE'
 
 /*
@@ -30,22 +30,34 @@ export const VerseTypes = {
  * action creators
  */
 
-export function addSong(text) {
-  return { type: ADD_SONG, text }
+export function addSong(songName) {
+  return { type: ADD_SONG, songName }
 }
 
-export function addVerse(songIndex, verseText, numVerses, verseType = VerseTypes.NO_CHORUS) {
-    return {type: ADD_VERSE, songIndex, verseText, numVerses, verseType}
+export function removeSong(songName) {
+  return {type: REMOVE_SONG, songName}
 }
 
-export function updateVerse(verseIndex, text) {
-    return {type: UPDATE_VERSE, verseIndex, text}
+export function updateSongOrder(songsongName, order) {
+  return { type: UPDATE_SONG_ORDER, songsongName, order }
 }
 
-export function removeVerse(verseIndex, songIndex) {
-    return {type: REMOVE_VERSE, songIndex, verseIndex}
+export function updateTitle(songsongName, title) {
+  return { type: UPDATE_SONG_TITLE, songsongName, title }
 }
 
-export function setTitle(index, title) {
-  return { type: UPDATE_SONG_TITLE, index, title }
+export function addVerse(songsongName, text, numVerses, verseType = VerseTypes.NO_CHORUS) {
+    return {type: ADD_VERSE, songsongName, text, numVerses, verseType}
+}
+
+export function removeVerse(verseIndex, songsongName) {
+  return {type: REMOVE_VERSE, songsongName, verseIndex}
+}
+
+export function updateVerse(index, text) {
+    return {type: UPDATE_VERSE, index, text}
+}
+
+export function updateVerseType(index, verseType) {
+  return {type: UPDATE_VERSE_TYPE, index, verseType}
 }

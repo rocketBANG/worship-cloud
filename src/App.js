@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import SongView from './SongView';
 import Song from './Song';
 import './App.css';
-import { addSong, setTitle, addVerse } from './store/actions'
+import { addSong, updateTitle, addVerse, removeSong, removeVerse } from './store/actions'
 
 class App extends Component {
 
@@ -26,9 +26,11 @@ class App extends Component {
   
     store.dispatch(addSong("Amazing Grace"));
     store.dispatch(addSong("Awesome Grace"));
-    store.dispatch(setTitle(0, "Hello"));
-    store.dispatch(addVerse(1, "hey there", store.getState().verses.length));
-    store.dispatch(addVerse(1, "hi there", store.getState().verses.length));
+    store.dispatch(updateTitle("Amazing Grace", "Hello"));
+    store.dispatch(addVerse("Amazing Grace", "hey there", store.getState().verses.length));
+    store.dispatch(addVerse("Amazing Grace", "hi there", store.getState().verses.length));
+    store.dispatch(removeVerse(0, "Amazing Grace"));
+    store.dispatch(removeSong("Amazing Grace"));
     
     this.handleClick = this.handleClick.bind(this);    
   }
