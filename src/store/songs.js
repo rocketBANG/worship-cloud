@@ -1,4 +1,4 @@
-import { ADD_SONG, UPDATE_SONG_TITLE, ADD_VERSE, REMOVE_VERSE, UPDATE_SONG_ORDER, REMOVE_SONG } from "./actions";
+import { ADD_SONG, UPDATE_SONG_TITLE, ADD_VERSE, REMOVE_VERSE, UPDATE_SONG_ORDER, REMOVE_SONG, RECEIVE_SONGS } from "./actions";
 
 /**
  * Handles actions on the song objects
@@ -23,8 +23,8 @@ function songsById(songsById, action) {
                 [action.songName] : {
                     songName: action.songName,
                     title: action.songName,
-                    verses: [],
-                    order: []        
+                    verses: action.songVerses,
+                    order: action.songOrder      
                 }
             }
         
@@ -35,6 +35,18 @@ function songsById(songsById, action) {
                 }
                 return result;
             }, {});
+
+        case RECEIVE_SONGS:
+            return action.items.reduce(function(result, item) {                
+                result[item.name] = {
+                    name: item.name,
+                    title: item.title,
+                    verses: item.verses,
+                    order: item.order,
+                };
+                return result;                    
+            }, {});
+
         
         default:
             return songsById;
@@ -87,11 +99,20 @@ function updateSong(song, action) {
 function allSongs(songs, action) {
     switch(action.type) {
         case ADD_SONG :
-            return [...songs, action.songName];
+            if(songs.indexOf(action.songName) < 0) { //Check that songs doesn't already exist
+                return [...songs, action.songName];
+            } else {
+                return songs;
+            }
 
         case REMOVE_SONG:
             return songs.filter(function(songName){
                 return songName !== action.songName;
+            });
+        
+        case RECEIVE_SONGS:
+            return action.items.map(function(item) {
+                return item.name;
             });
         
         default:

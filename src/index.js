@@ -5,8 +5,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import songApp from './store/reducers'
+import thunkMiddleware from 'redux-thunk'
 
 // function reqListener () {
 //   console.log(this.responseText);
@@ -18,9 +19,11 @@ import songApp from './store/reducers'
 // oReq.withCredentials = true;
 // oReq.setRequestHeader("Authorization", "Basic " + btoa("admin:late4tea2"))
 // oReq.send(null);
-var store = createStore(songApp);
+var store = createStore(songApp, applyMiddleware(
+    thunkMiddleware, // lets us dispatch() functions
+));
 
 ReactDOM.render(
-  <App store={store}/>
-, document.getElementById('root')); 
+    <App store={store} />
+    , document.getElementById('root'));
 registerServiceWorker();

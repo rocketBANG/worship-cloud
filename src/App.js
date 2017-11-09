@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import SongView from './SongView';
 import Song from './Song';
 import './App.css';
-import { addSong, updateTitle, addVerse, removeSong, removeVerse } from './store/actions'
+import { addSong, updateTitle, addVerse, removeSong, removeVerse, fetchSongs, uploadSong, fetchSongsIfNeeded, updateSong } from './store/actions'
 
 class App extends Component {
 
@@ -24,14 +24,15 @@ class App extends Component {
       console.log(store.getState())
     )
   
-    store.dispatch(addSong("Amazing Grace"));
-    store.dispatch(addSong("Awesome Grace"));
-    store.dispatch(updateTitle("Amazing Grace", "Hello"));
-    store.dispatch(addVerse("Amazing Grace", "hey there", "verse1"));
-    store.dispatch(addVerse("Amazing Grace", "hi there", "verse2"));
-    store.dispatch(removeVerse("verse1", "Amazing Grace"));
-    console.log("removed verse");
-    store.dispatch(removeSong("Amazing Grace"));
+    // store.dispatch(addSong("Amazing Grace"));
+    // store.dispatch(addSong("Awesome Grace"));
+    // store.dispatch(updateTitle("Amazing Grace", "Hello"));
+    // store.dispatch(addVerse("Amazing Grace", "hey there", "verse1"));
+    // store.dispatch(addVerse("Amazing Grace", "hi there", "verse2"));
+    // store.dispatch(removeVerse("verse1", "Amazing Grace"));
+    // store.dispatch(removeSong("Amazing Grace"));
+
+    store.dispatch(fetchSongsIfNeeded()).then(() => console.log("done"));
     
     this.handleClick = this.handleClick.bind(this);    
   }
