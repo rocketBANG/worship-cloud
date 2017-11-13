@@ -1,20 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { addSong, updateTitle, updateVerseText } from './store/actions';
 
-const SongEditor = ({ currentSong }) => (
-    <div className="SongEditor">
-        <textarea>
+const SongEditor = ({ text, verseId, onEdit }) => {
+    let textArea;
+    let initialText = text;
 
-        </textarea><br/>
-        {currentSong.songName}
-    </div>
-)
+    return (
+        <div className="SongEditor">
+            <textarea value={initialText} ref={node => (textArea = node)} onChange={() => onEdit(verseId, textArea.value)} />
+            <br/>
+        </div>
+    )}
+
 
 SongEditor.propTypes = {
-    currentSong: 
-        PropTypes.shape({
-            songName: PropTypes.string.isRequired
-        }).isRequired
+    text: PropTypes.string.isRequired
 }
 
 export default SongEditor

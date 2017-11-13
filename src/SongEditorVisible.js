@@ -1,24 +1,27 @@
 import {connect} from 'react-redux'
 import SongEditor from './SongEditor'
+import {updateVerseText} from './store/actions'
 
-function getSong(songName, songList) {
-    if(songList[songName] !== undefined) {
-        return songList[songName];
+function getVerseText(verseId, verses) {
+    if(verses[verseId] !== undefined) {
+        return verses[verseId].text;
     } else {
-        return {
-            songName: "no song"
-        }
+        return "";
     }
 }
 
 const mapStateToProps = state => {
     return {
-        currentSong: getSong(state.editor.currentSong, state.songs.byId)
+        text: getVerseText(state.editor.currentVerse, state.verses.byId),
+        verseId: state.editor.currentVerse
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
+        onEdit: (verseId, text) => {
+            dispatch(updateVerseText(verseId, text))
+        }
     }
 }
 

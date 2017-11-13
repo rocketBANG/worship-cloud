@@ -22,12 +22,14 @@ export const UPDATE_VERSE_TYPE = 'UPDATE_VERSE_TYPE'
 //API
 export const REQUEST_SONGS = 'REQUEST_SONGS'
 export const RECEIVE_SONGS = 'RECEIVE_SONGS'
+export const RECEIVE_VERSES = 'RECEIVE_VERSES'
 export const SEND_SONGS = 'SEND_SONGS'
 export const SEND_SONGS_DONE = 'SEND_SONGS_DONE'
 export const INVALIDATE_SONGS = 'INVALIDATE_SONGS'
 
 //EDITOR
 export const SET_EDITING_SONG = 'SET_EDITING_SONG';
+export const SET_EDITING_VERSE = 'SET_EDITING_VERSE';
 
 /*
  * other constants
@@ -58,7 +60,12 @@ export function addSongLocal(songName, songVerses = [], songOrder = []) {
 }
 
 export function removeSong(songName) {
-    return function(dispatch) {
+    return function(dispatch, getState) {
+        //Remove all associated verses
+        getState().songs.byId[songName].verses.forEach(function(verseId) {
+            dispatch(removeVerse(verseId, songName));
+        });
+
         dispatch(removeSongLocal(songName));
         dispatch(sendSongs());
         let headers = new Headers();
@@ -174,6 +181,10 @@ export function requestSongs() {
 
 export function recieveSongs(items, receivedAt) {
     return { type: RECEIVE_SONGS, items, receivedAt }
+}
+
+export function recieveVerses(items, receivedAt) {
+    return { type: RECEIVE_VERSES, items, receivedAt }
 }
 
 export function sendSongs() {
@@ -322,10 +333,38 @@ export function fetchSongs() {
                 }
             }
         )
+    }
+}
 
+export function fetchVerses() {
+    return function (dispatch) {
+
+        let headers = new Headers();
+        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+
+        return fetch(`http://128.199.145.41:5000/verses`, {
+            method: 'GET',
+            headers: headers,
+        })
+            .then(
+            response => response.json(),
+            error => console.log('An error occured.', error)
+            )
+            .then(json => {
+                // We can dispatch many times!
+                // Here, we update the app state with the results of the API call.
+                if(json._items !== undefined) {
+                    dispatch(recieveVerses(json._items, Date.now()));
+                }
+            }
+        )
     }
 }
 
 export function setEditingSong(songName) {
     return { type: SET_EDITING_SONG, songName }
+}
+
+export function setEditingVerse(verseId) {
+    return { type: SET_EDITING_VERSE, verseId }
 }

@@ -1,4 +1,4 @@
-import { SET_EDITING_SONG } from "./actions";
+import { SET_EDITING_SONG, SET_EDITING_VERSE } from "./actions";
 
 export function editor(editor = {}, action) {
     switch(action.type) {
@@ -7,6 +7,12 @@ export function editor(editor = {}, action) {
                 ...editor,
                 currentSong: action.songName
             };
+
+        case SET_EDITING_VERSE: 
+            return {
+                ...editor,
+                currentVerse: action.verseId
+            }
 
         default:
             return editor;

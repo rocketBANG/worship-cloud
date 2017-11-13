@@ -11,7 +11,7 @@ function songsById(songsById, action) {
         case UPDATE_SONG_ORDER:
         case UPDATE_SONG_TITLE:    
         case ADD_VERSE:
-        case REMOVE_VERSE:        
+        case REMOVE_VERSE:
             return {
                 ...songsById,
                 [action.songName]: updateSong(songsById[action.songName], action)

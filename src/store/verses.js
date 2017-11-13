@@ -1,4 +1,4 @@
-import { ADD_VERSE, UPDATE_VERSE, UPDATE_VERSE_TYPE, REMOVE_VERSE } from "./actions";
+import { ADD_VERSE, UPDATE_VERSE, UPDATE_VERSE_TYPE, REMOVE_VERSE, RECEIVE_VERSES } from "./actions";
 
 /**
  * Handles actions on the verse objects
@@ -13,6 +13,7 @@ function versesById(versesById, action) {
                 [action.verseId]: {
                     text: action.text,
                     type: action.verseType,
+                    verseId: action.verseId
                 }
             }
 
@@ -24,9 +25,23 @@ function versesById(versesById, action) {
                 return result;
             }, {});
 
+        case RECEIVE_VERSES:
+            return action.items.reduce(function(result, item) {                
+                result[item.id] = {
+                    verseId: item.id,
+                    text: item.text,
+                    type: item.verseType,
+                };
+                return result;                    
+            }, {});
+
+
         case UPDATE_VERSE:
         case UPDATE_VERSE_TYPE:
-            return updateVerse(versesById[action.verseId], action);
+            return {
+                ...versesById,
+                [action.verseId]: updateVerse(versesById[action.verseId], action)
+            };
 
         default:
             return versesById;
@@ -52,6 +67,8 @@ function updateVerse(verse, action) {
                 ...verse,
                 type: action.type
             }
+        
+        
 
         default:
             return verse;
@@ -72,7 +89,12 @@ function allVerses(verses, action) {
             return verses.filter(function(verseId){
                 return verseId !== action.verseId;
             })
-        
+
+        case RECEIVE_VERSES:
+            return action.items.map(function(item) {    
+                return item.id;
+            });
+    
         default:
             return verses;
 
