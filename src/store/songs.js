@@ -39,7 +39,7 @@ function songsById(songsById, action) {
         case RECEIVE_SONGS:
             return action.items.reduce(function(result, item) {                
                 result[item.name] = {
-                    name: item.name,
+                    songName: item.name,
                     title: item.title,
                     verses: item.verses,
                     order: item.order,

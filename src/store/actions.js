@@ -26,6 +26,9 @@ export const SEND_SONGS = 'SEND_SONGS'
 export const SEND_SONGS_DONE = 'SEND_SONGS_DONE'
 export const INVALIDATE_SONGS = 'INVALIDATE_SONGS'
 
+//EDITOR
+export const SET_EDITING_SONG = 'SET_EDITING_SONG';
+
 /*
  * other constants
  */
@@ -40,35 +43,129 @@ export const VerseTypes = {
  */
 
 export function addSong(songName, songVerses = [], songOrder = []) {
-    return { type: ADD_SONG, songName, songVerses, songOrder }
+    return function(dispatch) {
+        dispatch(addSongLocal(songName, songVerses, songOrder));
+        dispatch(uploadSong({
+            name: songName,
+            verses: songVerses,
+            order: songOrder
+        }));
+    }
+}
+
+export function addSongLocal(songName, songVerses = [], songOrder = []) {
+    return { type: ADD_SONG, songName, songVerses, songOrder }    
 }
 
 export function removeSong(songName) {
-    return { type: REMOVE_SONG, songName }
+    return function(dispatch) {
+        dispatch(removeSongLocal(songName));
+        dispatch(sendSongs());
+        let headers = new Headers();
+        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+
+        return fetch(`http://128.199.145.41:5000/songs/` + songName, {
+            method: 'DELETE',
+            headers: headers
+        }).then(() => dispatch(sendSongsDone()));
+    }
+}
+
+export function removeSongLocal(songName) {
+    return { type: REMOVE_SONG, songName }    
 }
 
 export function updateSongOrder(songName, order) {
+    return function(dispatch) {
+        dispatch(updateSongOrderLocal(songName, order));
+        dispatch(updateSong(songName, {
+            order: order,
+        }));
+    }
+}
+
+export function updateSongOrderLocal(songName, order) {
     return { type: UPDATE_SONG_ORDER, songName, order }
 }
 
 export function updateTitle(songName, title) {
+    return function(dispatch) {
+        dispatch(updateTitleLocal(songName, title));
+        return dispatch(updateSong(songName, {
+            title: title,
+        }));
+    }
+}
+
+export function updateTitleLocal(songName, title) {
     return { type: UPDATE_SONG_TITLE, songName, title }
 }
 
 export function addVerse(songName, text, verseId, verseType = VerseTypes.NO_CHORUS) {
+    return function(dispatch, getState) {
+        const state = getState();
+        dispatch(addVerseLocal(songName, text, verseId, verseType));
+        dispatch(updateSong(songName, {
+            verses: state.songs.byId[songName].verses.concat(verseId)
+        }));
+        return dispatch(uploadVerse({
+            id: verseId,
+            verseType: verseType,
+            text: text
+        }));
+    }
+}
+
+export function addVerseLocal(songName, text, verseId, verseType = VerseTypes.NO_CHORUS) {
     return { type: ADD_VERSE, songName, text, verseId, verseType }
 }
 
 export function removeVerse(verseId, songName) {
+    return function(dispatch, getState) {
+        const state = getState();
+        dispatch(removeVerseLocal(verseId, songName));
+        dispatch(sendSongs());
+        let headers = new Headers();
+        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        dispatch(updateSong(songName, {
+            verses: state.songs.byId[songName].verses.filter((verse) => { return verse !== verseId})
+        }));
+
+        return fetch(`http://128.199.145.41:5000/verses/` + verseId, {
+            method: 'DELETE',
+            headers: headers
+        }).then(() => dispatch(sendSongsDone()));
+    }
+}
+
+export function removeVerseLocal(verseId, songName) {
     return { type: REMOVE_VERSE, songName, verseId }
 }
 
-export function updateVerse(index, text) {
-    return { type: UPDATE_VERSE, index, text }
+export function updateVerseText(verseId, text) {
+    return function(dispatch) {
+        dispatch(updateVerseTextLocal(verseId, text));
+        dispatch(updateVerse(verseId, {
+            text: text
+        }))
+    }
 }
 
-export function updateVerseType(index, verseType) {
-    return { type: UPDATE_VERSE_TYPE, index, verseType }
+export function updateVerseTextLocal(verseId, text) {
+    return { type: UPDATE_VERSE, verseId, text }
+}
+
+export function updateVerseType(verseId, verseType) {
+    return function(dispatch) {
+        dispatch(updateVerseTypeLocal(verseId, verseType));
+        dispatch(updateVerse(verseId, {
+            verseType: verseType
+        }))
+    }
+}
+
+export function updateVerseTypeLocal(verseId, verseType) {
+    return { type: UPDATE_VERSE_TYPE, verseId, verseType }
 }
 
 export function requestSongs() {
@@ -113,6 +210,49 @@ export function updateSong(songName, updateData) {
     }
 }
 
+export function uploadVerse(verse) {
+    return function (dispatch) {
+        dispatch(sendSongs());
+        let headers = new Headers();
+        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        headers.append('Content-Type', 'application/json');
+
+        return fetch(`http://128.199.145.41:5000/verses`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(verse)
+        }).then(
+            response => response.json(),
+
+            error => console.log('An error occured.', error)
+            )
+            .then(json => {
+                dispatch(sendSongsDone());
+            });
+    }
+}
+
+export function updateVerse(verseId, updateData) {
+    return function (dispatch) {
+        dispatch(sendSongs());
+        let headers = new Headers();
+        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        headers.append('Content-Type', 'application/json');
+
+        return fetch(`http://128.199.145.41:5000/verses/` + verseId, {
+            method: 'PATCH',
+            headers: headers,
+            body: JSON.stringify(updateData)
+        }).then(
+            response => response.json(),
+
+            error => console.log('An error occured.', error)
+            )
+            .then(json => {
+                dispatch(sendSongsDone());
+            });
+    }
+}
 
 export function uploadSong(song) {
     return function (dispatch) {
@@ -166,25 +306,26 @@ export function fetchSongs() {
         let headers = new Headers();
         headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
 
-
         return fetch(`http://128.199.145.41:5000/songs`, {
             method: 'GET',
             headers: headers,
         })
             .then(
             response => response.json(),
-            // Do not use catch, because that will also catch
-            // any errors in the dispatch and resulting render,
-            // causing a loop of 'Unexpected batch number' errors.
-            // https://github.com/facebook/react/issues/6895
             error => console.log('An error occured.', error)
             )
             .then(json => {
                 // We can dispatch many times!
                 // Here, we update the app state with the results of the API call.
-                dispatch(recieveSongs(json._items, Date.now()));
+                if(json._items !== undefined) {
+                    dispatch(recieveSongs(json._items, Date.now()));
+                }
             }
         )
 
     }
+}
+
+export function setEditingSong(songName) {
+    return { type: SET_EDITING_SONG, songName }
 }

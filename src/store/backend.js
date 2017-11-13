@@ -29,8 +29,7 @@ export function backend(state = {
 
         case SEND_SONGS_DONE:
             return Object.assign({}, state, {
-                isPosting: false,
-                didInvalidate: true,
+                isPosting: false
             })
 
         default:

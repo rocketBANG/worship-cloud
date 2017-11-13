@@ -8,6 +8,7 @@ import registerServiceWorker from './registerServiceWorker';
 import { createStore, applyMiddleware } from 'redux'
 import songApp from './store/reducers'
 import thunkMiddleware from 'redux-thunk'
+import {Provider} from 'react-redux'
 
 // function reqListener () {
 //   console.log(this.responseText);
@@ -24,6 +25,8 @@ var store = createStore(songApp, applyMiddleware(
 ));
 
 ReactDOM.render(
+    <Provider store={store}>
     <App store={store} />
+    </Provider>
     , document.getElementById('root'));
 registerServiceWorker();
