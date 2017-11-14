@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import SongList from './SongList'
 import './App.css';
-import { updateTitle, removeSong, setEditingSong } from './store/actions';
+import { updateTitle, removeSong, addSong, setEditingSong } from './store/actions';
 
 function getSongs(songs) {
     return songs;
@@ -17,7 +17,13 @@ const mapDispatchToProps = dispatch => {
     return {
         onSongClick: songName => {
             dispatch(setEditingSong(songName))
-        }
+        },
+        onSongAdd: songName => {
+            dispatch(addSong(songName))
+        },
+        onSongRemove: songName => {
+            dispatch(removeSong(songName))
+        },
     }
 }
 

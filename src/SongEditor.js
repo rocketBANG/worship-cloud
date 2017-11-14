@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { addSong, updateTitle, updateVerseText } from './store/actions';
 
-const SongEditor = ({ text, verseId, onEdit }) => {
+const SongEditor = ({ text, verseId, onEdit, saving }) => {
     let textArea;
     let initialText = text;
 
@@ -10,6 +10,9 @@ const SongEditor = ({ text, verseId, onEdit }) => {
         <div className="SongEditor">
             <textarea value={initialText} ref={node => (textArea = node)} onChange={() => onEdit(verseId, textArea.value)} />
             <br/>
+            <div className="SaveProgress">
+                {saving ? "Saving" : ""}
+            </div>
         </div>
     )}
 

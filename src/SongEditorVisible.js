@@ -13,7 +13,8 @@ function getVerseText(verseId, verses) {
 const mapStateToProps = state => {
     return {
         text: getVerseText(state.editor.currentVerse, state.verses.byId),
-        verseId: state.editor.currentVerse
+        verseId: state.editor.currentVerse,
+        saving: state.backend.isPosting
     }
 }
 
