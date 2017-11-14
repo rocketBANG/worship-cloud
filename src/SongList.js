@@ -7,9 +7,9 @@ const SongList = ({ songs, onSongClick, onSongAdd, onSongRemove }) => {
 return (
     <div className="SongList">
         Songs:<br/>
-        <select multiple ref={(node) => songSelect = node}>
+        <select multiple ref={(node) => songSelect = node} onChange={() => onSongClick(songSelect.value)}>
             {Object.keys(songs).map((element, index) => (
-                <option key={index} onClick={() => onSongClick(songs[element].songName)} value={songs[element].songName} >{
+                <option key={index} value={songs[element].songName} >{
                     songs[element].title !== undefined ? songs[element].title : songs[element].songName
                 }</option>
             ))}

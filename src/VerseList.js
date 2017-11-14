@@ -1,18 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const VerseList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, maxVerseId }) => {
+const VerseList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, maxVerseId, currentVerse }) => {
     var selectInput;
+    const verseOptions = verses.map((element, index) => (
+        <option key={element.verseId} value={element.verseId}>{
+            element.firstLine !== "" ? element.firstLine : "NEW VERSE"
+        }</option>));
 return (
     <div className="VerseList">
         Verses:<br/>
-        <select multiple ref={(node) => selectInput = node}>
-            {
-                verses.map((element, index) => (
-                <option key={index} value={element.verseId} onClick={() => onVerseClick(element.verseId)} >{
-                    element.firstLine
-                }</option>
-            ))}
+        <select multiple={true} ref={(node) => selectInput = node} onChange={() => onVerseClick(selectInput.value)}>
+            {verseOptions}
         </select>
         <div className="ListControls">
                 <button onClick={() => onVerseAdd("v" + (maxVerseId + 1), songName)} >Add Verse</button>
@@ -27,6 +26,7 @@ VerseList.propTypes = {
         firstLine: PropTypes.string.isRequired,
     })).isRequired,
     songName: PropTypes.string.isRequired,
+    currentVerse: PropTypes.string.isRequired,
     onVerseClick: PropTypes.func.isRequired,
     onVerseAdd: PropTypes.func.isRequired,
     onVerseRemove: PropTypes.func.isRequired

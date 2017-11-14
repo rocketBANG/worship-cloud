@@ -25,14 +25,15 @@ function getMaxId(verses) {
     }
     verses.sort();
     let lastVerse = verses[verses.length - 1];
-    return parseInt(lastVerse.replace("v", ""));
+    return parseInt(lastVerse.replace("v", ""), 10);
 }
 
 const mapStateToProps = state => {
     return {
         verses: getVerses(state.editor.currentSong, state.songs.byId, state.verses.byId),
         maxVerseId: getMaxId(state.verses.allIds),
-        songName: state.editor.currentSong
+        songName: state.editor.currentSong,
+        currentVerse: state.editor.currentVerse
     }
 }
 

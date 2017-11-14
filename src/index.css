@@ -31,3 +31,11 @@ body {
 .SongList > select > option {
     padding: 10px 5px;
 }
+
+.VerseList > select {
+    width: 100%;
+}
+
+.VerseList > select > option {
+    padding: 10px 5px;
+}

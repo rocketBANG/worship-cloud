@@ -5,7 +5,8 @@ export function editor(editor = {}, action) {
         case SET_EDITING_SONG:
             return {
                 ...editor,
-                currentSong: action.songName
+                currentSong: action.songName,
+                currentVerse: undefined
             };
 
         case SET_EDITING_VERSE: 
