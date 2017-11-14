@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const VerseList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove }) => {
-    var addInput;
+const VerseList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, maxVerseId }) => {
     var selectInput;
 return (
     <div className="VerseList">
@@ -16,8 +15,7 @@ return (
             ))}
         </select>
         <div className="ListControls">
-                <input ref={(node) => addInput = node} />
-                <button onClick={() => onVerseAdd(addInput.value, songName)} >Add Verse</button>
+                <button onClick={() => onVerseAdd("v" + (maxVerseId + 1), songName)} >Add Verse</button>
                 <button onClick={() => onVerseRemove(selectInput.value, songName)}>Remove Verse</button>
         </div>
     </div>

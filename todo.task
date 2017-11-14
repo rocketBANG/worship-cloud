@@ -1,0 +1,4 @@
+[x] 1 Assign new verses a random ID that is not already taken
+[ ] 2 Change the verse editing text when a new song is selected
+[ ] 3 Style verse select so it is always visible
+[ ] 4 Change the name of verses in select to "NEW VERSE" if there is no text

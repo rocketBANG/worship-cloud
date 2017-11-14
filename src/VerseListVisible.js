@@ -19,9 +19,19 @@ function getVerses(songName, songList, verses) {
     return verseList;
 }
 
+function getMaxId(verses) {
+    if(verses.length < 1) {
+        return 0;
+    }
+    verses.sort();
+    let lastVerse = verses[verses.length - 1];
+    return parseInt(lastVerse.replace("v", ""));
+}
+
 const mapStateToProps = state => {
     return {
         verses: getVerses(state.editor.currentSong, state.songs.byId, state.verses.byId),
+        maxVerseId: getMaxId(state.verses.allIds),
         songName: state.editor.currentSong
     }
 }
