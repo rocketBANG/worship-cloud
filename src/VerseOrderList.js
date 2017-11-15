@@ -1,27 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const VerseList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, maxVerseId, currentVerse, onOrderAdd }) => {
+const VerseOrderList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, currentVerse,
+    onOrderUp, onOrderDown, onOrderRemove}) => {
     var selectInput;
     const verseOptions = verses.map((element, index) => (
-        <option key={element.verseId} value={element.verseId}>{
+        <option key={element.verseId + index} value={element.verseId}>{
             element.firstLine !== "" ? element.firstLine : "NEW VERSE"
         }</option>));
 return (
-    <div className="VerseList">
+    <div className="VerseOrderList">
         Verses:<br/>
         <select multiple={true} ref={(node) => selectInput = node} onChange={() => onVerseClick(selectInput.value)}>
             {verseOptions}
         </select>
         <div className="ListControls">
-                <button onClick={() => onVerseAdd("v" + (maxVerseId + 1), songName)} >Add Verse</button>
-                <button onClick={() => onVerseRemove(selectInput.value, songName)}>Remove Verse</button>
-                <button onClick={() => onOrderAdd(selectInput.value, songName)}>Add to order</button>
+                <button onClick={() => onOrderUp(selectInput.selectedIndex, songName)} >up</button>
+                <button onClick={() => onOrderDown(selectInput.selectedIndex, songName)}>down</button>
+                <button onClick={() => onOrderRemove(selectInput.selectedIndex, songName)}>x</button>
                 </div>
     </div>
 )}
 
-VerseList.propTypes = {
+VerseOrderList.propTypes = {
     verses: PropTypes.arrayOf(PropTypes.shape({
         verseId: PropTypes.string.isRequired,
         firstLine: PropTypes.string.isRequired,
@@ -29,9 +30,9 @@ VerseList.propTypes = {
     songName: PropTypes.string.isRequired,
     currentVerse: PropTypes.string.isRequired,
     onVerseClick: PropTypes.func.isRequired,
-    onVerseAdd: PropTypes.func.isRequired,
-    onVerseRemove: PropTypes.func.isRequired,
-    onOrderAdd: PropTypes.func.isRequired,
+    onOrderRemove: PropTypes.func.isRequired,
+    onOrderUp: PropTypes.func.isRequired,
+    onOrderDown: PropTypes.func.isRequired,
 }
 
-export default VerseList
+export default VerseOrderList

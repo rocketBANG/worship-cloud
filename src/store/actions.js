@@ -91,6 +91,35 @@ export function updateSongOrder(songName, order) {
     }
 }
 
+export function rearangeOrder(oldIndex, newIndex, songName) {
+    const move = (array, from, to) => array.splice(to, 0, array.splice(from, 1)[0]);
+
+    return function(dispatch, getState) {
+        var orderArray = getState().songs.byId[songName].order.slice();
+        move(orderArray, oldIndex, newIndex);
+
+        dispatch(updateSongOrder(songName, orderArray));
+    }
+}
+
+export function removeFromOrder(index, songName) {
+    return function(dispatch, getState) {
+        var orderArray = getState().songs.byId[songName].order.slice();
+        orderArray.splice(index, 1);
+        
+        dispatch(updateSongOrder(songName, orderArray));
+    }
+}
+
+export function addToOrder(verseId, songName) {
+    return function(dispatch, getState) {
+        var orderArray = getState().songs.byId[songName].order.slice();
+        orderArray.push(verseId);
+        
+        dispatch(updateSongOrder(songName, orderArray));
+    }
+}
+
 export function updateSongOrderLocal(songName, order) {
     return { type: UPDATE_SONG_ORDER, songName, order }
 }

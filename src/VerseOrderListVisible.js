@@ -1,22 +1,21 @@
 import {connect} from 'react-redux'
-import VerseList from './VerseList'
+import VerseOrderList from './VerseOrderList'
 import './App.css';
-import { updateTitle, removeSong, setEditingVerse, addVerse, removeVerse, addToOrder } from './store/actions';
+import { updateTitle, removeSong, setEditingVerse, addVerse, removeVerse, removeFromOrder, rearangeOrder } from './store/actions';
 
 function getVerses(songName, songList, verses) {
-    let verseList = [];
+    let VerseOrderList = [];
     if(songList[songName] !== undefined) {
-        
-        songList[songName].verses.forEach(function (verse) {
+        songList[songName].order.forEach(function (verse) {
             let firstLine = verses[verse].text.split("\n")[0];
-            verseList.push({
+            VerseOrderList.push({
                 verseId: verse,
                 firstLine: firstLine
             })            
         });
     }
     
-    return verseList;
+    return VerseOrderList;
 }
 
 function getMaxId(verses) {
@@ -31,7 +30,6 @@ function getMaxId(verses) {
 const mapStateToProps = state => {
     return {
         verses: getVerses(state.editor.currentSong, state.songs.byId, state.verses.byId),
-        maxVerseId: getMaxId(state.verses.allIds),
         songName: state.editor.currentSong,
         currentVerse: state.editor.currentVerse
     }
@@ -42,32 +40,23 @@ const mapDispatchToProps = (dispatch) => {
         onVerseClick: verseId => {
             dispatch(setEditingVerse(verseId))
         },
-        onVerseAdd: (verseId, songName) => {
-            if(verseId === undefined || verseId === "") {
-                return;
-            }
-            dispatch(addVerse(songName, "", verseId))
+        onOrderRemove: (index, songName) => {
+            dispatch(removeFromOrder(index, songName))
         },
-        onVerseRemove: (verseId, songName) => {
-            if(verseId === undefined || verseId === "") {
-                return;
-            }
-            dispatch(removeVerse(verseId, songName))
+        onOrderUp: (index, songName) => {
+            dispatch(rearangeOrder(index, index-1, songName))
         },
-        onOrderAdd: (verseId, songName) => {
-            if(verseId === undefined || verseId === "") {
-                return;
-            }
-            dispatch(addToOrder(verseId, songName))
+        onOrderDown: (index, songName) => {
+            dispatch(rearangeOrder(index, index+1, songName))
         },
     }
 }
 
-const VerseListVisible = connect(
+const VerseOrderListVisible = connect(
     mapStateToProps,
     mapDispatchToProps
-)(VerseList)
+)(VerseOrderList)
 
 
 
-export default VerseListVisible;
+export default VerseOrderListVisible;

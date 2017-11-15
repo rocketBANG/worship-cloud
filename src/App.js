@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import SongListVisible from './SongListVisible';
 import VerseListVisible from './VerseListVisible';
+import VerseOrderListVisible from './VerseOrderListVisible';
 import SongControls from './SongControls';
 import SongEditorVisible from './SongEditorVisible';
 import Song from './Song';
@@ -33,6 +34,7 @@ class App extends Component {
             <div className="App">
                 <SongListVisible />
                 <VerseListVisible />
+                <VerseOrderListVisible />
                 <SongEditorVisible />
             </div>
         );

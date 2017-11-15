@@ -1,5 +1,8 @@
 [x] 1 Assign new verses a random ID that is not already taken
 [x] 2 Change the verse editing text when a new song is selected
 [ ] 5 Select the newly added verse in the verse select when added
-[x]] 3 Style verse select so it is always visible
+[x] 3 Style verse select so it is always visible
 [x] 4 Change the name of verses in select to "NEW VERSE" if there is no text
+[ ] 6 Add a List react component for VerseList, SongList and OrderList to use
+[ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
+[ ] 8 Fix selection for the VerseOrderList to still have the verse selected on moving up/down
