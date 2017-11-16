@@ -10,8 +10,8 @@ const VerseList = ({ verses, onVerseClick, onVerseAdd, onVerseRemove, maxVerseId
         altText: "NEW VERSE"
     }));
 return (
-    <div className="VerseList">
-        Verses:<br/>
+    <div className="VerseList EditorContainer">
+        <div className="ListHeader">Verses:</div>
         <List options={options} onUpdate={onVerseClick} />
         <div className="ListControls">
             <button onClick={() => onVerseAdd("v" + (maxVerseId + 1))} >Add Verse</button>
@@ -26,7 +26,7 @@ VerseList.propTypes = {
         verseId: PropTypes.string.isRequired,
         firstLine: PropTypes.string.isRequired,
     })).isRequired,
-    currentVerse: PropTypes.string.isRequired,
+    currentVerse: PropTypes.string,
     onVerseClick: PropTypes.func.isRequired,
     onVerseAdd: PropTypes.func.isRequired,
     onVerseRemove: PropTypes.func.isRequired,

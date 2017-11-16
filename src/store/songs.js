@@ -83,6 +83,9 @@ function updateSong(song, action) {
                 ...song,
                 verses: song.verses.filter(function(verseId){
                     return verseId !== action.verseId;
+                }),
+                order: song.order.filter(function(verseId){
+                    return verseId !== action.verseId;
                 })
             };
 

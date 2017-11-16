@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import SongList from './SongList'
 import './App.css';
-import { updateTitle, removeSong, addSong, setEditingSong } from './store/actions';
+import { removeSong, addSong, setEditingSong } from './store/actions';
 
 function getSongs(songs) {
     return songs;

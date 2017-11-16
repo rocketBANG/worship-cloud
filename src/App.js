@@ -4,7 +4,7 @@ import songApp from './store/reducers'
 import './App.css';
 import Editor from './Editor'
 import Presenter from './Presenter'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'  
+import { BrowserRouter as Router, Route } from 'react-router-dom'  
 import thunkMiddleware from 'redux-thunk'
 import {Provider} from 'react-redux'
   
@@ -17,7 +17,8 @@ class App extends Component {
             thunkMiddleware, // lets us dispatch() functions
         ));
 
-        const unsubscribe = this.store.subscribe(() =>
+        // const unsubscribe = 
+        this.store.subscribe(() =>
             console.log(this.store.getState())
         )
         

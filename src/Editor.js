@@ -3,8 +3,7 @@ import SongListVisible from './SongListVisible';
 import VerseListVisible from './VerseListVisible';
 import VerseOrderListVisible from './VerseOrderListVisible';
 import SongEditorVisible from './SongEditorVisible';
-import './App.css';
-import './index.css';
+import './Editor.css';
 import { fetchSongsIfNeeded, fetchVerses } from './store/actions';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'

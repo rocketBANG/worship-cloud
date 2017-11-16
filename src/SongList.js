@@ -11,8 +11,8 @@ const SongList = ({ songs, onSongClick, onSongAdd, onSongRemove }) => {
         altText: songs[element].songName
     }));
 return (
-    <div className="SongList">
-        Songs:<br/>
+    <div className="SongList EditorContainer">
+        <div className="ListHeader">Songs:</div>
         <List onUpdate={onSongClick} options={options}/>
         <div className="ListControls">
             <input ref={(node) => addInput = node} />

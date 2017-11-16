@@ -158,14 +158,14 @@ export function addVerseLocal(songName, text, verseId, verseType = VerseTypes.NO
 
 export function removeVerse(verseId, songName) {
     return function(dispatch, getState) {
-        const state = getState();
         dispatch(removeVerseLocal(verseId, songName));
         dispatch(sendSongs());
+        const state = getState();        
         let headers = new Headers();
         headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
-        dispatch(updateSong(songName, {
-            verses: state.songs.byId[songName].verses.filter((verse) => { return verse !== verseId})
-        }));
+        let song = state.songs.byId[songName];
+        
+        dispatch(updateSong(songName, {...song, songName: undefined}));
 
         return fetch(`http://128.199.145.41:5000/verses/` + verseId, {
             method: 'DELETE',

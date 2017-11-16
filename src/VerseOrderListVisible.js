@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import VerseOrderList from './VerseOrderList'
 import './App.css';
-import { updateTitle, removeSong, setEditingVerse, addVerse, removeVerse, removeFromOrder, rearangeOrder } from './store/actions';
+import { setEditingVerse, removeFromOrder, rearangeOrder } from './store/actions';
 
 function getVerses(songName, songList, verses) {
     let VerseOrderList = [];
@@ -16,15 +16,6 @@ function getVerses(songName, songList, verses) {
     }
     
     return VerseOrderList;
-}
-
-function getMaxId(verses) {
-    if(verses.length < 1) {
-        return 0;
-    }
-    verses.sort();
-    let lastVerse = verses[verses.length - 1];
-    return parseInt(lastVerse.replace("v", ""), 10);
 }
 
 const mapStateToProps = state => {

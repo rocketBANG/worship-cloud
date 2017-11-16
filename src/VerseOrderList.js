@@ -11,6 +11,14 @@ class VerseOrderList extends React.Component{
         this.handleUpdate = this.handleUpdate.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.songName !== this.props.songName) {
+            this.setState({
+                index: -1
+            });    
+        }
+    }    
+
     handleUpdate(value, index) {
         this.setState({
             index: index
@@ -25,10 +33,7 @@ class VerseOrderList extends React.Component{
     }
 
     render() {
-        let keyCount = {};
-        let selectInput;
-        let { verses, songName, onVerseClick, onVerseAdd, onVerseRemove, currentVerse,
-            onOrderUp, onOrderDown, onOrderRemove} = this.props;
+        let { verses, songName, onOrderUp, onOrderDown, onOrderRemove} = this.props;
 
         const options = verses.map((element) => {
             return {
@@ -38,8 +43,8 @@ class VerseOrderList extends React.Component{
         }});
     
         return (
-            <div className="VerseOrderList">
-                Order:<br/>
+            <div className="VerseOrderList EditorContainer">
+                <div className="ListHeader">Order:</div>
                 <List selectedIndex={this.state.index} options={options} onUpdate={this.handleUpdate} />
                 <div className="ListControls">
                     <button onClick={() => {this.setIndex(this.state.index - 1); onOrderUp(this.state.index, songName)}} >up</button>
@@ -55,8 +60,8 @@ class VerseOrderList extends React.Component{
             verseId: PropTypes.string.isRequired,
             firstLine: PropTypes.string.isRequired,
         })).isRequired,
-        songName: PropTypes.string.isRequired,
-        currentVerse: PropTypes.string.isRequired,
+        songName: PropTypes.string,
+        currentVerse: PropTypes.string,
         onVerseClick: PropTypes.func.isRequired,
         onOrderRemove: PropTypes.func.isRequired,
         onOrderUp: PropTypes.func.isRequired,

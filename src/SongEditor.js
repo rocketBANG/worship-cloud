@@ -6,7 +6,7 @@ const SongEditor = ({ text, verseId, onEdit, saving }) => {
     let initialText = text;
 
     return (
-        <div className="SongEditor">
+        <div className="SongEditor EditorContainer">
             <textarea value={initialText} ref={node => (textArea = node)} onChange={() => onEdit(verseId, textArea.value)} />
             <br/>
             <div className="SaveProgress">

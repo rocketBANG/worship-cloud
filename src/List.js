@@ -28,12 +28,11 @@ export class List extends React.Component {
         let selected;
 
         if(this.props.selectedIndex !== undefined && this.props.selectedIndex > -1) {
-            let selectedOption = this.props.options[this.props.selectedIndex];
             selected = [optionsKeys[this.props.selectedIndex]];
         }
     
         return (
-            <select value={selected} class="List" multiple ref={(node) => select = node} 
+            <select value={selected} className="List" multiple ref={(node) => select = node} 
             onChange={() => this.props.onUpdate(this.removeUnique(select.value), select.selectedIndex)}
             // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
             >
