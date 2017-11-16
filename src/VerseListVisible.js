@@ -32,7 +32,7 @@ const mapStateToProps = state => {
     return {
         verses: getVerses(state.editor.currentSong, state.songs.byId, state.verses.byId),
         maxVerseId: getMaxId(state.verses.allIds),
-        songName: state.editor.currentSong,
+        currentSong: state.editor.currentSong,
         currentVerse: state.editor.currentVerse
     }
 }
@@ -63,9 +63,26 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    onVerseAdd(verseId) {
+        console.log("adding " + verseId);
+        dispatchProps.onVerseAdd(verseId, stateProps.currentSong)
+    }, 
+    onVerseRemove() {
+        dispatchProps.onVerseRemove(stateProps.currentVerse, stateProps.currentSong)
+    }, 
+    onOrderAdd() {
+        dispatchProps.onOrderAdd(stateProps.currentVerse, stateProps.currentSong)
+    },
+});
+
 const VerseListVisible = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
 )(VerseList)
 
 

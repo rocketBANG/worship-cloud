@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { addSong, updateTitle, updateVerseText } from './store/actions';
 
 const SongEditor = ({ text, verseId, onEdit, saving }) => {
     let textArea;

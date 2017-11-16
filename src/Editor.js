@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import SongListVisible from './SongListVisible';
 import VerseListVisible from './VerseListVisible';
 import VerseOrderListVisible from './VerseOrderListVisible';
-import SongControls from './SongControls';
 import SongEditorVisible from './SongEditorVisible';
-import Song from './Song';
 import './App.css';
 import './index.css';
-import { fetchSongsIfNeeded, fetchVerses, addSong, addVerse, removeSong } from './store/actions';
+import { fetchSongsIfNeeded, fetchVerses } from './store/actions';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 

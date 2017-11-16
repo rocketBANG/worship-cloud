@@ -1,23 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import {List} from './List'
 
 const SongList = ({ songs, onSongClick, onSongAdd, onSongRemove }) => {
-    var songSelect;
     var addInput;
+
+    const options = Object.keys(songs).map((element, index) => ({
+        id: songs[element].songName,
+        text: songs[element].title,
+        altText: songs[element].songName
+    }));
 return (
     <div className="SongList">
         Songs:<br/>
-        <select multiple ref={(node) => songSelect = node} onChange={() => onSongClick(songSelect.value)}>
-            {Object.keys(songs).map((element, index) => (
-                <option key={index} value={songs[element].songName} >{
-                    songs[element].title !== undefined ? songs[element].title : songs[element].songName
-                }</option>
-            ))}
-        </select>
+        <List onUpdate={onSongClick} options={options}/>
         <div className="ListControls">
             <input ref={(node) => addInput = node} />
             <button onClick={() => onSongAdd(addInput.value)} >Add Song</button>
-            <button onClick={() => onSongRemove(songSelect.value)}>Remove Song</button>
+            <button onClick={() => onSongRemove()}>Remove Song</button>
         </div>
     </div>
 )}

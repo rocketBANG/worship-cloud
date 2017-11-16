@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { addSong, updateTitle } from './store/actions';
+import { updateTitle } from './store/actions';
 
 export default class SongControls extends Component {
     

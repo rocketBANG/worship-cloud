@@ -9,7 +9,8 @@ function getSongs(songs) {
 
 const mapStateToProps = state => {
     return {
-        songs: getSongs(state.songs.byId)
+        songs: getSongs(state.songs.byId),
+        currentSong: state.editor.currentSong
     }
 }
 
@@ -27,9 +28,19 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    onSongRemove() {
+        dispatchProps.onSongRemove(stateProps.currentSong)
+    }
+});
+
 const SongListVisible = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
 )(SongList)
 
 

@@ -3,7 +3,9 @@
 [ ] 5 Select the newly added verse in the verse select when added
 [x] 3 Style verse select so it is always visible
 [x] 4 Change the name of verses in select to "NEW VERSE" if there is no text
-[ ] 6 Add a List react component for VerseList, SongList and OrderList to use
+[x] 6 Add a List react component for VerseList, SongList and OrderList to use
 [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
 [ ] 8 Fix selection for the VerseOrderList to still have the verse selected on moving up/down
 [ ] 9 Create the presenter and display views
+[ ] 10 Organise files into folders
+[ ] 11 Remove verse from order when removing from song
