@@ -10,7 +10,7 @@ const VerseList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, 
 return (
     <div className="VerseList">
         Verses:<br/>
-        <select multiple={true} ref={(node) => selectInput = node} onChange={() => onVerseClick(selectInput.value)}>
+        <select value={[currentVerse]} multiple={true} ref={(node) => selectInput = node} onChange={() => onVerseClick(selectInput.value)}>
             {verseOptions}
         </select>
         <div className="ListControls">

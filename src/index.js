@@ -10,23 +10,7 @@ import songApp from './store/reducers'
 import thunkMiddleware from 'redux-thunk'
 import {Provider} from 'react-redux'
 
-// function reqListener () {
-//   console.log(this.responseText);
-// }
-
-// var oReq = new XMLHttpRequest();
-// oReq.addEventListener("load", reqListener);
-// oReq.open("GET", "http://128.199.145.41:5000/songs");
-// oReq.withCredentials = true;
-// oReq.setRequestHeader("Authorization", "Basic " + btoa("admin:late4tea2"))
-// oReq.send(null);
-var store = createStore(songApp, applyMiddleware(
-    thunkMiddleware, // lets us dispatch() functions
-));
-
 ReactDOM.render(
-    <Provider store={store}>
-    <App store={store} />
-    </Provider>
+    <App />
     , document.getElementById('root'));
 registerServiceWorker();

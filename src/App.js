@@ -1,42 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import SongListVisible from './SongListVisible';
-import VerseListVisible from './VerseListVisible';
-import VerseOrderListVisible from './VerseOrderListVisible';
-import SongControls from './SongControls';
-import SongEditorVisible from './SongEditorVisible';
-import Song from './Song';
+import { createStore, applyMiddleware } from 'redux'
+import songApp from './store/reducers'
 import './App.css';
-import { fetchSongsIfNeeded, fetchVerses, addSong, addVerse, removeSong } from './store/actions';
+import Editor from './Editor'
+import Presenter from './Presenter'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'  
+import thunkMiddleware from 'redux-thunk'
+import {Provider} from 'react-redux'
+  
 
 class App extends Component {
-
     constructor(props) {
-        super(props)
+        super(props);
 
-        let store = this.props.store;
+        this.store = createStore(songApp, applyMiddleware(
+            thunkMiddleware, // lets us dispatch() functions
+        ));
 
-        console.log(store.getState());
-        const unsubscribe = store.subscribe(() =>
-            console.log(store.getState())
+        const unsubscribe = this.store.subscribe(() =>
+            console.log(this.store.getState())
         )
-
-        store.dispatch(fetchVerses()).then(() => { 
-            store.dispatch(fetchSongsIfNeeded()).then(() => { 
-                // store.dispatch(addSong("test"));
-                // store.dispatch(addVerse("test", "hello there \n haha", "v1"));
-            })
-        });
+        
     }
 
     render() {
         return (
-            <div className="App">
-                <SongListVisible />
-                <VerseListVisible />
-                <VerseOrderListVisible />
-                <SongEditorVisible />
-            </div>
+            <Provider store={this.store}>
+                <Router>            
+                    <div className="App">
+                        <Route exact path="/" component={Editor}/>
+                        <Route path="/editor" component={Editor}/>
+                        <Route path="/presenter" component={Presenter}/>
+                    </div>
+                </Router>
+            </Provider>
         );
     }
 }

@@ -6,3 +6,4 @@
 [ ] 6 Add a List react component for VerseList, SongList and OrderList to use
 [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
 [ ] 8 Fix selection for the VerseOrderList to still have the verse selected on moving up/down
+[ ] 9 Create the presenter and display views

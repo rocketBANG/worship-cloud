@@ -4,13 +4,17 @@ import PropTypes from 'prop-types'
 const VerseOrderList = ({ verses, songName, onVerseClick, onVerseAdd, onVerseRemove, currentVerse,
     onOrderUp, onOrderDown, onOrderRemove}) => {
     var selectInput;
-    const verseOptions = verses.map((element, index) => (
-        <option key={element.verseId + index} value={element.verseId}>{
+    var keyCount = []
+    
+    const verseOptions = verses.map((element, index) => {
+        keyCount[element.verseId] = keyCount[element.verseId] + 1 || 1;
+        return(
+        <option key={element.verseId + keyCount[element.verseId]} value={element.verseId}>{
             element.firstLine !== "" ? element.firstLine : "NEW VERSE"
-        }</option>));
+        }</option>)});
 return (
     <div className="VerseOrderList">
-        Verses:<br/>
+        Order:<br/>
         <select multiple={true} ref={(node) => selectInput = node} onChange={() => onVerseClick(selectInput.value)}>
             {verseOptions}
         </select>
