@@ -4,7 +4,7 @@ import songApp from './store/reducers'
 import './App.css';
 import Editor from './Editor'
 import Presenter from './Presenter'
-import { BrowserRouter as Router, Route } from 'react-router-dom'  
+import { BrowserRouter, Route } from 'react-router-dom'  
 import thunkMiddleware from 'redux-thunk'
 import {Provider} from 'react-redux'
   
@@ -27,13 +27,13 @@ class App extends Component {
     render() {
         return (
             <Provider store={this.store}>
-                <Router>            
+                <BrowserRouter>            
                     <div className="App">
                         <Route exact path="/" component={Editor}/>
                         <Route path="/editor" component={Editor}/>
                         <Route path="/presenter" component={Presenter}/>
                     </div>
-                </Router>
+                </BrowserRouter>
             </Provider>
         );
     }

@@ -1,0 +1,31 @@
+.Presenter {
+    display: grid;
+    grid-template-columns: auto 500px;
+    grid-template-rows: auto 300px;
+}
+
+.Display {
+    width: 500px;
+    height: 300px;
+    background-color: black;
+    color: white;
+    grid-column: 2;
+}
+
+.SongLibrary {
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: span 2;
+    height: 100%;
+}
+
+.DisplayControls {
+    grid-column: 2;
+    grid-row-start: 2;
+    border: 2px solid black;    
+    height: 100%;
+}
+
+.Presenter .List {
+    height: calc(100% - 40px);
+}

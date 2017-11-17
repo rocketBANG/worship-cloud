@@ -31,6 +31,10 @@ export const INVALIDATE_SONGS = 'INVALIDATE_SONGS'
 export const SET_EDITING_SONG = 'SET_EDITING_SONG';
 export const SET_EDITING_VERSE = 'SET_EDITING_VERSE';
 
+//DISPLAY
+export const SET_DISPLAY_SONG = 'SET_DISPLAY_SONG';
+export const SET_DISPLAY_VERSE_INDEX = 'SET_DISPLAY_VERSE_INDEX';
+
 /*
  * other constants
  */
@@ -396,4 +400,12 @@ export function setEditingSong(songName) {
 
 export function setEditingVerse(verseId) {
     return { type: SET_EDITING_VERSE, verseId }
+}
+
+export function setDisplaySong(songName) {
+    return { type: SET_DISPLAY_SONG, songName }
+}
+
+export function setDisplayVerseIndex(verseIndex) {
+    return { type: SET_DISPLAY_VERSE_INDEX, verseIndex }
 }

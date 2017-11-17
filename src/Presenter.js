@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import SongListVisible from './SongListVisible';
-import VerseListVisible from './VerseListVisible';
-import VerseOrderListVisible from './VerseOrderListVisible';
-import SongEditorVisible from './SongEditorVisible';
-import './App.css';
-import './index.css';
+import SongLibraryVisible from './SongLibraryVisible';
+import Display from './Display';
+import DisplayControls from './DisplayControls';
+import './Presenter.css'
 import { fetchSongsIfNeeded, fetchVerses } from './store/actions';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
@@ -26,10 +24,9 @@ class Presenter extends Component {
     render() {
         return (
             <div className="Presenter">
-                <SongListVisible />
-                <VerseListVisible />
-                <VerseOrderListVisible />
-                <SongEditorVisible />
+                <SongLibraryVisible />
+                <Display />
+                <DisplayControls />
             </div>
         );
     }
