@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "any-resize-event": "^1.0.0",
     "mongodb": "^2.2.33",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

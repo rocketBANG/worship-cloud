@@ -1,11 +1,14 @@
 .TitleText{
-    font-size: 40px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 2%;
 }
 
 .VerseText {
-    font-size: 20px;
     text-align: left;
-    margin-left: 20px;
+    margin-left: 3%;
+}
+
+.Display {
+    background-color: black;
+    color: white;
 }

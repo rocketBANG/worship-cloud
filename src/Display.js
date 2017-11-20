@@ -1,28 +1,79 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import './Display.css'
+import 'any-resize-event'
 
 class DisplayInternal extends React.Component {
 
+    ratio = 4.0/3.0;
+    wrapper = undefined;
+
+    constructor(props) {
+        super(props);
+        this.state= {
+            width: 400,
+            height: 300,
+            titleFontSize: "40px",
+            verseFontSize: "20px",
+        }
+
+        this.updateSize = this.updateSize.bind(this);
+    }
+
     splitLines(text) {
-        var br = React.createElement('br');
         if(text) {
-            return text.split("\n").map(line => {
-                return (<span>{line}<br /></span>)
+            return text.split("\n").map((line, index) => {
+                return (<span key={index}>{line}<br /></span>)
             });
         } else {
             return "";
         }
     }
 
+    updateSize() {
+        if(this.wrapper === undefined) {
+            return
+        }
+        console.log("updateing");        
+        let maxWidth = this.wrapper.offsetHeight * this.ratio;
+        let maxHeight = this.wrapper.offsetWidth / this.ratio;
+        if(maxWidth < this.wrapper.offsetWidth) {
+            this.setState({
+                width: maxWidth,
+                height: "100%",
+                titleFontSize: maxWidth * 0.08 + "px",
+                verseFontSize: maxWidth * 0.05 + "px",    
+            })
+        } else {
+            this.setState({
+                height: maxHeight,
+                width: "100%",
+                titleFontSize: maxHeight * this.ratio * 0.08 + "px",
+                verseFontSize: maxHeight * this.ratio * 0.05 + "px",    
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.wrapper.addEventListener('onresize', this.updateSize)
+    }
+
+    componentWillUnmount() {
+        this.wrapper.removeEventListener("resize", this.updateSize);
+    }
+
+
     render() {
         return (
-            <div className="Display">
-                <div className="TitleText">
-                    {this.props.showTitle ? this.props.currentSongObject.songName : ""}
-                </div>
-                <div className="VerseText">
-                    {this.splitLines(this.props.currentVerse.text)}
+            <div className="DisplayWrapper"
+            ref={(node) => {this.wrapper = node }}>
+                <div className="Display" style={{width: this.state.width, height: this.state.height}}>
+                    <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
+                        {this.props.showTitle ? this.props.currentSongObject.songName : ""}
+                    </div>
+                    <div className="VerseText" style={{fontSize: this.state.verseFontSize}}>
+                        {this.splitLines(this.props.currentVerse.text)}
+                    </div>
                 </div>
             </div>
         );
