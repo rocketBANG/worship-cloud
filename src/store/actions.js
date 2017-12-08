@@ -35,6 +35,8 @@ export const SET_EDITING_VERSE = 'SET_EDITING_VERSE';
 export const SET_DISPLAY_SONG = 'SET_DISPLAY_SONG';
 export const SET_DISPLAY_VERSE_INDEX = 'SET_DISPLAY_VERSE_INDEX';
 
+const databaseURL = "http://localhost:3500" // "http://128.199.145.41:5000"
+
 /*
  * other constants
  */
@@ -73,9 +75,9 @@ export function removeSong(songName) {
         dispatch(removeSongLocal(songName));
         dispatch(sendSongs());
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
 
-        return fetch(`http://128.199.145.41:5000/songs/` + songName, {
+        return fetch(databaseURL + `/songs/` + songName, {
             method: 'DELETE',
             headers: headers
         }).then(() => dispatch(sendSongsDone()));
@@ -166,12 +168,12 @@ export function removeVerse(verseId, songName) {
         dispatch(sendSongs());
         const state = getState();        
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         let song = state.songs.byId[songName];
         
         dispatch(updateSong(songName, {...song, songName: undefined}));
 
-        return fetch(`http://128.199.145.41:5000/verses/` + verseId, {
+        return fetch(databaseURL + `/verses/` + verseId, {
             method: 'DELETE',
             headers: headers
         }).then(() => dispatch(sendSongsDone()));
@@ -236,10 +238,10 @@ export function updateSong(songName, updateData) {
     return function (dispatch) {
         dispatch(sendSongs());
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         headers.append('Content-Type', 'application/json');
 
-        return fetch(`http://128.199.145.41:5000/songs/` + songName, {
+        return fetch(databaseURL + `/songs/` + songName, {
             method: 'PATCH',
             headers: headers,
             body: JSON.stringify(updateData)
@@ -258,10 +260,10 @@ export function uploadVerse(verse) {
     return function (dispatch) {
         dispatch(sendSongs());
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         headers.append('Content-Type', 'application/json');
 
-        return fetch(`http://128.199.145.41:5000/verses`, {
+        return fetch(databaseURL + `/verses`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(verse)
@@ -280,10 +282,10 @@ export function updateVerse(verseId, updateData) {
     return function (dispatch) {
         dispatch(sendSongs());
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         headers.append('Content-Type', 'application/json');
 
-        return fetch(`http://128.199.145.41:5000/verses/` + verseId, {
+        return fetch(databaseURL + `/verses/` + verseId, {
             method: 'PATCH',
             headers: headers,
             body: JSON.stringify(updateData)
@@ -293,6 +295,7 @@ export function updateVerse(verseId, updateData) {
             error => console.log('An error occured.', error)
             )
             .then(json => {
+                console.log(json);
                 dispatch(sendSongsDone());
             });
     }
@@ -302,10 +305,10 @@ export function uploadSong(song) {
     return function (dispatch) {
         dispatch(sendSongs());
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         headers.append('Content-Type', 'application/json');
 
-        return fetch(`http://128.199.145.41:5000/songs`, {
+        return fetch(databaseURL + `/songs`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(song)
@@ -348,9 +351,9 @@ export function fetchSongs() {
         dispatch(requestSongs());
 
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
 
-        return fetch(`http://128.199.145.41:5000/songs`, {
+        return fetch(databaseURL + `/songs`, {
             method: 'GET',
             headers: headers,
         })
@@ -361,8 +364,8 @@ export function fetchSongs() {
             .then(json => {
                 // We can dispatch many times!
                 // Here, we update the app state with the results of the API call.
-                if(json._items !== undefined) {
-                    dispatch(recieveSongs(json._items, Date.now()));
+                if(json !== undefined) {
+                    dispatch(recieveSongs(json, Date.now()));
                 }
             }
         )
@@ -373,9 +376,9 @@ export function fetchVerses() {
     return function (dispatch) {
 
         let headers = new Headers();
-        headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
 
-        return fetch(`http://128.199.145.41:5000/verses`, {
+        return fetch(databaseURL + `/verses`, {
             method: 'GET',
             headers: headers,
         })
@@ -384,10 +387,11 @@ export function fetchVerses() {
             error => console.log('An error occured.', error)
             )
             .then(json => {
+                console.log(json);
                 // We can dispatch many times!
                 // Here, we update the app state with the results of the API call.
-                if(json._items !== undefined) {
-                    dispatch(recieveVerses(json._items, Date.now()));
+                if(json !== undefined) {
+                    dispatch(recieveVerses(json, Date.now()));
                 }
             }
         )
