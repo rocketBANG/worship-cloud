@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 
-import { verses } from './verses'
-import { songs } from './songs'
-import { backend } from './backend'
-import { editor } from './editor'
-import { display } from './display'
+import { verses } from './reducers/verses'
+import { songs } from './reducers/songs'
+import { backend } from './reducers/backend'
+import { editor } from './reducers/editor'
+import { display } from './reducers/display'
 
 const songApp = combineReducers({
     songs,

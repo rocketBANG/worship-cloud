@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => {
         onSongAdd: songName => {
             dispatch(addSong(songName))
         },
-        onSongRemove: songName => {
+        removeSong: songName => {
             dispatch(removeSong(songName))
         },
     }
@@ -33,7 +33,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     ...stateProps,
     ...dispatchProps,
     onSongRemove() {
-        dispatchProps.onSongRemove(stateProps.currentSong)
+        dispatchProps.removeSong(stateProps.currentSong) //Passes the current state to dispatch
     }
 });
 

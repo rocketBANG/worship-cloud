@@ -1,4 +1,4 @@
-import { ADD_VERSE, UPDATE_VERSE, UPDATE_VERSE_TYPE, REMOVE_VERSE, RECEIVE_VERSES } from "./actions";
+import { ADD_VERSE, UPDATE_VERSE, UPDATE_VERSE_TYPE, REMOVE_VERSE, RECEIVE_VERSES } from "../actions";
 
 /**
  * Handles actions on the verse objects

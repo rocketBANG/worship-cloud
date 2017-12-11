@@ -1,4 +1,4 @@
-import { SET_DISPLAY_SONG, SET_DISPLAY_VERSE_INDEX } from "./actions";
+import { SET_DISPLAY_SONG, SET_DISPLAY_VERSE_INDEX } from "../actions";
 
 export function display(display = {currentVerseIndex: 0}, action) {
     switch(action.type) {

@@ -1,4 +1,4 @@
-import { SET_EDITING_SONG, SET_EDITING_VERSE } from "./actions";
+import { SET_EDITING_SONG, SET_EDITING_VERSE } from "../actions";
 
 export function editor(editor = {}, action) {
     switch(action.type) {

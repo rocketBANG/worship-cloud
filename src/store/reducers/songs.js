@@ -1,4 +1,4 @@
-import { ADD_SONG, UPDATE_SONG_TITLE, ADD_VERSE, REMOVE_VERSE, UPDATE_SONG_ORDER, REMOVE_SONG, RECEIVE_SONGS } from "./actions";
+import { ADD_SONG, UPDATE_SONG_TITLE, ADD_VERSE, REMOVE_VERSE, UPDATE_SONG_ORDER, REMOVE_SONG, RECEIVE_SONGS } from "../actions";
 
 /**
  * Handles actions on the song objects

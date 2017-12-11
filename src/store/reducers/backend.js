@@ -1,4 +1,4 @@
-import { INVALIDATE_SONGS, REQUEST_SONGS, RECEIVE_SONGS, SEND_SONGS, SEND_SONGS_DONE } from "./actions";
+import { INVALIDATE_SONGS, REQUEST_SONGS, RECEIVE_SONGS, SEND_SONGS, SEND_SONGS_DONE } from "../actions";
 
 export function backend(state = {
     isFetching: false,
