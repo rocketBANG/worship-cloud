@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import SongEditor from './SongEditor'
-import {updateVerseText} from './store/actions'
+import {updateVerseText} from '../store/actions'
 
 function getVerseText(verseId, verses) {
     if(verses[verseId] !== undefined) {

@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import VerseOrderList from './VerseOrderList'
-import './App.css';
-import { setEditingVerse, removeFromOrder, rearangeOrder } from './store/actions';
+import '../style/App.css';
+import { setEditingVerse, removeFromOrder, rearangeOrder } from '../store/actions';
 
 function getVerses(songName, songList, verses) {
     let VerseOrderList = [];

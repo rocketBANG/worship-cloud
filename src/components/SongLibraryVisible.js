@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import SongLibrary from './SongLibrary'
-import './App.css';
-import { setDisplaySong } from './store/actions';
+import '../style/App.css';
+import { setDisplaySong } from '../store/actions';
 
 function getSongs(songs) {
     return songs;

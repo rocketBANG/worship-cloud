@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import './Display.css'
+import '../style/Display.css'
 import 'any-resize-event'
 
 class DisplayInternal extends React.Component {

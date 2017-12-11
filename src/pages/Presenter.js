@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import SongLibraryVisible from './SongLibraryVisible';
-import Display from './Display';
-import DisplayControls from './DisplayControls';
-import './Presenter.css'
-import { fetchSongsIfNeeded, fetchVerses } from './store/actions';
+import SongLibraryVisible from '../components/SongLibraryVisible';
+import Display from '../components/Display';
+import DisplayControls from '../components/DisplayControls';
+import '../style/Presenter.css'
+import { fetchSongsIfNeeded, fetchVerses } from '../store/actions';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 

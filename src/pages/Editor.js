@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import SongListVisible from './SongListVisible';
-import VerseListVisible from './VerseListVisible';
-import VerseOrderListVisible from './VerseOrderListVisible';
-import SongEditorVisible from './SongEditorVisible';
-import './Editor.css';
-import { fetchSongsIfNeeded, fetchVerses } from './store/actions';
+import SongListVisible from '../components/SongListVisible';
+import VerseListVisible from '../components/VerseListVisible';
+import VerseOrderListVisible from '../components/VerseOrderListVisible';
+import SongEditorVisible from '../components/SongEditorVisible';
+import '../style/Editor.css';
+import { fetchSongsIfNeeded, fetchVerses } from '../store/actions';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 

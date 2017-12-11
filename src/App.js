@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { createStore, applyMiddleware } from 'redux'
 import songApp from './store/reducers'
-import './App.css';
-import Editor from './Editor'
-import Presenter from './Presenter'
+import './style/App.css';
+import Editor from './pages/Editor'
+import Presenter from './pages/Presenter'
 import { BrowserRouter, Route } from 'react-router-dom'  
 import thunkMiddleware from 'redux-thunk'
 import {Provider} from 'react-redux'

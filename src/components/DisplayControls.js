@@ -1,5 +1,5 @@
 import React from 'react'
-import {setDisplayVerseIndex} from './store/actions'
+import {setDisplayVerseIndex} from '../store/actions'
 import {connect} from 'react-redux'
 
 class DisplayControlsInternal extends React.Component {
