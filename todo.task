@@ -14,3 +14,4 @@
 [x] 14 Add node to database
 [ ] 15 Add chorus type of verse
 [ ] 16 Make actions.js more readable
+[ ] 17 Move API calls out of actions.js and into another file
