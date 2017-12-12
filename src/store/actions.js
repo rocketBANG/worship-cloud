@@ -52,12 +52,11 @@ export const VerseTypes = {
 
 export function addSong(songName, songVerses = [], songOrder = []) {
     return function(dispatch) {
-        dispatch(addSongLocal(songName, songVerses, songOrder));
-        dispatch(uploadSong({
+        return dispatch(uploadSong({
             name: songName,
             verses: songVerses,
             order: songOrder
-        }));
+        })).then(() => dispatch(addSongLocal(songName, songVerses, songOrder)));
     }
 }
 
