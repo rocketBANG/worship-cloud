@@ -3,7 +3,7 @@ import { INVALIDATE_SONGS, REQUEST_SONGS, RECEIVE_SONGS, SEND_SONGS, SEND_SONGS_
 export function backend(state = {
     isFetching: false,
     didInvalidate: true,
-    isPosting: false}
+    isPosting: 0}
     , action) {
     switch (action.type) {
         case INVALIDATE_SONGS:
@@ -24,12 +24,12 @@ export function backend(state = {
 
         case SEND_SONGS:
             return Object.assign({}, state, {
-                isPosting: true
+                isPosting: state.isPosting+1
             })
 
         case SEND_SONGS_DONE:
             return Object.assign({}, state, {
-                isPosting: false
+                isPosting: state.isPosting-1
             })
 
         default:
