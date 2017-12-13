@@ -26,6 +26,7 @@ export const RECEIVE_VERSES = 'RECEIVE_VERSES'
 export const SEND_SONGS = 'SEND_SONGS'
 export const SEND_SONGS_DONE = 'SEND_SONGS_DONE'
 export const INVALIDATE_SONGS = 'INVALIDATE_SONGS'
+export const SEND_SONGS_ERROR = 'SEND_SONGS_ERROR'
 
 //EDITOR
 export const SET_EDITING_SONG = 'SET_EDITING_SONG';
@@ -227,6 +228,10 @@ export function sendSongs() {
 
 export function sendSongsDone() {
     return { type: SEND_SONGS_DONE }
+}
+
+export function sendSongsError() {
+    return { type: SEND_SONGS_ERROR }
 }
 
 export function invalidateSongs() {

@@ -1,9 +1,10 @@
-import { INVALIDATE_SONGS, REQUEST_SONGS, RECEIVE_SONGS, SEND_SONGS, SEND_SONGS_DONE } from "../actions";
+import { INVALIDATE_SONGS, REQUEST_SONGS, RECEIVE_SONGS, SEND_SONGS, SEND_SONGS_DONE, SEND_SONGS_ERROR } from "../actions/songActions";
 
 export function backend(state = {
     isFetching: false,
     didInvalidate: true,
-    isPosting: 0}
+    isPosting: 0,
+    isError: false}
     , action) {
     switch (action.type) {
         case INVALIDATE_SONGS:
@@ -30,6 +31,11 @@ export function backend(state = {
         case SEND_SONGS_DONE:
             return Object.assign({}, state, {
                 isPosting: state.isPosting-1
+            })
+
+        case SEND_SONGS_ERROR:
+            return Object.assign({}, state, {
+                isError: true
             })
 
         default:

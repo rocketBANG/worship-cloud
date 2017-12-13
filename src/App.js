@@ -21,8 +21,25 @@ class App extends Component {
         this.store.subscribe(() =>
             console.log(this.store.getState())
         )
+
+        this.handleWindowClose = this.handleWindowClose.bind(this);
         
     }
+
+    handleWindowClose(event) {
+        if(this.store.getState().backend.isPosting !==0 ) {
+            event.preventDefault();
+            return event.returnValue = 'Are you sure you want to leave? You have unsaved changes';
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener('beforeunload', this.handleWindowClose);
+    }
+    
+    componentWillUnmount() {
+        window.removeEventListener('beforeunload', this.handleWindowClose);
+    }    
 
     render() {
         return (

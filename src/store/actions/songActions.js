@@ -1,18 +1,26 @@
-import {uploadSong} from '../api'
+import * as API from '../api'
+import { removeVerse } from '../actions';
 
 export const ADD_SONG = 'ADD_SONG'
 export const REMOVE_SONG = 'REMOVE_SONG'
 export const UPDATE_SONG_ORDER = 'UPDATE_SONG_ORDER'
 export const UPDATE_SONG_TITLE = 'UPDATE_TITLE'
+export const REQUEST_SONGS = 'REQUEST_SONGS'
+export const RECEIVE_SONGS = 'RECEIVE_SONGS'
+export const SEND_SONGS = 'SEND_SONGS'
+export const SEND_SONGS_DONE = 'SEND_SONGS_DONE'
+export const INVALIDATE_SONGS = 'INVALIDATE_SONGS'
+export const SEND_SONGS_ERROR = 'SEND_SONGS_ERROR'
+
 
 export function addSong(songName, songVerses = [], songOrder = []) {
     return (dispatch) => {
-        dispatch(sendSongs());
+        dispatch(isUploading(true));
 
-        return uploadSong(songName, songVerses, songOrder)
+        return API.uploadSong(songName, songVerses, songOrder)
         .then((response) => {
             dispatch(addSongLocal(songName, songVerses, songOrder));
-            dispatch(sendSongsDone());
+            dispatch(isUploading(false));
         });
     }
 }
@@ -23,31 +31,34 @@ function addSongLocal(songName, songVerses = [], songOrder = []) {
 
 export function removeSong(songName) {
     return function(dispatch, getState) {
+        dispatch(isUploading(true));
+        
+        let promises = [];
+
         //Remove all associated verses
         getState().songs.byId[songName].verses.forEach(function(verseId) {
-            dispatch(removeVerse(verseId, songName));
+            let removePromise = dispatch(removeVerse(verseId, songName));
+            promises.push(removePromise);
         });
 
-        dispatch(removeSongLocal(songName));
-        dispatch(sendSongs());
-        let headers = new Headers();
-        // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+        let songPromise = API.removeSong(songName)
+        .then((response) => {
+            dispatch(removeSongLocal(songName));
+        });
 
-        return fetch(databaseURL + `/songs/` + songName, {
-            method: 'DELETE',
-            headers: headers
-        }).then(() => dispatch(sendSongsDone()));
+        promises.push(songPromise);
+        return Promise.all(promises).then(() => dispatch(isUploading(false)));
     }
 }
 
-export function removeSongLocal(songName) {
+function removeSongLocal(songName) {
     return { type: REMOVE_SONG, songName }    
 }
 
-export function updateSongOrder(songName, order) {
+function updateSongOrder(songName, order) {
     return function(dispatch) {
         dispatch(updateSongOrderLocal(songName, order));
-        dispatch(updateSong(songName, {
+        return dispatch(updateSong(songName, {
             order: order,
         }));
     }
@@ -82,7 +93,7 @@ export function addToOrder(verseId, songName) {
     }
 }
 
-export function updateSongOrderLocal(songName, order) {
+function updateSongOrderLocal(songName, order) {
     return { type: UPDATE_SONG_ORDER, songName, order }
 }
 
@@ -95,6 +106,74 @@ export function updateTitle(songName, title) {
     }
 }
 
-export function updateTitleLocal(songName, title) {
+function updateTitleLocal(songName, title) {
     return { type: UPDATE_SONG_TITLE, songName, title }
+}
+
+function updateSong(songName, updateData) {
+    return function (dispatch) {
+        dispatch(isUploading(true));
+
+        return API.updateSong(songName, updateData).then(
+            () => dispatch(isUploading(false)),
+            () => dispatch(sendSongsError())
+        );
+    }
+}
+
+function shouldFetchSongs(state) {
+    const backend = state.backend;
+    if (!backend) {
+        return true;
+    } else if (backend.isFetching) {
+        return false;
+    } else {
+        return backend.didInvalidate;
+    }
+}
+
+export function fetchSongsIfNeeded() {
+    return (dispatch, getState) => {
+        if (shouldFetchSongs(getState())) {
+            return dispatch(fetchSongs())
+        } else {
+            return Promise.resolve()
+        }
+    }
+}
+
+function fetchSongs() {
+    return function (dispatch) {
+        dispatch(requestSongs());
+
+        return API.fetchSongs().then((json) => {
+            if (json !== undefined) {
+                dispatch(recieveSongs(json, Date.now()));
+            }
+        });
+    }
+}
+
+function requestSongs() {
+    return { type: REQUEST_SONGS }
+}
+
+function recieveSongs(items, receivedAt) {
+    return { type: RECEIVE_SONGS, items, receivedAt }
+}
+
+export function sendSongsError() {
+    return { type: SEND_SONGS_ERROR }
+}
+
+export function isUploading(isUploading) {
+    if(isUploading) {
+        return { type: SEND_SONGS }        
+    } else {
+        return { type: SEND_SONGS_DONE }        
+    }
+}
+
+export function invalidateSongs() {
+    return { type: INVALIDATE_SONGS }
 }

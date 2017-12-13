@@ -3,7 +3,8 @@ import SongLibraryVisible from '../components/SongLibraryVisible';
 import Display from '../components/Display';
 import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
-import { fetchSongsIfNeeded, fetchVerses } from '../store/actions';
+import { fetchSongsIfNeeded } from '../store/actions/songActions';
+import { fetchVerses } from '../store/actions'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
