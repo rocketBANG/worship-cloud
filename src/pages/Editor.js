@@ -3,19 +3,28 @@ import SongListVisible from '../components/SongListVisible';
 import VerseListVisible from '../components/VerseListVisible';
 import VerseOrderListVisible from '../components/VerseOrderListVisible';
 import SongEditorVisible from '../components/SongEditorVisible';
+import MobxList from '../components/MobxList';
 import '../style/Editor.css';
 import { fetchSongsIfNeeded } from '../store/actions/songActions';
 import { fetchVerses } from '../store/actions'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-
+import { SongList } from '../objects/SongList'
+import { Song } from '../objects/Song'
 
 class Editor extends Component {
 
     constructor(props) {
         super(props)
 
+        var song = new Song("hi", "there");
+        song.loadSong();
+
+        this.songList = new SongList();
+        this.songList.loadSongs();
+        
         let dispatch = this.props.dispatch;
+        console.log(props);
 
         dispatch(fetchVerses()).then(() => { 
             dispatch(fetchSongsIfNeeded()).then(() => { 
@@ -26,7 +35,7 @@ class Editor extends Component {
     render() {
         return (
             <div className="Editor">
-                <SongListVisible />
+                <MobxList songList={this.songList}/>
                 <VerseListVisible />
                 <VerseOrderListVisible />
                 <SongEditorVisible />

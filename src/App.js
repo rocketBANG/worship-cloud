@@ -6,8 +6,7 @@ import Editor from './pages/Editor'
 import Presenter from './pages/Presenter'
 import { BrowserRouter, Route } from 'react-router-dom'  
 import thunkMiddleware from 'redux-thunk'
-import {Provider} from 'react-redux'
-  
+import { Provider } from 'react-redux'
 
 class App extends Component {
     constructor(props) {
@@ -18,9 +17,9 @@ class App extends Component {
         ));
 
         // const unsubscribe = 
-        this.store.subscribe(() =>
-            console.log(this.store.getState())
-        )
+        // this.store.subscribe(() =>
+        //     console.log(this.store.getState())
+        // )
 
         this.handleWindowClose = this.handleWindowClose.bind(this);
         

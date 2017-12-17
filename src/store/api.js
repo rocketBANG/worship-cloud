@@ -1,6 +1,6 @@
 const databaseURL = "http://localhost:3500" // "http://128.199.145.41:5000"
 
-export const uploadSong = (songName, songVerses, songOrder) => {
+export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     let song = {
         name: songName,
         verses: songVerses,

@@ -153,7 +153,8 @@ export function addVerse(songName, text, verseId, verseType = VerseTypes.NO_CHOR
         return dispatch(uploadVerse({
             id: verseId,
             verseType: verseType,
-            text: text
+            text: text,
+            songName: songName
         }));
     }
 }

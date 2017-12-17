@@ -5,6 +5,7 @@
   "dependencies": {
     "any-resize-event": "^1.0.0",
     "mobx": "^3.4.1",
+    "mobx-react": "^4.3.5",
     "mongodb": "^2.2.33",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -20,5 +21,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "devDependencies": {}
 }
