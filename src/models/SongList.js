@@ -17,7 +17,7 @@ export class SongList {
         API.fetchSongs().then((json) => {
             json.forEach(songJson => {
                 let song = new Song(songJson.name, songJson.title);
-                song.verses = songJson.verses;
+                song.verses = [];
                 song.order = songJson.order;
                 this.songs.push(song);
             });

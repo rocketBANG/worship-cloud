@@ -41,7 +41,6 @@ export const updateSong = (songName, updateData) => {
 
 export const removeSong = (songName) => {
     let headers = new Headers();
-    // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
 
     return fetch(databaseURL + `/songs/` + songName, {
         method: 'DELETE',
@@ -51,7 +50,6 @@ export const removeSong = (songName) => {
 
 export const fetchSongs = () => {
     let headers = new Headers();
-    // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
 
     return fetch(databaseURL + `/songs`, {
         method: 'GET',
@@ -61,4 +59,53 @@ export const fetchSongs = () => {
         response => response.json(),
         error => console.log('An error occured.', error)
     );
+}
+
+export const fetchVerses = (songName) => {
+    let headers = new Headers();
+
+    return fetch(databaseURL + `/songs/` + songName + `/verses`, {
+        method: 'GET',
+        headers: headers,
+    })
+    .then(
+        response => response.json(),
+        error => console.log('An error occured.', error)
+    );
+}
+
+
+export const addVerse = (text, songName, type) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    let verse = {
+        text,
+        songName: songName,
+        verseType: type,
+    }
+
+    return fetch(databaseURL + `/songs/` + songName + `/verses`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(verse)
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+}
+
+export const removeVerse = (verse, songName) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return fetch(databaseURL + `/verses/` + verse.id, {
+        method: 'DELETE',
+        headers: headers
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
 }

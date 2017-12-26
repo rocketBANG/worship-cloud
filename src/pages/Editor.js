@@ -1,42 +1,49 @@
 import React, { Component } from 'react';
 import SongListVisible from '../components/SongListVisible';
-import VerseListVisible from '../components/VerseListVisible';
+import VerseList from '../components/VerseList';
 import VerseOrderListVisible from '../components/VerseOrderListVisible';
 import SongEditorVisible from '../components/SongEditorVisible';
-import MobxList from '../components/MobxList';
+import SongList from '../components/SongList';
 import '../style/Editor.css';
 import { fetchSongsIfNeeded } from '../store/actions/songActions';
 import { fetchVerses } from '../store/actions'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import { SongList } from '../objects/SongList'
-import { Song } from '../objects/Song'
+import { SongList as SongListModel } from '../models/SongList'
+import { Song } from '../models/Song'
+import { observable, autorun } from 'mobx';
 
 class Editor extends Component {
 
     constructor(props) {
-        super(props)
-
-        var song = new Song("hi", "there");
-        song.loadSong();
-
-        this.songList = new SongList();
-        this.songList.loadSongs();
+        super(props) 
         
-        let dispatch = this.props.dispatch;
-        console.log(props);
+        this.songList = new SongListModel();
+        this.songList.loadSongs();
 
-        dispatch(fetchVerses()).then(() => { 
-            dispatch(fetchSongsIfNeeded()).then(() => { 
-            })
+        this.state = { verses: undefined };
+
+        this.editorState = observable({
+            currentSong: undefined,
+            currentVerse: undefined
+        })
+
+    }
+
+    componentDidMount() {
+        autorun(() => { 
+            this.setState({
+                verses: (this.editorState.currentSong || {verses: undefined}).verses
+            }); 
+            console.log((this.editorState.currentSong || {verses: undefined}).verses);
         });
     }
 
     render() {
         return (
             <div className="Editor">
-                <MobxList songList={this.songList}/>
-                <VerseListVisible />
+                <SongList songList={this.songList} state={this.editorState}/>
+                <VerseList verses={this.state.verses} state={this.editorState}/>
                 <VerseOrderListVisible />
                 <SongEditorVisible />
             </div>

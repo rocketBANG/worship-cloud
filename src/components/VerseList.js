@@ -1,36 +1,43 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import {List} from './List'
+import { observer } from 'mobx-react'
+import { List } from './List'
+import { Song } from '../models/Song'
 
-const VerseList = ({ verses, onVerseClick, onVerseAdd, onVerseRemove, maxVerseId, currentVerse, onOrderAdd }) => {
+const VerseList = observer(class VerseList extends React.Component {
 
-    const options = verses.map((element) => ({
-        id: element.verseId,
-        text: element.firstLine,
-        altText: "NEW VERSE"
-    }));
-return (
-    <div className="VerseList EditorContainer">
-        <div className="ListHeader">Verses:</div>
-        <List options={options} onUpdate={onVerseClick} />
-        <div className="ListControls">
-            <button onClick={() => onVerseAdd("v" + (maxVerseId + 1))} >Add Verse</button>
-            <button onClick={() => onVerseRemove()}>Remove Verse</button>
-            <button onClick={() => onOrderAdd()}>Add to order</button>
-        </div>
-    </div>
-)}
+    onVerseClick = (name, index) => {
+        this.setState({
+            currentVerse: name,
+            selectedIndex: index
+        })
+    }
 
-VerseList.propTypes = {
-    verses: PropTypes.arrayOf(PropTypes.shape({
-        verseId: PropTypes.string.isRequired,
-        firstLine: PropTypes.string.isRequired,
-    })).isRequired,
-    currentVerse: PropTypes.string,
-    onVerseClick: PropTypes.func.isRequired,
-    onVerseAdd: PropTypes.func.isRequired,
-    onVerseRemove: PropTypes.func.isRequired,
-    onOrderAdd: PropTypes.func.isRequired,
-}
+    onVerseAdd = () => {
+        this.props.state.currentSong.addVerse("");
+    }
 
-export default VerseList
+    onVerseRemove = () => {
+        this.props.state.currentSong.removeVerse(this.state.selectedIndex);
+    }
+    
+    render() {
+        const options = (this.props.verses || []).map((verse, index) => ({
+            id: verse.id,
+            text: verse.text,
+            altText: "NEW VERSE"
+        }));
+    
+        return (
+            <div className="VerseList EditorContainer">
+                <div className="ListHeader">Verses:</div>
+                <List onUpdate={this.onVerseClick} options={options} />
+                <div className="ListControls">
+                    <button onClick={this.onVerseAdd} >Add Verse</button>
+                    <button onClick={this.onVerseRemove}>Remove Verse</button>
+                </div>
+            </div>
+        )    
+    }
+})
+
+export default VerseList;

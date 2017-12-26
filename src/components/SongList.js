@@ -1,37 +1,59 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import {List} from './List'
+import { observer } from 'mobx-react'
+import { List } from './List'
+import { Song } from '../models/Song'
 
-const SongList = ({ songs, onSongClick, onSongAdd, onSongRemove }) => {
-    var addInput;
+const SongList = observer(class SongList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            songText: '',
+        };
+    
+      }    
 
-    const options = Object.keys(songs).map((element, index) => ({
-        id: songs[element].songName,
-        text: songs[element].title,
-        altText: songs[element].songName
-    }));
-return (
-    <div className="SongList EditorContainer">
-        <div className="ListHeader">Songs:</div>
-        <List onUpdate={onSongClick} options={options}/>
-        <div className="ListControls">
-            <input ref={(node) => addInput = node} />
-            <button onClick={() => onSongAdd(addInput.value)} >Add Song</button>
-            <button onClick={() => onSongRemove()}>Remove Song</button>
-        </div>
-    </div>
-)}
+    onSongClick = (name, index) => {
+        this.props.state.currentSong = this.props.songList.songs[index];
+        this.props.state.currentSong.loadSong();
+        // this.setState({
+        //     currentSong: name
+        // })
+    }
 
-SongList.propTypes = {
-    songs: PropTypes.objectOf(
-        PropTypes.shape({
-            songName: PropTypes.string.isRequired,
-            title: PropTypes.string
-        }).isRequired
-    ).isRequired,
-    onSongClick: PropTypes.func.isRequired,
-    onSongAdd: PropTypes.func.isRequired,
-    onSongRemove: PropTypes.func.isRequired
-}
+    onSongAdd = () => {
+        this.props.songList.addSong(new Song(this.state.songText));
+    }
 
-export default SongList
+    onSongRemove = () => {
+        this.props.songList.removeSong(this.state.currentSong);
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            songText: event.target.value
+        })
+    }
+    
+    render() {
+        const options = this.props.songList.songs.map((song, index) => ({
+            id: song.name,
+            text: song.title,
+            altText: song.name
+        }));
+    
+        return (
+            <div className="SongList EditorContainer">
+                <div className="ListHeader">Songs:</div>
+                <List onUpdate={this.onSongClick} options={options} />
+                <div className="ListControls">
+                    <input value={this.state.songText} onChange={this.handleChange} />
+                    <button onClick={this.onSongAdd} >Add Song</button>
+                    <button onClick={this.onSongRemove}>Remove Song</button>
+                </div>
+                {this.props.songList.state === "pending" ? "Saving" : ""}
+            </div>
+        )    
+    }
+})
+
+export default SongList;
