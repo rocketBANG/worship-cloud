@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SongListVisible from '../components/SongListVisible';
 import VerseList from '../components/VerseList';
 import VerseOrderListVisible from '../components/VerseOrderListVisible';
-import SongEditorVisible from '../components/SongEditorVisible';
+import SongEditor from '../components/SongEditor';
 import SongList from '../components/SongList';
 import '../style/Editor.css';
 import { fetchSongsIfNeeded } from '../store/actions/songActions';
@@ -45,7 +45,7 @@ class Editor extends Component {
                 <SongList songList={this.songList} state={this.editorState}/>
                 <VerseList verses={this.state.verses} state={this.editorState}/>
                 <VerseOrderListVisible />
-                <SongEditorVisible />
+                <SongEditor />
             </div>
         );
     }
