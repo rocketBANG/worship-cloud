@@ -18,6 +18,12 @@ const VerseList = observer(class VerseList extends React.Component {
     onVerseRemove = () => {
         this.props.state.currentSong.removeVerse(this.state.selectedIndex);
     }
+
+    onAddToOrder = () => {
+        let song = this.props.state.currentSong;
+
+        song.addToOrder(this.state.selectedIndex);
+    }
     
     render() {
         let currentSong = this.props.state.currentSong || {};
@@ -34,6 +40,7 @@ const VerseList = observer(class VerseList extends React.Component {
                 <div className="ListControls">
                     <button onClick={this.onVerseAdd} >Add Verse</button>
                     <button onClick={this.onVerseRemove}>Remove Verse</button>
+                    <button onClick={this.onAddToOrder}>Add to Order</button>
                 </div>
             </div>
         )    

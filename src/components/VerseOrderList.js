@@ -1,72 +1,56 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import {List} from './List'
+import { observer } from 'mobx-react'
+import { List } from './List'
 
-class VerseOrderList extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            index: -1
-        };
-        this.handleUpdate = this.handleUpdate.bind(this);
+const VerseList = observer(class VerseList extends React.Component {
+
+    state = {
+        index: -1
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.songName !== this.props.songName) {
-            this.setState({
-                index: -1
-            });    
-        }
-    }    
-
-    handleUpdate(value, index) {
+    onVerseClick = (name, index) => {
+        this.props.state.currentVerse = this.props.state.currentSong.verseOrder[index];
         this.setState({
             index: index
-        });
-        this.props.onVerseClick(value);
+        })
     }
 
-    setIndex(index) {
-        this.setState({
-            index: index
-        });
+    onOrderRemove = () => {
+        this.props.state.currentSong.removeFromOrder(this.state.index)
     }
 
+    onOrderUp = () => {
+        let index = this.state.index;
+        this.props.state.currentSong.reorder(index, index - 1);
+        this.setState({index: index - 1});
+    }
+
+    onOrderDown = () => {
+        let index = this.state.index;
+        this.props.state.currentSong.reorder(index, index + 1);
+        this.setState({index: index + 1});
+    }
+    
     render() {
-        let { verses, songName, onOrderUp, onOrderDown, onOrderRemove} = this.props;
-
-        const options = verses.map((element) => {
-            return {
-            id: element.verseId,
-            text: element.firstLine,
+        let currentSong = this.props.state.currentSong || {};
+        const options = (currentSong.verseOrder || []).map((verse, index) => ({
+            id: verse.id,
+            text: verse.text,
             altText: "NEW VERSE"
-        }});
+        }));
     
         return (
-            <div className="VerseOrderList EditorContainer">
+            <div className="VerseList EditorContainer">
                 <div className="ListHeader">Order:</div>
-                <List selectedIndex={this.state.index} options={options} onUpdate={this.handleUpdate} />
+                <List selectedIndex={this.state.index} onUpdate={this.onVerseClick} options={options} />
                 <div className="ListControls">
-                    <button onClick={() => {this.setIndex(this.state.index - 1); onOrderUp(this.state.index, songName)}} >up</button>
-                    <button onClick={() => {this.setIndex(this.state.index + 1); onOrderDown(this.state.index, songName)}}>down</button>
-                    <button onClick={() => {this.setIndex(this.state.index - 1); onOrderRemove(this.state.index, songName)}}>x</button>
-                </div>
+                <button onClick={this.onOrderUp} >up</button>
+                <button onClick={this.onOrderDown}>down</button>
+                <button onClick={this.onOrderRemove}>x</button>
             </div>
-        )
+            </div>
+        )    
     }
+})
 
-    static propTypes = {
-        verses: PropTypes.arrayOf(PropTypes.shape({
-            verseId: PropTypes.string.isRequired,
-            firstLine: PropTypes.string.isRequired,
-        })).isRequired,
-        songName: PropTypes.string,
-        currentVerse: PropTypes.string,
-        onVerseClick: PropTypes.func.isRequired,
-        onOrderRemove: PropTypes.func.isRequired,
-        onOrderUp: PropTypes.func.isRequired,
-        onOrderDown: PropTypes.func.isRequired,
-    }
-}
-
-export default VerseOrderList
+export default VerseList;

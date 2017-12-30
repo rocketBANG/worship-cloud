@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import VerseList from '../components/VerseList';
-import VerseOrderListVisible from '../components/VerseOrderListVisible';
+import VerseOrderList from '../components/VerseOrderList';
 import SongEditor from '../components/SongEditor';
 import SongList from '../components/SongList';
 import '../style/Editor.css';
@@ -31,7 +31,7 @@ class Editor extends Component {
             <div className="Editor">
                 <SongList songList={this.songList} state={this.editorState}/>
                 <VerseList state={this.editorState}/>
-                <VerseOrderListVisible />
+                <VerseOrderList state={this.editorState}/>
                 <SongEditor state={this.editorState}/>
             </div>
         );

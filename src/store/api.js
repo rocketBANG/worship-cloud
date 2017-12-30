@@ -128,3 +128,23 @@ export const updateVerse = (text, verseId) => {
         error => console.log('An error occured.', error)
     )
 }
+
+export const updateOrder = (order, songName) => {
+    let headers = new Headers();
+    // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+    headers.append('Content-Type', 'application/json');
+
+    let updateData = {
+        order: order
+    };
+
+    return fetch(databaseURL + `/songs/` + songName, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(updateData)
+    }).then(
+        response => response.json(),
+        error => console.log('An error occured.', error)
+    )
+
+}
