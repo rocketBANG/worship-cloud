@@ -34,7 +34,6 @@ class DisplayInternal extends React.Component {
         if(this.wrapper === undefined) {
             return
         }
-        console.log("updateing");        
         let maxWidth = this.wrapper.offsetHeight * this.ratio;
         let maxHeight = this.wrapper.offsetWidth / this.ratio;
         if(maxWidth < this.wrapper.offsetWidth) {

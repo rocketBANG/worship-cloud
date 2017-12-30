@@ -109,3 +109,22 @@ export const removeVerse = (verse, songName) => {
         error => console.log('An error occured.', error)
     )
 }
+
+export const updateVerse = (text, verseId) => {
+    let headers = new Headers();
+    // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+    headers.append('Content-Type', 'application/json');
+
+    let updateData = {
+        text: text
+    };
+
+    return fetch(databaseURL + `/verses/` + verseId, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(updateData)
+    }).then(
+        response => response.json(),
+        error => console.log('An error occured.', error)
+    )
+}

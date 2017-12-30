@@ -1,6 +1,6 @@
 //@ts-check
 
-import {user, pass} from "./auth"
+// import {user, pass} from "./auth"
 
 /*
  * action types

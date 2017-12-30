@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import SongListVisible from '../components/SongListVisible';
 import VerseList from '../components/VerseList';
 import VerseOrderListVisible from '../components/VerseOrderListVisible';
 import SongEditor from '../components/SongEditor';
 import SongList from '../components/SongList';
 import '../style/Editor.css';
-import { fetchSongsIfNeeded } from '../store/actions/songActions';
-import { fetchVerses } from '../store/actions'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import { SongList as SongListModel } from '../models/SongList'
-import { Song } from '../models/Song'
-import { observable, autorun } from 'mobx';
+import { observable } from 'mobx';
 
 class Editor extends Component {
 
@@ -30,22 +26,13 @@ class Editor extends Component {
 
     }
 
-    componentDidMount() {
-        autorun(() => { 
-            this.setState({
-                verses: (this.editorState.currentSong || {verses: undefined}).verses
-            }); 
-            console.log((this.editorState.currentSong || {verses: undefined}).verses);
-        });
-    }
-
     render() {
         return (
             <div className="Editor">
                 <SongList songList={this.songList} state={this.editorState}/>
-                <VerseList verses={this.state.verses} state={this.editorState}/>
+                <VerseList state={this.editorState}/>
                 <VerseOrderListVisible />
-                <SongEditor />
+                <SongEditor state={this.editorState}/>
             </div>
         );
     }

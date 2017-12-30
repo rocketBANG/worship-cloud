@@ -1,4 +1,4 @@
-import { observable, computed, extendObservable, action } from 'mobx';
+import { extendObservable, action } from 'mobx';
 import * as API from '../store/api'
 import { Verse } from './Verse'
 
@@ -25,7 +25,6 @@ export class Song {
         if(!this.isLoaded) {
             this.state = "loading";
             API.fetchVerses(this.name).then((json) => {
-                console.log(json.verses);
                 json.verses.forEach(verse => {
                     var newVerse = new Verse(verse.id, verse.text);
                     this.verses.push(newVerse);

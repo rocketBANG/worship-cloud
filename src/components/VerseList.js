@@ -1,13 +1,12 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
-import { Song } from '../models/Song'
 
 const VerseList = observer(class VerseList extends React.Component {
 
     onVerseClick = (name, index) => {
+        this.props.state.currentVerse = this.props.state.currentSong.verses[index];
         this.setState({
-            currentVerse: name,
             selectedIndex: index
         })
     }
@@ -21,7 +20,8 @@ const VerseList = observer(class VerseList extends React.Component {
     }
     
     render() {
-        const options = (this.props.verses || []).map((verse, index) => ({
+        let currentSong = this.props.state.currentSong || {};
+        const options = (currentSong.verses || []).map((verse, index) => ({
             id: verse.id,
             text: verse.text,
             altText: "NEW VERSE"
