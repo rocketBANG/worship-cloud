@@ -1,28 +1,32 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {List} from './List'
+import { observer } from 'mobx-react'
 
-const SongLibrary = ({ songs, onSongClick }) => {
-    const options = Object.keys(songs).map((element, index) => ({
-        id: songs[element].songName,
-        text: songs[element].title,
-        altText: songs[element].songName
-    }));
-return (
-    <div className="SongLibrary">
-        <div className="ListHeader">Songs:</div>
-        <List onUpdate={onSongClick} options={options}/>
-    </div>
-)}
+const SongLibrary = observer(class SongLibrary extends React.Component {
 
-SongLibrary.propTypes = {
-    songs: PropTypes.objectOf(
-        PropTypes.shape({
-            songName: PropTypes.string.isRequired,
-            title: PropTypes.string
-        }).isRequired
-    ).isRequired,
-    onSongClick: PropTypes.func.isRequired,
-}
+    onSongClick = (name, index) => {
+        this.props.state.currentSong = this.props.songList.songs[index];
+        if (this.props.state.currentSong.state == "unloaded") {
+            this.props.state.currentSong.loadSong().then(() => {
+                this.props.state.currentSong.nextVerse();
+            });    
+        }
+    }
 
-export default SongLibrary
+    render = () => {
+        const options = this.props.songList.songs.map((song, index) => ({
+            id: song.name,
+            text: song.title,
+            altText: song.name
+        }));
+    
+        return ( 
+            <div className="SongLibrary">
+                <div className="ListHeader">Songs:</div>
+                <List onUpdate={this.onSongClick} options={options}/>
+            </div>
+        )
+    }
+});
+
+export default SongLibrary;

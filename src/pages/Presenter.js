@@ -1,40 +1,36 @@
 import React, { Component } from 'react';
-import SongLibraryVisible from '../components/SongLibraryVisible';
+import SongLibrary from '../components/SongLibrary';
 import Display from '../components/Display';
 import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
-import { fetchSongsIfNeeded } from '../store/actions/songActions';
-import { fetchVerses } from '../store/actions'
-import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
+import { observable } from 'mobx';
+import { SongList } from '../models/SongList';
+import { DisplaySong } from '../models/DisplaySong';
 
 
 class Presenter extends Component {
 
     constructor(props) {
-        super(props)
+        super(props) 
+        
+        this.songList = new SongList(DisplaySong);
+        this.songList.loadSongs();
 
-        let dispatch = this.props.dispatch;
+        this.presenterState = observable({
+            currentSong: undefined
+        })
 
-        dispatch(fetchVerses()).then(() => { 
-            dispatch(fetchSongsIfNeeded()).then(() => { 
-            })
-        });
     }
 
     render() {
         return (
             <div className="Presenter">
-                <SongLibraryVisible />
-                <Display />
-                <DisplayControls />
+                <SongLibrary songList={this.songList} state={this.presenterState}/>
+                <Display state={this.presenterState} showTitle={true}/>
+                <DisplayControls state={this.presenterState}/>
             </div>
         );
     }
-
-    static propTypes = {
-        dispatch: PropTypes.func.isRequired
-    }
 }
 
-export default connect()(Presenter);
+export default Presenter;

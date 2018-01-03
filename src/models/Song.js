@@ -31,7 +31,7 @@ export class Song {
     loadSong = () => {
         if(!this.isLoaded) {
             this.state = "loading";
-            API.fetchVerses(this.name).then((json) => {
+            return API.fetchVerses(this.name).then((json) => {
                 json.verses.forEach(verse => {
                     if(verse.type !== "chorus") {
                         var newVerse = new Verse(verse.id, verse.text, verse.type);
@@ -46,6 +46,7 @@ export class Song {
                 this.isLoaded = true;
             })
         }
+        return Promise.resolve();
     }
 
     addToOrder = (verseIndex) => {

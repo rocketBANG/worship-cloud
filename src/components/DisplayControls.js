@@ -1,37 +1,25 @@
 import React from 'react'
-import {setDisplayVerseIndex} from '../store/actions'
-import {connect} from 'react-redux'
+import { observer } from 'mobx-react'
 
-class DisplayControlsInternal extends React.Component {
+const DisplayControls = observer(class DisplayControls extends React.Component {
+
+    onNextVerse = () => {
+        this.props.state.currentSong.nextVerse();
+    }
+
+    onPrevVerse = () => {
+        this.props.state.currentSong.prevVerse();
+    }
 
     render() {
         let{currentVerseIndex, onVerseChange} = this.props;
         return (
             <div className="DisplayControls">
-                <button onClick={() => onVerseChange(currentVerseIndex - 1)}>Previous</button>
-                <button onClick={() => onVerseChange(currentVerseIndex + 1)}>Next</button>
+                <button onClick={this.onPrevVerse}>Previous</button>
+                <button onClick={this.onNextVerse}>Next</button>
             </div>
         );
     }
-}
+});
 
-const mapStateToProps = state => {
-    return {
-        currentVerseIndex: state.display.currentVerseIndex
-    }
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        onVerseChange: verseIndex => {
-            dispatch(setDisplayVerseIndex(verseIndex))
-        }
-    }
-}
-
-const DisplayControls = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(DisplayControlsInternal)
-
-export default DisplayControls
+export default DisplayControls;

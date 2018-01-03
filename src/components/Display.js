@@ -1,10 +1,9 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { observer } from 'mobx-react'
 import '../style/Display.css'
 import 'any-resize-event'
 
-class DisplayInternal extends React.Component {
-
+const Display = observer(class Display extends React.Component {
     ratio = 4.0/3.0;
     wrapper = undefined;
 
@@ -63,40 +62,23 @@ class DisplayInternal extends React.Component {
 
 
     render() {
+
+        let currentSong = this.props.state.currentSong || {};
+
         return (
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
                 <div className="Display" style={{width: this.state.width, height: this.state.height}}>
                     <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
-                        {this.props.showTitle ? this.props.currentSongObject.songName : ""}
+                        {currentSong.verseIndex > 0 ? "" : currentSong.name}
                     </div>
                     <div className="VerseText" style={{fontSize: this.state.verseFontSize}}>
-                        {this.splitLines(this.props.currentVerse.text)}
+                        {this.splitLines((currentSong.currentVerse || {}).text)}
                     </div>
                 </div>
             </div>
         );
     }
-}
+});
 
-function getCurrentVerse(verses, song, verseIndex) {
-    if(song !== undefined) {
-        let verseId = song.order[verseIndex];
-        return verses[verseId];
-    }
-    return {text: ""};
-}
-
-const mapStateToProps = state => {
-    return {
-        currentVerse: getCurrentVerse(state.verses.byId, state.songs.byId[state.display.currentSong], state.display.currentVerseIndex),
-        currentSongObject: state.songs.byId[state.display.currentSong] || {order: []},
-        showTitle: state.display.currentVerseIndex < 1
-    }
-}
-
-const Display = connect(
-    mapStateToProps
-)(DisplayInternal)
-
-export default Display
+export default Display;

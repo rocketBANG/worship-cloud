@@ -3,7 +3,9 @@ import { Song } from './Song'
 import * as API from '../store/api'
 
 export class SongList {
-    constructor(songName, songTitle) {
+    constructor(classType = Song) {
+        this.classType = classType;
+
         extendObservable(this, {
             songs: [],
             addSong: action(this.addSong),
@@ -16,7 +18,7 @@ export class SongList {
     loadSongs = () => {
         API.fetchSongs().then((json) => {
             json.forEach(songJson => {
-                let song = new Song(songJson.name, songJson.title);
+                let song = new this.classType(songJson.name, songJson.title);
                 song.verses = [];
                 song.order = songJson.order;
                 this.songs.push(song);
