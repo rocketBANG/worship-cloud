@@ -74,15 +74,37 @@ export const fetchVerses = (songName) => {
     );
 }
 
-
-export const addVerse = (text, songName, type) => {
+export const addChorus = (text, songName) => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
     let verse = {
         text,
         songName: songName,
-        verseType: type,
+        type: "chorus"
+    }
+
+    console.log(verse);
+
+    return fetch(databaseURL + `/songs/` + songName + `/chorus`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(verse)
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+}
+
+export const addVerse = (text, songName) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    let verse = {
+        text,
+        songName: songName,
+        type: "verse"
     }
 
     return fetch(databaseURL + `/songs/` + songName + `/verses`, {

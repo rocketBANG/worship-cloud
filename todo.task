@@ -1,17 +1,20 @@
 [x] 1 Assign new verses a random ID that is not already taken
 [x] 2 Change the verse editing text when a new song is selected
-[ ] 5 Select the newly added verse in the verse select when added
 [x] 3 Style verse select so it is always visible
 [x] 4 Change the name of verses in select to "NEW VERSE" if there is no text
 [x] 6 Add a List react component for VerseList, SongList and OrderList to use
-[ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
 [x] 8 Fix selection for the VerseOrderList to still have the verse selected on moving up/down
-[ ] 9 Create the presenter and display views
-[ ] 10 Organise files into folders
+[x] 10 Organise files into folders
 [x] 11 Remove verse from order when removing from song
-[ ] 12 Create choruses
 [x] 13 Allow the display to scale to any size
 [x] 14 Add node to database
+[x] 16 Make actions.js more readable
+[x] 17 Move API calls out of actions.js and into another file
+[ ] 12 Create choruses
 [ ] 15 Add chorus type of verse
-[ ] 16 Make actions.js more readable
-[ ] 17 Move API calls out of actions.js and into another file
+[ ] 9 Create the presenter and display views
+[ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
+[ ] 5 Select the newly added verse in the verse select when added
+[ ] 18 Add an ID generator to local and api so that verses can be added without waiting for response
+[ ] 19 Only show the first line as the verse title
+[ ] 20 Ability to select/manupulate multiple verses

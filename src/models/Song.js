@@ -12,17 +12,40 @@ export class Song {
             title: songTitle,
             state: "unloaded", // "loading" / "loaded" / "error" / "unloaded"
             verses: [],
+            chorus: undefined,
             order: [],
             get songName() {
                 return this.title || this.name;
             },
+            completeVerses: computed(this.completeVerses),
             verseOrder: computed(this.verseOrder),
             loadSong: action(this.loadSong),
             addVerse: action(this.addVerse),
             addToOrder: action(this.addToOrder),
             removeFromOrder: action(this.removeFromOrder),
             reorder: action(this.reorder),
+            setChorus: action(this.setChorus),
         });
+    }
+
+    loadSong = () => {
+        if(!this.isLoaded) {
+            this.state = "loading";
+            API.fetchVerses(this.name).then((json) => {
+                json.verses.forEach(verse => {
+                    if(verse.type !== "chorus") {
+                        var newVerse = new Verse(verse.id, verse.text, verse.type);
+                        this.verses.push(newVerse);
+                    } else {
+                        this.chorus = new Verse(verse.id, verse.text, verse.type); 
+                    }
+                });
+
+                this.order = json.order;
+                this.state = "loaded";
+                this.isLoaded = true;
+            })
+        }
     }
 
     addToOrder = (verseIndex) => {
@@ -50,6 +73,17 @@ export class Song {
         });
     }
 
+    completeVerses = () => {
+        let verses = [];
+        verses = verses.concat(this.verses.slice());
+
+        if(this.chorus !== undefined) {
+            verses.push(this.chorus);
+        }
+
+        return verses;
+    }
+
     verseOrder = () => {
         let verseOrder = [];
 
@@ -58,26 +92,13 @@ export class Song {
                 if(verseId !== 'c') {
                     let verseNum = parseInt(verseId, 10);
                     verseOrder.push(this.verses[verseNum]);
+                } else {
+                    verseOrder.push(this.chorus);
                 }
             });
         }
 
         return verseOrder;
-    }
-
-    loadSong = () => {
-        if(!this.isLoaded) {
-            this.state = "loading";
-            API.fetchVerses(this.name).then((json) => {
-                json.verses.forEach(verse => {
-                    var newVerse = new Verse(verse.id, verse.text);
-                    this.verses.push(newVerse);
-                });
-                this.order = json.order;
-                this.state = "loaded";
-                this.isLoaded = true;
-            })
-        }
     }
  
     addVerse = (text) => {
@@ -98,5 +119,30 @@ export class Song {
         API.removeVerse(removedVerse, this.name).then((json) => {
             this.state = "loaded";
         });
+    }
+
+    setChorus = (verseIndex) => {
+        this.state = "uploading";
+        let verseText = this.verses[verseIndex].text;
+
+        API.addChorus(verseText, this.name).then((verse) => {
+            let chorus = new Verse(verse.id, verse.text, verse.type);
+            this.chorus = chorus;
+
+            this.order = this.order.map((orderChar) => {
+                if(orderChar == verseIndex) {
+                    return "c";
+                } else {
+                    return orderChar;
+                }
+            });
+            this.removeVerse(verseIndex);
+
+            API.updateOrder(this.order, this.name).then(() => {
+                this.state = "loaded";
+            });
+
+        });
+
     }
 }

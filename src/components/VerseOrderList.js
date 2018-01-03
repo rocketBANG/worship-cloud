@@ -35,7 +35,7 @@ const VerseList = observer(class VerseList extends React.Component {
         let currentSong = this.props.state.currentSong || {};
         const options = (currentSong.verseOrder || []).map((verse, index) => ({
             id: verse.id,
-            text: verse.text,
+            text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
             altText: "NEW VERSE"
         }));
     

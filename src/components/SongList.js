@@ -25,7 +25,7 @@ const SongList = observer(class SongList extends React.Component {
     }
 
     onSongRemove = () => {
-        this.props.songList.removeSong(this.state.currentSong);
+        this.props.songList.removeSong(this.props.state.currentSong.name);
     }
 
     handleChange = (event) => {

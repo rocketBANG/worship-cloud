@@ -5,7 +5,9 @@ import { List } from './List'
 const VerseList = observer(class VerseList extends React.Component {
 
     onVerseClick = (name, index) => {
-        this.props.state.currentVerse = this.props.state.currentSong.verses[index];
+
+        this.props.state.currentVerse = this.props.state.currentSong.completeVerses[index];
+        
         this.setState({
             selectedIndex: index
         })
@@ -24,12 +26,16 @@ const VerseList = observer(class VerseList extends React.Component {
 
         song.addToOrder(this.state.selectedIndex);
     }
+
+    onSetChorus = () => {
+        this.props.state.currentSong.setChorus(this.state.selectedIndex);
+    }
     
     render() {
         let currentSong = this.props.state.currentSong || {};
-        const options = (currentSong.verses || []).map((verse, index) => ({
+        const options = (currentSong.completeVerses || []).map((verse, index) => ({
             id: verse.id,
-            text: verse.text,
+            text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
             altText: "NEW VERSE"
         }));
     
@@ -41,6 +47,7 @@ const VerseList = observer(class VerseList extends React.Component {
                     <button onClick={this.onVerseAdd} >Add Verse</button>
                     <button onClick={this.onVerseRemove}>Remove Verse</button>
                     <button onClick={this.onAddToOrder}>Add to Order</button>
+                    <button onClick={this.onSetChorus}>Set as chorus</button>
                 </div>
             </div>
         )    
