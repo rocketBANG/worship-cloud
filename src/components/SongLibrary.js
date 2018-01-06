@@ -6,7 +6,7 @@ const SongLibrary = observer(class SongLibrary extends React.Component {
 
     onSongClick = (name, index) => {
         this.props.state.currentSong = this.props.songList.songs[index];
-        if (this.props.state.currentSong.state == "unloaded") {
+        if (this.props.state.currentSong.state === "unloaded") {
             this.props.state.currentSong.loadSong().then(() => {
                 this.props.state.currentSong.nextVerse();
             });    

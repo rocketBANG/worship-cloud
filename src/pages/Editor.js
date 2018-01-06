@@ -4,12 +4,10 @@ import VerseOrderList from '../components/VerseOrderList';
 import SongEditor from '../components/SongEditor';
 import SongList from '../components/SongList';
 import '../style/Editor.css';
-import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
 import { SongList as SongListModel } from '../models/SongList'
 import { observable } from 'mobx';
 
-class Editor extends Component {
+export default class Editor extends Component {
 
     constructor(props) {
         super(props) 
@@ -36,10 +34,4 @@ class Editor extends Component {
             </div>
         );
     }
-
-    static propTypes = {
-        dispatch: PropTypes.func.isRequired
-    }
 }
-
-export default connect()(Editor);

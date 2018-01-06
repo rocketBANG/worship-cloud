@@ -1,6 +1,4 @@
-import { extendObservable, action, computed } from 'mobx';
-import * as API from '../store/api'
-import { Verse } from './Verse'
+import { extendObservable, action } from 'mobx';
 import { Song } from './Song'
 
 export class DisplaySong extends Song {

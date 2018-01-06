@@ -1,4 +1,4 @@
-import { extendObservable, action, computed, observable } from 'mobx';
+import { extendObservable, action, computed } from 'mobx';
 import * as API from '../store/api'
 import { Verse } from './Verse'
 

@@ -12,7 +12,6 @@ const DisplayControls = observer(class DisplayControls extends React.Component {
     }
 
     render() {
-        let{currentVerseIndex, onVerseChange} = this.props;
         return (
             <div className="DisplayControls">
                 <button onClick={this.onPrevVerse}>Previous</button>
