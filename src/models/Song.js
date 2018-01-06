@@ -120,6 +120,7 @@ export class Song {
         API.removeVerse(removedVerse, this.name).then((json) => {
             this.state = "loaded";
         });
+        API.updateOrder(this.order, this.name);
     }
 
     setChorus = (verseIndex) => {

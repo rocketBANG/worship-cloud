@@ -64,6 +64,9 @@ const Display = observer(class Display extends React.Component {
     render() {
 
         let currentSong = this.props.state.currentSong || {};
+        let currentVerse = currentSong.currentVerse || {};
+
+        const words = currentVerse.type === "chorus" ? <i>{this.splitLines(currentVerse.text)}</i> : this.splitLines(currentVerse.text)
 
         return (
             <div className="DisplayWrapper"
@@ -73,7 +76,7 @@ const Display = observer(class Display extends React.Component {
                         {currentSong.verseIndex > 0 ? "" : currentSong.name}
                     </div>
                     <div className="VerseText" style={{fontSize: this.state.verseFontSize}}>
-                        {this.splitLines((currentSong.currentVerse || {}).text)}
+                        {words}
                     </div>
                 </div>
             </div>
