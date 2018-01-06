@@ -10,6 +10,7 @@ export class Verse {
             state: "loaded", // "loading" / "loaded" / "error" / "unloaded",
             updateText: action(this.updateText),
             title: computed(this.getTitle),
+            setChorus: action(this.setChorus),
         });
     }
 
@@ -24,6 +25,13 @@ export class Verse {
 
     getTitle = () => {
         return this.text.split("\n")[0];
+    }
+
+    setChorus = () => {
+        this.state = "uploading";
+        let type = this.type === "verse" ? "chorus" : "verse";
+        this.type = type;
+        return API.updateVerseType(this.id, type).then(() => this.state = "loaded");
     }
 
 }

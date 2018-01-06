@@ -9,13 +9,14 @@ const SongEditor = observer(class SongEditor extends React.Component {
     render() {
         const disabled = this.props.state.currentVerse === undefined;
         const verse = this.props.state.currentVerse || {};
+        const song = this.props.state.currentSong || {};
         
         return (
             <div className="SongEditor EditorContainer">
                 <textarea disabled={disabled} value={verse.text} onChange={this.onEdit} />
                 <br/>
                 <div className="SaveProgress">
-                    {verse.state}
+                    {song.state} - {verse.state}
                 </div>
             </div>
         )    

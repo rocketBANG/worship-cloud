@@ -1,4 +1,4 @@
-import { extendObservable, action, computed } from 'mobx';
+import { extendObservable, action, computed, observable } from 'mobx';
 import * as API from '../store/api'
 import { Verse } from './Verse'
 
@@ -7,13 +7,14 @@ export class Song {
     isLoaded = false;
 
     constructor(songName, songTitle) {
+
         extendObservable(this, {
             name: songName,
             title: songTitle,
             state: "unloaded", // "loading" / "loaded" / "error" / "unloaded"
-            verses: [],
             chorus: undefined,
             order: [],
+            verses: new Map(),
             get songName() {
                 return this.title || this.name;
             },
@@ -33,12 +34,8 @@ export class Song {
             this.state = "loading";
             return API.fetchVerses(this.name).then((json) => {
                 json.verses.forEach(verse => {
-                    if(verse.type !== "chorus") {
-                        var newVerse = new Verse(verse.id, verse.text, verse.type);
-                        this.verses.push(newVerse);
-                    } else {
-                        this.chorus = new Verse(verse.id, verse.text, verse.type); 
-                    }
+                    var newVerse = new Verse(verse.id, verse.text, verse.type);
+                    this.verses.set(verse.id, newVerse);
                 });
 
                 this.order = json.order;
@@ -49,9 +46,9 @@ export class Song {
         return Promise.resolve();
     }
 
-    addToOrder = (verseIndex) => {
+    addToOrder = (verseId) => {
         this.state = "uploading";
-        this.order.push(verseIndex);
+        this.order.push(verseId);
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
@@ -66,22 +63,16 @@ export class Song {
         });
     }
 
-    removeFromOrder = (verseIndex) => {
+    removeFromOrder = (index) => {
         this.state = "uploading";
-        this.order.splice(verseIndex, 1);
+        this.order.splice(index, 1);
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
     }
 
     completeVerses = () => {
-        let verses = [];
-        verses = verses.concat(this.verses.slice());
-
-        if(this.chorus !== undefined) {
-            verses.push(this.chorus);
-        }
-
+        let verses = this.verses.values();
         return verses;
     }
 
@@ -90,12 +81,7 @@ export class Song {
 
         if(this.state !== "loading" && this.state !== "unloaded") {
             this.order.forEach((verseId) => {
-                if(verseId !== 'c') {
-                    let verseNum = parseInt(verseId, 10);
-                    verseOrder.push(this.verses[verseNum]);
-                } else {
-                    verseOrder.push(this.chorus);
-                }
+                verseOrder.push(this.verses.get(verseId));
             });
         }
 
@@ -105,46 +91,27 @@ export class Song {
     addVerse = (text) => {
         this.state = "uploading";
         API.addVerse(text, this.name).then((verse) => {
-            this.verses.push(new Verse(verse.id, verse.text));
+            this.verses.set(verse.id, new Verse(verse.id, verse.text));
             this.state = "loaded";
         });
     }
 
-    removeVerse = (index) => {
+    removeVerse = (verseId) => {
         this.state = "uploading";
-        var removedVerse = this.verses[index];
-        this.verses.splice(index, 1);
-        this.order = this.order.filter((verse, index) => {
-            return verse.id !== removedVerse.id;
-        })
-        API.removeVerse(removedVerse, this.name).then((json) => {
+        this.order = this.order.filter((orderId, index) => {
+            return orderId !== verseId;
+        });
+        this.verses.delete(verseId);
+        API.removeVerse(verseId, this.name).then((json) => {
             this.state = "loaded";
         });
         API.updateOrder(this.order, this.name);
     }
 
-    setChorus = (verseIndex) => {
+    setChorus = (verseId) => {
         this.state = "uploading";
-        let verseText = this.verses[verseIndex].text;
-
-        API.addChorus(verseText, this.name).then((verse) => {
-            let chorus = new Verse(verse.id, verse.text, verse.type);
-            this.chorus = chorus;
-
-            this.order = this.order.map((orderChar) => {
-                if(orderChar == verseIndex) {
-                    return "c";
-                } else {
-                    return orderChar;
-                }
-            });
-            this.removeVerse(verseIndex);
-
-            API.updateOrder(this.order, this.name).then(() => {
-                this.state = "loaded";
-            });
-
-        });
+        let selectedVerse = this.verses.get(verseId);
+        selectedVerse.setChorus().then(() => this.state = "loaded");
 
     }
 }

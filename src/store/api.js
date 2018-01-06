@@ -118,11 +118,11 @@ export const addVerse = (text, songName) => {
     )
 }
 
-export const removeVerse = (verse, songName) => {
+export const removeVerse = (verseId, songName) => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return fetch(databaseURL + `/verses/` + verse.id, {
+    return fetch(databaseURL + `/verses/` + verseId, {
         method: 'DELETE',
         headers: headers
     }).then(
@@ -139,6 +139,25 @@ export const updateVerse = (text, verseId) => {
 
     let updateData = {
         text: text
+    };
+
+    return fetch(databaseURL + `/verses/` + verseId, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(updateData)
+    }).then(
+        response => response.json(),
+        error => console.log('An error occured.', error)
+    )
+}
+
+export const updateVerseType = (verseId, type) => {
+    let headers = new Headers();
+    // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+    headers.append('Content-Type', 'application/json');
+
+    let updateData = {
+        type: type
     };
 
     return fetch(databaseURL + `/verses/` + verseId, {

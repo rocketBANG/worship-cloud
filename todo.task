@@ -21,4 +21,4 @@
 [ ] 21 Ability to remove choruses
 [ ] 22 Error checking for multiple choruses
 [ ] 23 Create presenter view
-[ ] 24 Change order to use verseId instead of index
+[x] 24 Change order to use verseId instead of index
