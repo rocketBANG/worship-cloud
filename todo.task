@@ -19,6 +19,8 @@
 [x] 19 Only show the first line as the verse title
 [ ] 20 Ability to select/manupulate multiple verses
 [ ] 21 Ability to remove choruses
-[ ] 22 Error checking for multiple choruses
+[-] 22 Error checking for multiple choruses
 [ ] 23 Create presenter view
 [x] 24 Change order to use verseId instead of index
+[ ] 26 Automatically resize display view on page load
+[ ] 27 Add context/right click menus
