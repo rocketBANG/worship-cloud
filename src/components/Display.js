@@ -63,20 +63,15 @@ const Display = observer(class Display extends React.Component {
         this.wrapper.removeEventListener("resize", this.updateSize);
     }
 
-
     render() {
-
-        let currentSong = this.props.state.currentSong || {};
-        let currentVerse = currentSong.currentVerse || {};
-
-        const words = currentVerse.type === "chorus" ? <i>{this.splitLines(currentVerse.text)}</i> : this.splitLines(currentVerse.text)
+        const words = this.props.isItallic ? <i>{this.splitLines(this.props.words)}</i> : this.splitLines(this.props.words);
 
         return (
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
                 <div className="Display" style={{width: this.state.width, height: this.state.height}}>
                     <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
-                        {currentSong.verseIndex > 0 ? "" : currentSong.name}
+                        {this.props.title}
                     </div>
                     <div className="VerseText" style={{fontSize: this.state.verseFontSize}}>
                         {words}
@@ -87,10 +82,9 @@ const Display = observer(class Display extends React.Component {
     }
     
     static propTypes = {
-        state: PropTypes.shape({
-            currentSong: PropTypes.instanceOf(Song)
-        }).isRequired,
-        showTite: PropTypes.bool
+        words: PropTypes.string,
+        title: PropTypes.string,
+        isItallic: PropTypes.bool
     };
     
     
