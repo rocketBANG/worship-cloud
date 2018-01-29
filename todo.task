@@ -4,6 +4,7 @@ Backlog:
     [ ] 20 Ability to select/manupulate multiple verses
     [ ] 27 Add context/right click menus
     [ ] 32 Add checking for pending changes on tab close
+    [ ] 33 Authorization
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     [ ] 28 Keyboard shortcuts
     [ ] 5 Select the newly added verse in the verse select when added

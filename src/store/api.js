@@ -1,4 +1,4 @@
-const databaseURL = "http://localhost:3500" // "http://128.199.145.41:5000"
+const databaseURL = process.env.REACT_APP_API_URL;
 
 export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     let song = {
@@ -56,6 +56,8 @@ export const removeSong = (songName) => {
 
 export const fetchSongs = () => {
     let headers = new Headers();
+    
+    console.log(process.env);
 
     return fetch(databaseURL + `/songs`, {
         method: 'GET',
