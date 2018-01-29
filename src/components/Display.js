@@ -30,13 +30,15 @@ const Display = observer(class Display extends React.Component {
         }
     }
 
-    updateSize() {
+    updateSize(fontSize) {
+        fontSize = fontSize || this.props.fontSize || 50;
+
         if(this.props.isFullscreen) {    
             this.setState({
                 width: '100%',
                 height: '100%',
-                titleFontSize: window.innerWidth * 0.08 + "px",
-                verseFontSize: window.innerWidth * 0.05 + "px",    
+                titleFontSize: window.innerWidth * fontSize * 0.0016 + "px",
+                verseFontSize: window.innerWidth * fontSize * 0.001 + "px",    
             });
             return;
         }
@@ -50,26 +52,29 @@ const Display = observer(class Display extends React.Component {
             this.setState({
                 width: maxWidth,
                 height: "100%",
-                titleFontSize: maxWidth * 0.08 + "px",
-                verseFontSize: maxWidth * 0.05 + "px",    
+                titleFontSize: maxWidth * fontSize * 0.0016 + "px",
+                verseFontSize: maxWidth * fontSize * 0.001 + "px",    
             })
         } else {
             this.setState({
                 height: maxHeight,
                 width: "100%",
-                titleFontSize: maxHeight * this.ratio * 0.08 + "px",
-                verseFontSize: maxHeight * this.ratio * 0.05 + "px",    
+                titleFontSize: maxHeight * this.ratio * fontSize * 0.0016 + "px",
+                verseFontSize: maxHeight * this.ratio * fontSize * 0.001 + "px",    
             })
         }
     }
 
     componentDidMount() {
         this.updateSize();
-        this.wrapper.addEventListener('onresize', this.updateSize)
+        this.wrapper.addEventListener('onresize', () => this.updateSize())
     }
 
-    componentWillUnmount() {
-        this.wrapper.removeEventListener("onresize", this.updateSize);
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.fontSize === this.props.fontSize) {
+            return;
+        }
+        this.updateSize(nextProps.fontSize);
     }
 
     render() {
@@ -85,6 +90,9 @@ const Display = observer(class Display extends React.Component {
                     <div className="VerseText" style={{fontSize: this.state.verseFontSize}}>
                         {words}
                     </div>
+                </div>
+                <div className='displayChildren'>
+                    {this.props.children}
                 </div>
             </div>
         );

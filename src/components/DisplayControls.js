@@ -16,6 +16,8 @@ const DisplayControls = observer(class DisplayControls extends React.Component {
             <div className="DisplayControls">
                 <button onClick={this.onPrevVerse} disabled={this.props.state.currentSong === undefined}>Previous</button>
                 <button onClick={this.onNextVerse} disabled={this.props.state.currentSong === undefined}>Next</button>
+                <button onClick={() => this.props.fontChange(false)}>Font-</button>
+                <button onClick={() => this.props.fontChange(true)}>Font+</button>
             </div>
         );
     }

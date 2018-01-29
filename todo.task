@@ -1,9 +1,9 @@
 Doing: 
-    [ ] 30 Font size controls
 
 Backlog:
     [ ] 20 Ability to select/manupulate multiple verses
     [ ] 27 Add context/right click menus
+    [ ] 32 Add checking for pending changes on tab close
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     [ ] 28 Keyboard shortcuts
     [ ] 5 Select the newly added verse in the verse select when added
@@ -12,6 +12,7 @@ Backlog:
     [ ] 31 Black and white screens
 
 Done: 
+    [x] 30 Font size controls
     [x] 26 Automatically resize display view on page load
     [x] 29 Fullscreen for viewer
     [x] 1 Assign new verses a random ID that is not already taken
