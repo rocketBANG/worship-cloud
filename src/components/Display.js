@@ -31,6 +31,16 @@ const Display = observer(class Display extends React.Component {
     }
 
     updateSize() {
+        if(this.props.isFullscreen) {    
+            this.setState({
+                width: '100%',
+                height: '100%',
+                titleFontSize: window.innerWidth * 0.08 + "px",
+                verseFontSize: window.innerWidth * 0.05 + "px",    
+            });
+            return;
+        }
+
         if(this.wrapper === undefined) {
             return
         }
@@ -58,7 +68,7 @@ const Display = observer(class Display extends React.Component {
     }
 
     componentWillUnmount() {
-        this.wrapper.removeEventListener("resize", this.updateSize);
+        this.wrapper.removeEventListener("onresize", this.updateSize);
     }
 
     render() {

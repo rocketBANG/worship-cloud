@@ -1,5 +1,4 @@
 Doing: 
-    [ ] 29 Fullscreen for viewer
     [ ] 26 Automatically resize display view on page load
     [ ] 30 Font size controls
 
@@ -11,8 +10,10 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     [ ] 18 Add an ID generator to local and api so that verses can be added without waiting for response
     [ ] 21 Ability to remove choruses
+    [ ] 31 Black and white screens
 
 Done: 
+    [x] 29 Fullscreen for viewer
     [x] 1 Assign new verses a random ID that is not already taken
     [x] 2 Change the verse editing text when a new song is selected
     [x] 3 Style verse select so it is always visible

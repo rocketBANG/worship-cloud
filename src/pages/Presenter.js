@@ -3,6 +3,7 @@ import SongLibrary from '../components/SongLibrary';
 import Display from '../components/Display';
 import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
+import '../style/Display.css'
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { SongList } from '../models/SongList';
@@ -37,7 +38,7 @@ const Presenter = observer(class Presenter extends Component {
         return (
             <div className="Presenter">
                 <SongLibrary songList={this.songList} state={this.presenterState}/>
-                <Display title={currentSong.verseIndex > 0 ? "" : currentSong.name} isItallic={currentVerse.type === 'chorus'} words={currentVerse.text}/>
+                <Display id='PresenterDisplay' title={currentSong.verseIndex > 0 ? "" : currentSong.name} isItallic={currentVerse.type === 'chorus'} words={currentVerse.text}/>
                 <DisplayControls state={this.presenterState}/>
             </div>
         );

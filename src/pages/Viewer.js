@@ -1,18 +1,51 @@
 import React, { Component } from 'react';
 import Display from '../components/Display';
-import '../style/Presenter.css'
+import '../style/viewer.css'
+import '../style/Display.css'
 
 class Viewer extends Component {
     state = {
         words: undefined, 
         title: undefined,
-        isItallic: undefined
+        isItallic: undefined,
+        isFullscreen: false
     }
 
     constructor(props) {
         super(props);
 
+        document.addEventListener("mozfullscreenchange", () => {
+            if(!document.mozFullScreen) {
+                this.setState({isFullscreen: false});
+            }
+        });
+
+        document.addEventListener("webkitfullscreenchange", () => {
+            if(!document.webkitIsFullScreen) {
+                this.setState({isFullscreen: false});
+            }
+        });
+
+        document.addEventListener("fullscreenchange", () => {
+            if(!document.webkitIsFullScreen) {
+                this.setState({isFullscreen: false});
+            }
+        });
+
         window.addEventListener('storage', this.onUpdateLocalStorage);
+    }
+
+    onFullscreenClick = () => {
+        // go full-screen
+        if (this.viewer.requestFullscreen) {
+            this.viewer.requestFullscreen();
+        } else if (this.viewer.mozRequestFullScreen) {
+            this.viewer.mozRequestFullScreen();
+        } else if (this.viewer.webkitRequestFullScreen) {
+            this.viewer.webkitRequestFullScreen(this.viewer.ALLOW_KEYBOARD_INPUT);
+        }
+
+        this.setState({isFullscreen: true});
     }
 
     onUpdateLocalStorage = (event) => {
@@ -38,11 +71,12 @@ class Viewer extends Component {
     }
 
     render() {
-        return (            
-            <div className="Presenter">
-                <div className="Viewer">
-                    <Display title={this.state.title} isItallic={this.state.isItallic === 'true'} words={this.state.words}/>
-                </div>
+        return (
+            <div ref={viewer => this.viewer = viewer} className="Viewer">
+                <Display title={this.state.title} isItallic={this.state.isItallic === 'true'} words={this.state.words} isFullscreen={this.state.isFullscreen}/>
+                { !this.state.isFullscreen && <div className='viewerControls'>
+                    <button onClick={this.onFullscreenClick}>Go fullscreen</button>
+                </div> }
             </div>
         );
     }
