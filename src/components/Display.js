@@ -64,6 +64,7 @@ const Display = observer(class Display extends React.Component {
     }
 
     componentDidMount() {
+        this.updateSize();
         this.wrapper.addEventListener('onresize', this.updateSize)
     }
 

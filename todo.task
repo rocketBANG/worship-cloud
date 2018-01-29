@@ -1,5 +1,4 @@
 Doing: 
-    [ ] 26 Automatically resize display view on page load
     [ ] 30 Font size controls
 
 Backlog:
@@ -13,6 +12,7 @@ Backlog:
     [ ] 31 Black and white screens
 
 Done: 
+    [x] 26 Automatically resize display view on page load
     [x] 29 Fullscreen for viewer
     [x] 1 Assign new verses a random ID that is not already taken
     [x] 2 Change the verse editing text when a new song is selected
