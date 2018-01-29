@@ -26,8 +26,7 @@ export class SongList {
 
     addSong = (song) => {
         this.state = "pending";
-        this.songs.push(song);
-        API.uploadSong(song.name).then(() => this.state = "done");
+        API.uploadSong(song.name).then(body => { this.state = "done"; this.songs.push(song); }, error => {this.state = "done"});
     }
 
     removeSong = (songName) => {

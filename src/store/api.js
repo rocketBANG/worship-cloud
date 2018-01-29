@@ -16,7 +16,16 @@ export const uploadSong = (songName, songVerses = [], songOrder = []) => {
         headers: headers,
         body: JSON.stringify(song)
     }).then(
-        response => response.json(),
+        response => {
+            console.log(response);
+            if(response.status === 200) {
+                return response.json();
+            } else {
+                console.log('Could not add song. Error code: ' + response.status);
+                
+                return Promise.reject('Could not add song');
+            }
+        },
 
         error => console.log('An error occured.', error)
     )/*.then(json => {
