@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import SongLibrary from '../components/SongLibrary';
 import Display from '../components/Display';
-import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
-import { observable } from 'mobx';
-import { SongList } from '../models/SongList';
-import { DisplaySong } from '../models/DisplaySong';
 
 class Viewer extends Component {
     state = {
@@ -21,15 +16,15 @@ class Viewer extends Component {
     }
 
     onUpdateLocalStorage = (event) => {
-        if (event.key == 'display-setWords') {
+        if (event.key === 'display-setWords') {
             this.setState({words: localStorage.getItem('display-setWords')});
         }
 
-        if (event.key == 'display-setTitle') {
+        if (event.key === 'display-setTitle') {
             this.setState({title: localStorage.getItem('display-setTitle')});
         }
 
-        if (event.key == 'display-setIsItallic') {
+        if (event.key === 'display-setIsItallic') {
             this.setState({isItallic: localStorage.getItem('display-setIsItallic')});
         }
 

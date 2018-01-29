@@ -5,6 +5,11 @@ import { observer } from 'mobx-react'
 const SongLibrary = observer(class SongLibrary extends React.Component {
 
     onSongClick = (name, index) => {
+        if(index < 0) {
+            this.props.state.currentSong = undefined;
+            return;
+        }
+
         this.props.state.currentSong = this.props.songList.songs[index];
         if (this.props.state.currentSong.state === "unloaded") {
             this.props.state.currentSong.loadSong().then(() => {

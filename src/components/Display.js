@@ -3,8 +3,6 @@ import { observer } from 'mobx-react'
 import '../style/Display.css'
 import 'any-resize-event'
 import PropTypes from 'prop-types'
-import { Verse } from '../models/Verse';
-import { Song } from '../models/Song';
 
 const Display = observer(class Display extends React.Component {
     ratio = 4.0/3.0;
