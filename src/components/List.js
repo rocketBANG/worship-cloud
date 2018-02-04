@@ -1,12 +1,28 @@
 import React from 'react'
+import { PropTypes } from 'prop-types';
 
-export class List extends React.Component {
+class List extends React.Component {
 
     keySeperator = "_-";
 
     removeUnique(string) {
         let endIndex = string.indexOf(this.keySeperator);
         return string.substring(0, endIndex);
+    }
+
+    returnSelected = () => {
+        let options = this.select.options;
+        let selectedValues = [];
+        let selectedIndexes = [];
+        
+        for(let i = 0; i < options.length; i++) {
+            if(options[i].selected) {
+                selectedValues.push(this.removeUnique(options[i].value));
+                selectedIndexes.push(i);
+            }
+        }
+
+        this.props.onUpdate(selectedValues, selectedIndexes)
     }
 
     render() {
@@ -32,8 +48,8 @@ export class List extends React.Component {
         }
     
         return (
-            <select value={selected} className="List" multiple ref={(node) => select = node} 
-            onChange={() => this.props.onUpdate(this.removeUnique(select.value), select.selectedIndex)}
+            <select value={selected} className="List" multiple ref={(node) => this.select = node} 
+            onChange={this.returnSelected}
             // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
             >
                 {options}
@@ -41,3 +57,15 @@ export class List extends React.Component {
         )
     }
 }
+
+List.propTypes = {
+    selectedIndex: PropTypes.number,
+    onUpdate: PropTypes.func,
+    options: PropTypes.arrayOf(PropTypes.shape({
+        altText: PropTypes.string.isRequired,
+        text: PropTypes.string,
+        id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
+    })).isRequired
+};
+  
+export { List }

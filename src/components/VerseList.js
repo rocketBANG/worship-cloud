@@ -4,32 +4,32 @@ import { List } from './List'
 
 const VerseList = observer(class VerseList extends React.Component {
 
-    onVerseClick = (name, index) => {
+    onVerseClick = (names, indexes) => {
 
-        this.props.state.currentVerse = this.props.state.currentSong.completeVerses[index];
+        this.props.state.currentVerse = this.props.state.currentSong.completeVerses[indexes[0]];
         
         this.setState({
-            selectedId: name
+            selectedId: names[0]
         })
-    }
+    };
 
     onVerseAdd = () => {
         this.props.state.currentSong.addVerse("");
-    }
+    };
 
     onVerseRemove = () => {
         this.props.state.currentSong.removeVerse(this.state.selectedId);
-    }
+    };
 
     onAddToOrder = () => {
         let song = this.props.state.currentSong;
 
         song.addToOrder(this.state.selectedId);
-    }
+    };
 
     onSetChorus = () => {
         this.props.state.currentSong.setChorus(this.state.selectedId);
-    }
+    };
     
     render() {
         let currentSong = this.props.state.currentSong || {};
@@ -52,6 +52,6 @@ const VerseList = observer(class VerseList extends React.Component {
             </div>
         )    
     }
-})
+});
 
 export default VerseList;

@@ -6,30 +6,30 @@ const VerseList = observer(class VerseList extends React.Component {
 
     state = {
         index: -1
-    }
+    };
 
-    onVerseClick = (name, index) => {
-        this.props.state.currentVerse = this.props.state.currentSong.verseOrder[index];
+    onVerseClick = (names, indexes) => {
+        this.props.state.currentVerse = this.props.state.currentSong.verseOrder[indexes[0]];
         this.setState({
-            index: index
+            index: indexes[0]
         })
-    }
+    };
 
     onOrderRemove = () => {
         this.props.state.currentSong.removeFromOrder(this.state.index)
-    }
+    };
 
     onOrderUp = () => {
         let index = this.state.index;
         this.props.state.currentSong.reorder(index, index - 1);
         this.setState({index: index - 1});
-    }
+    };
 
     onOrderDown = () => {
         let index = this.state.index;
         this.props.state.currentSong.reorder(index, index + 1);
         this.setState({index: index + 1});
-    }
+    };
     
     render() {
         let currentSong = this.props.state.currentSong || {};
@@ -51,6 +51,6 @@ const VerseList = observer(class VerseList extends React.Component {
             </div>
         )    
     }
-})
+});
 
 export default VerseList;

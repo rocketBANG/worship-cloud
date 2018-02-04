@@ -17,7 +17,7 @@ export class DisplaySong extends Song {
     nextVerse = () => {
         this.verseIndex++;
         this.currentVerse = this.verseOrder[this.verseIndex];
-    }
+    };
 
     prevVerse = () => {
         this.verseIndex--;

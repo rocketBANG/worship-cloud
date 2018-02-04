@@ -10,7 +10,7 @@ class Viewer extends Component {
         isItallic: undefined,
         isFullscreen: false,
         fontSize: 0
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -47,7 +47,7 @@ class Viewer extends Component {
         }
 
         this.setState({isFullscreen: true});
-    }
+    };
 
     onUpdateLocalStorage = (event) => {
         if (event.key === 'display-setWords') {
@@ -73,7 +73,7 @@ class Viewer extends Component {
         // if (event.key == 'display-setFontSize') {
         //     document.getElementById("songWords").style.fontSize = localStorage.getItem('display-setFontSize') + "vw";
         // }
-    }
+    };
 
     render() {
         return (

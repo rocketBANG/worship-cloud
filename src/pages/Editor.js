@@ -4,13 +4,13 @@ import VerseOrderList from '../components/VerseOrderList';
 import SongEditor from '../components/SongEditor';
 import SongList from '../components/SongList';
 import '../style/Editor.css';
-import { SongList as SongListModel } from '../models/SongList'
+import { SongListModel } from '../models/SongListModel'
 import { observable } from 'mobx';
 
 export default class Editor extends Component {
 
     constructor(props) {
-        super(props) 
+        super(props);
         
         this.songList = new SongListModel();
         this.songList.loadSongs();

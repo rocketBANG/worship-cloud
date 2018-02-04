@@ -8,31 +8,42 @@ const SongList = observer(class SongList extends React.Component {
         super(props);
         this.state = {
             songText: '',
+            selectedSongNames: []
         };
-    
       }    
 
-    onSongClick = (name, index) => {
-        this.props.state.currentSong = this.props.songList.songs[index];
+    onSongClick = (names, indexes) => {
+        if(names.length < 1) {
+            this.props.state.currentSong = undefined;
+            this.setState({
+                selectedSongNames: []
+            })    
+            return;
+        }
+        
+        this.props.state.currentSong = this.props.songList.songs[indexes[0]];
         this.props.state.currentSong.loadSong();
-        // this.setState({
-        //     currentSong: name
-        // })
-    }
+        this.setState({
+            selectedSongNames: names
+        })
+
+    };
 
     onSongAdd = () => {
         this.props.songList.addSong(new Song(this.state.songText));
-    }
+    };
 
     onSongRemove = () => {
-        this.props.songList.removeSong(this.props.state.currentSong.name);
-    }
+        this.state.selectedSongNames.forEach(songName => {
+            this.props.songList.removeSong(songName);
+        })
+    };
 
     handleChange = (event) => {
         this.setState({
             songText: event.target.value
         })
-    }
+    };
     
     render() {
         const options = this.props.songList.songs.map((song, index) => ({
@@ -54,6 +65,6 @@ const SongList = observer(class SongList extends React.Component {
             </div>
         )    
     }
-})
+});
 
 export default SongList;

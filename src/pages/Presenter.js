@@ -6,7 +6,7 @@ import '../style/Presenter.css'
 import '../style/Display.css'
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { SongList } from '../models/SongList';
+import { SongListModel } from '../models/SongListModel';
 import { DisplaySong } from '../models/DisplaySong';
 
 
@@ -14,14 +14,14 @@ const Presenter = observer(class Presenter extends Component {
 
     state = {
         fontSize: 50
-    }
+    };
 
     fontIncrement = 3;
 
     constructor(props) {
-        super(props) 
+        super(props);
         
-        this.songList = new SongList(DisplaySong);
+        this.songList = new SongListModel(DisplaySong);
         this.songList.loadSongs();
 
         this.currentSong = undefined;
@@ -40,7 +40,7 @@ const Presenter = observer(class Presenter extends Component {
         } else {
             this.setState({fontSize: this.state.fontSize - this.fontIncrement});
         }
-    }
+    };
 
     render() {
         let currentSong = this.presenterState.currentSong || {};

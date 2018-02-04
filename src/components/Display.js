@@ -15,7 +15,7 @@ const Display = observer(class Display extends React.Component {
             height: 300,
             titleFontSize: "40px",
             verseFontSize: "20px",
-        }
+        };
 
         this.updateSize = this.updateSize.bind(this);
     }

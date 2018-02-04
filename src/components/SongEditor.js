@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 const SongEditor = observer(class SongEditor extends React.Component {
     onEdit = (event) => {
         this.props.state.currentVerse.updateText(event.target.value);
-    }
+    };
 
     render() {
         const disabled = this.props.state.currentVerse === undefined;
@@ -21,6 +21,6 @@ const SongEditor = observer(class SongEditor extends React.Component {
             </div>
         )    
     }
-})
+});
 
 export default SongEditor;

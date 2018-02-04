@@ -21,11 +21,11 @@ export class Verse {
         API.updateVerse(text, this.id).then((verse) => {
             this.state = "loaded";
         });
-    }
+    };
 
     getTitle = () => {
         return this.text.split("\n")[0];
-    }
+    };
 
     setChorus = () => {
         this.state = "uploading";

@@ -5,11 +5,11 @@ const DisplayControls = observer(class DisplayControls extends React.Component {
 
     onNextVerse = () => {
         this.props.state.currentSong.nextVerse();
-    }
+    };
 
     onPrevVerse = () => {
         this.props.state.currentSong.prevVerse();
-    }
+    };
 
     render() {
         return (

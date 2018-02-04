@@ -44,7 +44,7 @@ export class Song {
             })
         }
         return Promise.resolve();
-    }
+    };
 
     addToOrder = (verseId) => {
         this.state = "uploading";
@@ -52,7 +52,7 @@ export class Song {
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
-    }
+    };
 
     reorder = (from, to) => {
         this.state = "uploading";
@@ -61,7 +61,7 @@ export class Song {
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
-    }
+    };
 
     removeFromOrder = (index) => {
         this.state = "uploading";
@@ -69,12 +69,12 @@ export class Song {
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
-    }
+    };
 
     completeVerses = () => {
         let verses = this.verses.values();
         return verses;
-    }
+    };
 
     verseOrder = () => {
         let verseOrder = [];
@@ -86,7 +86,7 @@ export class Song {
         }
 
         return verseOrder;
-    }
+    };
  
     addVerse = (text) => {
         this.state = "uploading";
@@ -94,7 +94,7 @@ export class Song {
             this.verses.set(verse.id, new Verse(verse.id, verse.text));
             this.state = "loaded";
         });
-    }
+    };
 
     removeVerse = (verseId) => {
         this.state = "uploading";
@@ -106,7 +106,7 @@ export class Song {
             this.state = "loaded";
         });
         API.updateOrder(this.order, this.name);
-    }
+    };
 
     setChorus = (verseId) => {
         this.state = "uploading";
