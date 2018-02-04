@@ -1,11 +1,15 @@
+import openSocket from 'socket.io-client';
+
 const databaseURL = process.env.REACT_APP_API_URL;
+const socket = openSocket('http://localhost:8000');
+socket.emit('subscribeEvent', 1000);
 
 export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     let song = {
         name: songName,
         verses: songVerses,
         order: songOrder
-    }
+    };
 
     let headers = new Headers();
     // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
@@ -28,7 +32,7 @@ export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     )/*.then(json => {
 
     });*/
-}
+};
 
 export const updateSong = (songName, updateData) => {
     let headers = new Headers();
@@ -43,7 +47,7 @@ export const updateSong = (songName, updateData) => {
         response => response.json(),
         error => console.log('An error occured.', error)
     )
-}
+};
 
 export const removeSong = (songName) => {
     let headers = new Headers();
@@ -52,7 +56,7 @@ export const removeSong = (songName) => {
         method: 'DELETE',
         headers: headers
     });
-}
+};
 
 export const fetchSongs = () => {
     let headers = new Headers();
@@ -67,7 +71,7 @@ export const fetchSongs = () => {
         response => response.json(),
         error => console.log('An error occured.', error)
     );
-}
+};
 
 export const fetchVerses = (songName) => {
     let headers = new Headers();
@@ -80,7 +84,7 @@ export const fetchVerses = (songName) => {
         response => response.json(),
         error => console.log('An error occured.', error)
     );
-}
+};
 
 export const addChorus = (text, songName) => {
     let headers = new Headers();
@@ -90,7 +94,7 @@ export const addChorus = (text, songName) => {
         text,
         songName: songName,
         type: "chorus"
-    }
+    };
 
     console.log(verse);
 
@@ -103,7 +107,7 @@ export const addChorus = (text, songName) => {
 
         error => console.log('An error occured.', error)
     )
-}
+};
 
 export const addVerse = (text, songName) => {
     let headers = new Headers();
@@ -113,7 +117,7 @@ export const addVerse = (text, songName) => {
         text,
         songName: songName,
         type: "verse"
-    }
+    };
 
     return fetch(databaseURL + `/songs/` + songName + `/verses`, {
         method: 'POST',
@@ -124,7 +128,7 @@ export const addVerse = (text, songName) => {
 
         error => console.log('An error occured.', error)
     )
-}
+};
 
 export const removeVerse = (verseId, songName) => {
     let headers = new Headers();
@@ -138,7 +142,7 @@ export const removeVerse = (verseId, songName) => {
 
         error => console.log('An error occured.', error)
     )
-}
+};
 
 export const updateVerse = (text, verseId) => {
     let headers = new Headers();
@@ -157,7 +161,7 @@ export const updateVerse = (text, verseId) => {
         response => response.json(),
         error => console.log('An error occured.', error)
     )
-}
+};
 
 export const updateVerseType = (verseId, type) => {
     let headers = new Headers();
@@ -176,7 +180,7 @@ export const updateVerseType = (verseId, type) => {
         response => response.json(),
         error => console.log('An error occured.', error)
     )
-}
+};
 
 export const updateOrder = (order, songName) => {
     let headers = new Headers();
@@ -196,4 +200,10 @@ export const updateOrder = (order, songName) => {
         error => console.log('An error occured.', error)
     )
 
+};
+
+function subscribeToSocket(cb) {
+    socket.on('newDataEvent', data => cb(data));
 }
+export { subscribeToSocket };
+  
