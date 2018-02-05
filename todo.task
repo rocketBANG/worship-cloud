@@ -1,7 +1,9 @@
 Doing: 
+    [ ] 33 Add verse viewer on presenter screen to see the selected song's verses
 
 Backlog:
-    [ ] 20 Ability to select/manupulate multiple verses
+    [ ] 35 Load all songs on presenter view on load
+    [ ] 34 Add multiple pages if a verse is too long
     [ ] 27 Add context/right click menus
     [ ] 32 Add checking for pending changes on tab close
     [ ] 33 Authorization
@@ -13,6 +15,8 @@ Backlog:
     [ ] 31 Black and white screens
 
 Done: 
+    [x] 32 Add toolbar for switching between the different views
+    [x] 20 Ability to select/manupulate multiple verses
     [x] 30 Font size controls
     [x] 26 Automatically resize display view on page load
     [x] 29 Fullscreen for viewer

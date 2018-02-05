@@ -39,7 +39,6 @@ export class SongListModel {
             else if(data.action === 'removeSong') {
                 let i = this.songs.findIndex(s => s.name === data.data.name);
                 if(i !== -1) {
-                    console.log('removing');
                     this.songs.splice(i,  1);
                 }
             }

@@ -61,8 +61,6 @@ export const removeSong = (songName) => {
 export const fetchSongs = () => {
     let headers = new Headers();
     
-    console.log(process.env);
-
     return fetch(databaseURL + `/songs`, {
         method: 'GET',
         headers: headers,
@@ -95,8 +93,6 @@ export const addChorus = (text, songName) => {
         songName: songName,
         type: "chorus"
     };
-
-    console.log(verse);
 
     return fetch(databaseURL + `/songs/` + songName + `/chorus`, {
         method: 'POST',

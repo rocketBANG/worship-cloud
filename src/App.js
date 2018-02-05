@@ -4,6 +4,7 @@ import Editor from './pages/Editor'
 import Presenter from './pages/Presenter'
 import { BrowserRouter, Route } from 'react-router-dom'  
 import Viewer from './pages/Viewer';
+import { Toolbar } from './components/Toolbar';
 
 class App extends Component {
     constructor(props) {
@@ -28,10 +29,16 @@ class App extends Component {
         return (
             <BrowserRouter>            
                 <div className="App">
+                    <Route path="/viewer" component={Viewer}/>
+
+                    <Route exact path='/editor' component={Toolbar}/>
+                    <Route exact path='/presenter' component={Toolbar}/>
+                    <Route exact path='/' component={Toolbar}/>
+
                     <Route exact path="/" component={Editor}/>
                     <Route path="/editor" component={Editor}/>
+
                     <Route path="/presenter" component={Presenter}/>
-                    <Route path="/viewer" component={Viewer}/>
                 </div>
             </BrowserRouter>
         );
