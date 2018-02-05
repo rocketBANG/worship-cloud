@@ -1,6 +1,6 @@
 .Presenter {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 25% 25% 50%;
     grid-template-rows: 75% 25%;
     height: 100%;
 }
@@ -12,6 +12,13 @@
 
 .SongLibrary {
     grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: span 2;
+    height: 100%;
+}
+
+#displayVerseList {
+    grid-column: 2;
     grid-row-start: 1;
     grid-row-end: span 2;
     height: 100%;

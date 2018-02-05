@@ -1,6 +1,6 @@
 import React from 'react'
-import {List} from './List'
 import { observer } from 'mobx-react'
+import { List } from './List';
 
 const SongLibrary = observer(class SongLibrary extends React.Component {
 

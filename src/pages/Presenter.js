@@ -8,6 +8,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { SongListModel } from '../models/SongListModel';
 import { DisplaySong } from '../models/DisplaySong';
+import { DisplayVerseList } from '../components/DisplayVerseList';
 
 
 const Presenter = observer(class Presenter extends Component {
@@ -55,6 +56,7 @@ const Presenter = observer(class Presenter extends Component {
         return (
             <div className="Presenter">
                 <SongLibrary songList={this.songList} state={this.presenterState}/>
+                <DisplayVerseList id='displayVerseList' song={this.presenterState.currentSong} />
                 <Display 
                     fontSize={this.state.fontSize}
                     id='PresenterDisplay' 

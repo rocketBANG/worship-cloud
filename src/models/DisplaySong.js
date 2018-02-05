@@ -24,4 +24,9 @@ export class DisplaySong extends Song {
         this.currentVerse = this.verseOrder[this.verseIndex];
     }
 
+    setVerse = (index) => {
+        this.verseIndex = index;
+        this.currentVerse = this.verseOrder[this.verseIndex];
+    }
+
 }
