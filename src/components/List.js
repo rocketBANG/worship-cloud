@@ -43,8 +43,12 @@ class List extends React.Component {
 
         let selected;
 
-        if(this.props.selectedIndex !== undefined && this.props.selectedIndex > -1) {
-            selected = [optionsKeys[this.props.selectedIndex]];
+        if(this.props.selectedIndex !== undefined) {
+            if(this.props.selectedIndex.constructor === Array) {
+                selected = optionsKeys.filter((v, i) => this.props.selectedIndex.indexOf(i) !== -1);
+            } else if(this.props.selectedIndex > -1) {
+                selected = [optionsKeys[this.props.selectedIndex]];
+            }
         }
     
         return (
@@ -59,7 +63,7 @@ class List extends React.Component {
 }
 
 List.propTypes = {
-    selectedIndex: PropTypes.number,
+    selectedIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
     onUpdate: PropTypes.func,
     options: PropTypes.arrayOf(PropTypes.shape({
         altText: PropTypes.string.isRequired,

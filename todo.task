@@ -1,4 +1,5 @@
 Doing: 
+    [ ] 28 Keyboard shortcuts
     [ ] 34 Add multiple pages if a verse is too long
 
 Backlog:
@@ -7,7 +8,6 @@ Backlog:
     [ ] 32 Add checking for pending changes on tab close
     [ ] 33 Authorization
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
-    [ ] 28 Keyboard shortcuts
     [ ] 5 Select the newly added verse in the verse select when added
     [ ] 18 Add an ID generator to local and api so that verses can be added without waiting for response
     [ ] 21 Ability to remove choruses

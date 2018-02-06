@@ -1,4 +1,4 @@
-import React, { Component, ReactFragment } from 'react';
+import React, { Component } from 'react';
 import VerseList from '../components/VerseList';
 import VerseOrderList from '../components/VerseOrderList';
 import SongEditor from '../components/SongEditor';
@@ -6,7 +6,6 @@ import SongList from '../components/SongList';
 import '../style/Editor.css';
 import { SongListModel } from '../models/SongListModel'
 import { observable } from 'mobx';
-import { Toolbar } from '../components/Toolbar';
 
 export default class Editor extends Component {
 

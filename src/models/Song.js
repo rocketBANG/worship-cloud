@@ -48,7 +48,7 @@ export class Song {
 
     addToOrder = (verseId) => {
         this.state = "uploading";
-        this.order.push(verseId);
+        this.order = this.order.concat(verseId);
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
@@ -56,7 +56,13 @@ export class Song {
 
     reorder = (from, to) => {
         this.state = "uploading";
-        this.order.splice(to, 0, this.order.splice(from, 1)[0]);
+        if(from.constructor === Array) {
+            // If going down, for loop in reverse order
+            from = to > 0 ? from.slice().reverse() : from;
+            from.forEach(i => this.order.splice(i + to, 0, this.order.splice(i, 1)[0]));
+        } else {
+            this.order.splice(from + to, 0, this.order.splice(from, 1)[0]);
+        }
 
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
@@ -65,7 +71,12 @@ export class Song {
 
     removeFromOrder = (index) => {
         this.state = "uploading";
-        this.order.splice(index, 1);
+        if(index.constructor === Array) {
+            this.order = this.order.filter((o, i) => index.indexOf(i) === -1);
+            // this.order.splice(index[0], index.length);
+        } else {
+            this.order.splice(index, 1);
+        }
         API.updateOrder(this.order, this.name).then(() => {
             this.state = "loaded";
         });
@@ -96,16 +107,20 @@ export class Song {
         });
     };
 
-    removeVerse = (verseId) => {
+    removeVerse = (verseIds) => {
         this.state = "uploading";
         this.order = this.order.filter((orderId, index) => {
-            return orderId !== verseId;
+            return verseIds.indexOf(orderId) === -1;
         });
-        this.verses.delete(verseId);
-        API.removeVerse(verseId, this.name).then((json) => {
+        let promises = [];
+        verseIds.forEach(v => { 
+            this.verses.delete(v);
+            promises.push(API.removeVerse(v, this.name));
+        });
+        promises.push(API.updateOrder(this.order, this.name));
+        Promise.all(promises).then((json) => {
             this.state = "loaded";
-        });
-        API.updateOrder(this.order, this.name);
+        });    
     };
 
     setChorus = (verseId) => {

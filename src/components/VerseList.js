@@ -9,7 +9,8 @@ const VerseList = observer(class VerseList extends React.Component {
         this.props.state.currentVerse = this.props.state.currentSong.completeVerses[indexes[0]];
         
         this.setState({
-            selectedId: names[0]
+            selectedId: names[0],
+            selectedIds: names
         })
     };
 
@@ -18,13 +19,13 @@ const VerseList = observer(class VerseList extends React.Component {
     };
 
     onVerseRemove = () => {
-        this.props.state.currentSong.removeVerse(this.state.selectedId);
+        this.props.state.currentSong.removeVerse(this.state.selectedIds);
     };
 
     onAddToOrder = () => {
         let song = this.props.state.currentSong;
 
-        song.addToOrder(this.state.selectedId);
+        song.addToOrder(this.state.selectedIds);
     };
 
     onSetChorus = () => {

@@ -5,30 +5,36 @@ import { List } from './List'
 const VerseList = observer(class VerseList extends React.Component {
 
     state = {
-        index: -1
+        index: -1,
+        indexes: []
     };
 
     onVerseClick = (names, indexes) => {
         this.props.state.currentVerse = this.props.state.currentSong.verseOrder[indexes[0]];
         this.setState({
-            index: indexes[0]
+            index: indexes[0],
+            indexes: indexes
         })
     };
 
     onOrderRemove = () => {
-        this.props.state.currentSong.removeFromOrder(this.state.index)
+        this.props.state.currentSong.removeFromOrder(this.state.indexes)
     };
 
     onOrderUp = () => {
-        let index = this.state.index;
-        this.props.state.currentSong.reorder(index, index - 1);
-        this.setState({index: index - 1});
+        if(this.state.indexes[0] < 1) {
+            return;
+        }
+        this.props.state.currentSong.reorder(this.state.indexes, -1);
+        this.setState({indexes: this.state.indexes.map(i => i - 1)});
     };
 
     onOrderDown = () => {
-        let index = this.state.index;
-        this.props.state.currentSong.reorder(index, index + 1);
-        this.setState({index: index + 1});
+        if(this.state.indexes[this.state.indexes.length - 1] > this.props.state.currentSong.verseOrder.length - 2) {
+            return;
+        }
+        this.props.state.currentSong.reorder(this.state.indexes, +1);
+        this.setState({indexes: this.state.indexes.map(i => i + 1)});
     };
     
     render() {
@@ -42,7 +48,7 @@ const VerseList = observer(class VerseList extends React.Component {
         return (
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Order:</div>
-                <List selectedIndex={this.state.index} onUpdate={this.onVerseClick} options={options} />
+                <List selectedIndex={this.state.indexes} onUpdate={this.onVerseClick} options={options} />
                 <div className="ListControls">
                 <button onClick={this.onOrderUp} >up</button>
                 <button onClick={this.onOrderDown}>down</button>
