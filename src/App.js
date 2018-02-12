@@ -5,6 +5,7 @@ import Presenter from './pages/Presenter'
 import { BrowserRouter, Route } from 'react-router-dom'  
 import Viewer from './pages/Viewer';
 import { Toolbar } from './components/Toolbar';
+import SermonEditor from './pages/SermonEditor';
 
 class App extends Component {
     constructor(props) {
@@ -33,10 +34,12 @@ class App extends Component {
 
                     <Route exact path='/editor' component={Toolbar}/>
                     <Route exact path='/presenter' component={Toolbar}/>
+                    <Route exact path='/sermoneditor' component={Toolbar}/>
                     <Route exact path='/' component={Toolbar}/>
 
                     <Route exact path="/" component={Editor}/>
                     <Route path="/editor" component={Editor}/>
+                    <Route path="/sermoneditor" component={SermonEditor}/>
 
                     <Route path="/presenter" component={Presenter}/>
                 </div>

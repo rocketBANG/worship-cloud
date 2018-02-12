@@ -19,6 +19,11 @@ export const Toolbar = () => (
                     Display
                 </a>
             </li>
+            <li>
+                <NavLink to="/sermoneditor" activeClassName="selected">
+                    Sermon Editor
+                </NavLink>
+            </li>
         </ul>
     </div>
 )
