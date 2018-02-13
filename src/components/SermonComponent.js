@@ -8,6 +8,8 @@ export const SermonComponent = observer(class SermonComponent extends Component 
 
     possibleDragging = false;
 
+    canMove = false;
+
     state = {
         isDragging: false,
         dragStartX: 0,
@@ -17,9 +19,10 @@ export const SermonComponent = observer(class SermonComponent extends Component 
     constructor(props) {
         super(props);
 
-        observe(this.props.controller, (change) => {
-            this.props.component.move(change.object.moveX, change.object.moveY);
-            console.log(change.object.moveX + " " + change.object.moveY);
+        autorun(() => {
+            if(this.props.component.selected) {
+                this.props.component.move(this.props.controller.moveX, this.props.controller.moveY);
+            }
         });
         
     }
@@ -34,6 +37,7 @@ export const SermonComponent = observer(class SermonComponent extends Component 
     }
 
     onComponentMouseDown = (e) => {
+        this.setState({isDragging: false});
         e.stopPropagation();
         this.possibleDragging = true;
         this.props.parent.addEventListener('mousemove', this.onComponentMouseMove);
@@ -55,6 +59,7 @@ export const SermonComponent = observer(class SermonComponent extends Component 
     onComponentMouseUp = (e) => {
         e.stopPropagation();
         this.possibleDragging = false;
+        this.props.controller.move(0, 0);
         this.props.parent.removeEventListener('mousemove', this.onComponentMouseMove);
         this.props.parent.removeEventListener('mouseup', this.onComponentMouseUp);
     }
