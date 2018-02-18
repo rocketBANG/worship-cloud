@@ -3,6 +3,9 @@ import '../style/SermonEditor.css';
 import { SermonComponent } from '../components/SermonComponent';
 import { SermonComponentModel } from '../models/SermonComponentModel'
 import { SermonComponentControllerModel } from '../models/SermonComponentControllerModel';
+import { SermonPageList } from '../components/SermonPageList';
+import { PageListModel } from '../models/sermon/PageListModel';
+import { SermonPageModel } from '../models/SermonPageModel';
 
 export default class SermonEditor extends Component {
 
@@ -19,7 +22,14 @@ export default class SermonEditor extends Component {
         selectOriginY: 0,
     };
 
+    pageList = new PageListModel();
+
     sermonController = new SermonComponentControllerModel();
+
+    constructor(props) {
+        super(props);
+        this.pageList.addPage(new SermonPageModel('page 1'));
+    }
 
     onAddComponent = () => {
         this.state.componentList.push(new SermonComponentModel("hi", 10, 10));
@@ -70,6 +80,13 @@ export default class SermonEditor extends Component {
     deselectAll = () => {
         let components = this.state.componentList;
         components.filter(c => c.selected === true).forEach(c => c.deselect());
+    }
+
+    moveComponent = (component, mouseEvent) => {
+        if (!component.selected) {
+            this.deselectAll();
+            component.select();
+        }
     }
 
     onViewMouseUp = () => {
@@ -123,15 +140,20 @@ export default class SermonEditor extends Component {
     render() {
 
         let componentRender = this.state.componentList.map((c, i) => (
-            <SermonComponent key={i} component={c} parent={this.sermonViewDiv} controller={this.sermonController}/>
+            <SermonComponent key={i} component={c} parent={this.sermonViewDiv} controller={this.sermonController} deselectAll={(e) => this.moveComponent(c, e)}/>
         ))
         
         return (
             <div className='sermonEditorPage' onKeyDown={this.onKeyDown} tabIndex='-1'>
-                <div ref={ref => this.sermonViewDiv = ref} className='sermonView' onClick={this.onViewClick} onMouseDown={this.onViewMouseDown} onMouseUp={this.onViewMouseUp} onMouseMove={this.onViewMouseMove}>
-                    {componentRender}
-                    <div className='selectBox' 
-                    style={{left: this.state.selectX, top: this.state.selectY, width: this.state.selectWidth, height: this.state.selectHeight}}></div>
+                <div className='topPage'>
+                    <div ref={ref => this.sermonViewDiv = ref} className='sermonView' onClick={this.onViewClick} onMouseDown={this.onViewMouseDown} onMouseUp={this.onViewMouseUp} onMouseMove={this.onViewMouseMove}>
+                        {componentRender}
+                        <div className='selectBox' 
+                        style={{left: this.state.selectX, top: this.state.selectY, width: this.state.selectWidth, height: this.state.selectHeight}}></div>
+                    </div>
+                    <div className='pageList'>
+                        <SermonPageList pageList={this.pageList} />
+                    </div>
                 </div>
                 <div className='sermonEditorControls'>
                     <button onClick={this.onAddComponent}>+</button>

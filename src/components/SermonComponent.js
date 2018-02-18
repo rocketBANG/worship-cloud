@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { observe, autorun } from 'mobx';
+import { autorun } from 'mobx';
 
 export const SermonComponent = observer(class SermonComponent extends Component {
 
@@ -29,16 +29,12 @@ export const SermonComponent = observer(class SermonComponent extends Component 
 
     onComponentClick = (e) => {
         e.stopPropagation();
-        if(this.state.isDragging) {
-            this.setState({isDragging: false});
-            return;
-        }
-        this.props.component.toggleSelected();
     }
 
     onComponentMouseDown = (e) => {
         this.setState({isDragging: false});
         e.stopPropagation();
+        this.props.deselectAll(e);
         this.possibleDragging = true;
         this.props.parent.addEventListener('mousemove', this.onComponentMouseMove);
         this.props.parent.addEventListener('mouseup', this.onComponentMouseUp);    
@@ -46,13 +42,11 @@ export const SermonComponent = observer(class SermonComponent extends Component 
 
     onComponentMouseMove = (e) => {
         if(this.possibleDragging && !this.state.isDragging) {
-            this.props.component.select();
             this.setState({dragStartX: e.clientX - this.props.component.x, dragStartY: e.clientY - this.props.component.y, isDragging: true});
             return;
         } else if(!this.state.isDragging){
             return;
         }
-        // this.props.component.move(e.clientX - this.state.dragStartX - this.props.component.x,  e.clientY - this.state.dragStartY- this.props.component.y);
         this.props.controller.move(e.clientX - this.state.dragStartX - this.props.component.x,  e.clientY - this.state.dragStartY- this.props.component.y);
     }
 
@@ -74,8 +68,6 @@ export const SermonComponent = observer(class SermonComponent extends Component 
             style={{left: x, top: y}} 
             onClick={this.onComponentClick}
             onMouseDown={this.onComponentMouseDown}
-            // onMouseUp={this.onComponentMouseUp}
-            // onMouseMove={this.onComponentMouseMove}
             >
                 {text}
             </div>
