@@ -16,15 +16,21 @@ export const SermonComponent = observer(class SermonComponent extends Component 
         dragStartY: 0,
     }
 
+    auto;
+
     constructor(props) {
         super(props);
 
-        autorun(() => {
+        this.auto = autorun(() => {
             if(this.props.component.selected) {
                 this.props.component.move(this.props.controller.moveX, this.props.controller.moveY);
             }
         });
         
+    }
+
+    componentWillUnmount() {
+        this.auto();
     }
 
     onComponentClick = (e) => {

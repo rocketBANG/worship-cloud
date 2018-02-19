@@ -3,6 +3,7 @@
     flex: 1 1 auto;
     overflow: hidden;
     background: #000000;
+    height: 500px;
 }
 
 .sermonComponent {
@@ -12,6 +13,11 @@
     border: 1px solid rgba(1, 1, 1, 0);
     user-select: none;
     padding: 5px;
+}
+
+.topPage {
+    display: flex;
+    flex-direction: row;
 }
 
 .sermonComponent.selected {

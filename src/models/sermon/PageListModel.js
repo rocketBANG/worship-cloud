@@ -7,11 +7,13 @@ export class PageListModel {
             pages: [],
             setPage: action(this.setPage),
             currentPageIndex: -1,
+            currentPage: {},
         })
     }
 
     setPage = (index) => {
         this.currentPageIndex = index;
+        this.currentPage = this.pages[this.currentPageIndex];
     }
 
     addPage = (page) => {

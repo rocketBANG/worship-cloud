@@ -6,13 +6,14 @@ import { SermonComponentControllerModel } from '../models/SermonComponentControl
 import { SermonPageList } from '../components/SermonPageList';
 import { PageListModel } from '../models/sermon/PageListModel';
 import { SermonPageModel } from '../models/SermonPageModel';
+import { observer } from 'mobx-react';
+import PageListControls from '../components/sermon/PageListControls';
 
-export default class SermonEditor extends Component {
+export default observer(class SermonEditor extends Component {
 
     possibleDragging = false;
 
     state = {
-        componentList: [],
         isDragging: false,
         selectX: 0,
         selectY: 0,
@@ -26,14 +27,17 @@ export default class SermonEditor extends Component {
 
     sermonController = new SermonComponentControllerModel();
 
+    selectedPage;
+
     constructor(props) {
         super(props);
         this.pageList.addPage(new SermonPageModel('page 1'));
+        this.pageList.setPage(0);
+        this.selectedPage = this.pageList.currentPage;
     }
 
     onAddComponent = () => {
-        this.state.componentList.push(new SermonComponentModel("hi", 10, 10));
-        this.setState({componentList: this.state.componentList});
+        this.pageList.currentPage.addComponent(new SermonComponentModel("hi", 10, 10));
     }
 
     onMoveRight = () => {
@@ -41,7 +45,7 @@ export default class SermonEditor extends Component {
     }
 
     moveSelectedComponents = (x, y) => {
-        let components = this.state.componentList;
+        let components = this.pageList.currentPage.components;
         components.filter(c => c.selected === true).forEach(c => c.move(x, y));
     }
 
@@ -63,7 +67,7 @@ export default class SermonEditor extends Component {
     }
 
     onChangeText = (e) => {
-        let components = this.state.componentList;
+        let components = this.pageList.currentPage.components;
         components.filter(c => c.selected === true).forEach(c => c.text = e.target.value);
     }
 
@@ -78,7 +82,7 @@ export default class SermonEditor extends Component {
     }
 
     deselectAll = () => {
-        let components = this.state.componentList;
+        let components = this.pageList.currentPage.components;
         components.filter(c => c.selected === true).forEach(c => c.deselect());
     }
 
@@ -129,22 +133,26 @@ export default class SermonEditor extends Component {
     }
 
     checkSelectedComponents(topLeft, bottomRight) {
-        this.state.componentList.forEach(c => {
+        this.pageList.currentPage.components.forEach(c => {
             if(c.x > topLeft.x && c.x < bottomRight.x && c.y > topLeft.y && c.y < bottomRight.y) {
                 c.select();
             }
         });
     }
 
+    onAddPage = () => {
+        this.pageList.addPage(new SermonPageModel('2'));
+    }
+
 
     render() {
 
-        let componentRender = this.state.componentList.map((c, i) => (
+        let componentRender = this.pageList.currentPage.components.map((c, i) => (
             <SermonComponent key={i} component={c} parent={this.sermonViewDiv} controller={this.sermonController} deselectAll={(e) => this.moveComponent(c, e)}/>
         ))
         
         return (
-            <div className='sermonEditorPage' onKeyDown={this.onKeyDown} tabIndex='-1'>
+            <div className='sermonEditorPage' onKeyDown={this.onKeyDown}>
                 <div className='topPage'>
                     <div ref={ref => this.sermonViewDiv = ref} className='sermonView' onClick={this.onViewClick} onMouseDown={this.onViewMouseDown} onMouseUp={this.onViewMouseUp} onMouseMove={this.onViewMouseMove}>
                         {componentRender}
@@ -153,6 +161,7 @@ export default class SermonEditor extends Component {
                     </div>
                     <div className='pageList'>
                         <SermonPageList pageList={this.pageList} />
+                        <PageListControls addPage={this.onAddPage} />
                     </div>
                 </div>
                 <div className='sermonEditorControls'>
@@ -163,4 +172,4 @@ export default class SermonEditor extends Component {
             </div>
         );
     }
-}
+});

@@ -1,7 +1,8 @@
 import React from 'react';
 import { List } from './List';
+import { observer } from 'mobx-react';
 
-class SermonPageList extends React.Component {
+const SermonPageList = observer(class SermonPageList extends React.Component {
 
     onPageClick = (names, indexes) => {
         if(indexes.length < 1) {
@@ -27,6 +28,6 @@ class SermonPageList extends React.Component {
             </div>
         )
     }
-}
+});
 
 export { SermonPageList };

@@ -6,7 +6,12 @@ export class SermonPageModel {
         extendObservable(this, {
             components: [],
             title: title | '',
+            addComponent: action(this.addComponent)
         })
+    }
+
+    addComponent = (component) => {
+        this.components.push(component);
     }
 
 }
