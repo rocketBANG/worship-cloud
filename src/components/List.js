@@ -69,7 +69,7 @@ List.propTypes = {
         altText: PropTypes.string.isRequired,
         text: PropTypes.string,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
-    })).isRequired
+    }))
 };
   
 export { List }

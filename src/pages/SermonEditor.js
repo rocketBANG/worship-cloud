@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../style/SermonEditor.css';
+import { ComponentEditor } from '../components/sermon/ComponentEditor';
+import ComponentList from '../components/sermon/ComponentList';
 import { SermonComponent } from '../components/SermonComponent';
 import { SermonComponentModel } from '../models/SermonComponentModel'
 import { SermonComponentControllerModel } from '../models/SermonComponentControllerModel';
@@ -163,6 +165,8 @@ export default observer(class SermonEditor extends Component {
                         <SermonPageList pageList={this.pageList} />
                         <PageListControls addPage={this.onAddPage} />
                     </div>
+                    <ComponentList sermonPage={this.pageList.currentPage}/>
+                    <ComponentEditor component={this.pageList.currentPage.components.filter(c => c.selected)[0]}/>
                 </div>
                 <div className='sermonEditorControls'>
                     <button onClick={this.onAddComponent}>+</button>
