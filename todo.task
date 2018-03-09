@@ -3,7 +3,6 @@ Doing:
     [ ] 37 Add line spacing options
     [ ] 38 Add top padding
     [ ] 28 Keyboard shortcuts
-    [ ] 34 Add multiple pages if a verse is too long
 
 Backlog:
     [ ] 35 Load all songs on presenter view on load
@@ -17,6 +16,7 @@ Backlog:
     [ ] 31 Black and white screens
 
 Done: 
+    [x] 34 Add multiple pages if a verse is too long
     [x] 33 Add verse viewer on presenter screen to see the selected song's verses
     [x] 32 Add toolbar for switching between the different views
     [x] 20 Ability to select/manupulate multiple verses

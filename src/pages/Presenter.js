@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SongLibrary from '../components/SongLibrary';
-import Display from '../components/Display';
+import ControledDisplay from '../components/ControledDisplay';
 import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
 import '../style/Display.css'
@@ -46,10 +46,11 @@ const Presenter = observer(class Presenter extends Component {
     render() {
         let currentSong = this.presenterState.currentSong || {};
         let currentVerse = currentSong.currentVerse || {};
+        let currentPage = currentSong.currentPage || "";
 
         // Broadcast to viewer
         localStorage.setItem('display-setTitle', currentSong.verseIndex > 0 ? "" : currentSong.name || '');
-        localStorage.setItem('display-setWords', currentVerse.text || '');
+        localStorage.setItem('display-setWords', currentPage || '');
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' || false);
         localStorage.setItem('display-setFontSize', this.state.fontSize || 0);
 
@@ -57,14 +58,15 @@ const Presenter = observer(class Presenter extends Component {
             <div className="Presenter">
                 <SongLibrary songList={this.songList} state={this.presenterState}/>
                 <DisplayVerseList id='displayVerseList' song={this.presenterState.currentSong} />
-                <Display 
+                <ControledDisplay 
                     fontSize={this.state.fontSize}
                     id='PresenterDisplay' 
+                    displaySong={currentSong}
                     title={currentSong.verseIndex > 0 ? "" : currentSong.name} 
                     isItallic={currentVerse.type === 'chorus'} 
-                    words={currentVerse.text}>
+                    words={currentPage}>
                     <DisplayControls state={this.presenterState} fontChange={this.onFontChange}/>
-                </Display>
+                </ControledDisplay>
             </div>
         );
     }

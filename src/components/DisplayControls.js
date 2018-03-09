@@ -4,11 +4,11 @@ import { observer } from 'mobx-react'
 const DisplayControls = observer(class DisplayControls extends React.Component {
 
     onNextVerse = () => {
-        this.props.state.currentSong.nextVerse();
+        this.props.state.currentSong.nextPage();
     };
 
     onPrevVerse = () => {
-        this.props.state.currentSong.prevVerse();
+        this.props.state.currentSong.prevPage();
     };
 
     render() {
