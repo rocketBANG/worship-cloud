@@ -1,7 +1,7 @@
 Doing: 
-    [ ] 37 Add line spacing options
 
 Backlog:
+    [ ] 37 Add line spacing options
     [ ] 35 Load all songs on presenter view on load
     [ ] 27 Add context/right click menus
     [ ] 32 Add checking for pending changes on tab close
@@ -10,7 +10,6 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     [ ] 18 Add an ID generator to local and api so that verses can be added without waiting for response
     [ ] 21 Ability to remove choruses
-    [ ] 31 Black and white screens
 
 Done: 
     [x] 28 Keyboard shortcuts
