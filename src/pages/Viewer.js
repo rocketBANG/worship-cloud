@@ -9,7 +9,8 @@ class Viewer extends Component {
         title: undefined,
         isItallic: undefined,
         isFullscreen: false,
-        fontSize: 0
+        fontSize: 0,
+        backgroundColor: "#000"
     };
 
     constructor(props) {
@@ -66,6 +67,10 @@ class Viewer extends Component {
             this.setState({fontSize: localStorage.getItem('display-setFontSize')});
         }
 
+        if (event.key === 'display-setBackgroundColor') {
+            this.setState({backgroundColor: localStorage.getItem('display-setBackgroundColor')});
+        }
+
         // if (event.key == 'display-setColor') {
         //     document.getElementById("main").style.backgroundColor = localStorage.getItem('display-setColor');
         // }
@@ -83,7 +88,8 @@ class Viewer extends Component {
                     isItallic={this.state.isItallic === 'true'} 
                     words={this.state.words} 
                     isFullscreen={this.state.isFullscreen}
-                    fontSize={this.state.fontSize}/>
+                    fontSize={this.state.fontSize}
+                    backgroundColor={this.state.backgroundColor}/>
                 { !this.state.isFullscreen && <div className='viewerControls'>
                     <button onClick={this.onFullscreenClick}>Go fullscreen</button>
                 </div> }

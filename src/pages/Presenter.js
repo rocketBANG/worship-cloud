@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SongLibrary from '../components/SongLibrary';
-import ControledDisplay from '../components/ControledDisplay';
+import Display from '../components/Display';
 import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
 import '../style/Display.css'
@@ -48,25 +48,36 @@ const Presenter = observer(class Presenter extends Component {
         let currentVerse = currentSong.currentVerse || {};
         let currentPage = currentSong.currentPage || "";
 
+        let title = currentSong.verseIndex > 0 ? "" : currentSong.name || '';
+        let words = currentPage || '';
+        let backgroundColor = currentSong.backgroundColor;
+
+        if(currentSong.isBlanked) {
+            title = '';
+            words = '';
+        }
+
         // Broadcast to viewer
-        localStorage.setItem('display-setTitle', currentSong.verseIndex > 0 ? "" : currentSong.name || '');
-        localStorage.setItem('display-setWords', currentPage || '');
+        localStorage.setItem('display-setTitle', title);
+        localStorage.setItem('display-setWords', words);
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' || false);
         localStorage.setItem('display-setFontSize', this.state.fontSize || 0);
+        localStorage.setItem('display-setBackgroundColor', backgroundColor);
 
         return (
             <div className="Presenter">
                 <SongLibrary songList={this.songList} state={this.presenterState}/>
                 <DisplayVerseList id='displayVerseList' song={this.presenterState.currentSong} />
-                <ControledDisplay 
+                <Display 
                     fontSize={this.state.fontSize}
                     id='PresenterDisplay' 
                     displaySong={currentSong}
-                    title={currentSong.verseIndex > 0 ? "" : currentSong.name} 
+                    title={title} 
                     isItallic={currentVerse.type === 'chorus'} 
-                    words={currentPage}>
+                    words={words}
+                    backgroundColor={backgroundColor}>
                     <DisplayControls state={this.presenterState} fontChange={this.onFontChange}/>
-                </ControledDisplay>
+                </Display>
             </div>
         );
     }

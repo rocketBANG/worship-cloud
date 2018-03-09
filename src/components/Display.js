@@ -83,7 +83,7 @@ const Display = observer(class Display extends React.Component {
         return (
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
-                <div className="Display" style={{width: this.state.width, height: this.state.height}}>
+                <div className="Display" style={{width: this.state.width, height: this.state.height, backgroundColor: this.props.backgroundColor}}>
                     <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
                         {this.props.title}
                     </div>

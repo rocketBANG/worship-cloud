@@ -1,4 +1,4 @@
-import { extendObservable, action } from 'mobx';
+import { extendObservable, action, computed } from 'mobx';
 import { Song } from './Song'
 
 var arrayNumber = -1;
@@ -12,7 +12,10 @@ const arrayReducer = (accumulator, currentValue, currentIndex, array) => {
         }
     }
     return accumulator;
-}      
+}
+
+export const BLACKED = 1;
+export const WHITE = -1;
 
 export class DisplaySong extends Song {
 
@@ -23,6 +26,7 @@ export class DisplaySong extends Song {
     constructor(songName, songTitle) {
         super(songName, songTitle);
         extendObservable(this, {
+            blanked: 0, // 1 = black, -1 = white
             currentVerse: undefined,
             currentPage: "",
             nextVerse: action(this.nextVerse),
@@ -30,7 +34,11 @@ export class DisplaySong extends Song {
             nextPage: action(this.nextPage),
             prevPage: action(this.prevPage),
             wordFontSize: "20px",
-            titleFontSize: "40px"
+            titleFontSize: "40px",
+            setWhite: action(this.setWhite),
+            setBlack: action(this.setBlack),
+            isBlanked: computed(() => this.blanked !== 0),
+            backgroundColor: computed(this.getBackgroundColor)
         });
     }
 
@@ -57,27 +65,37 @@ export class DisplaySong extends Song {
     }
 
     nextPage = () => {
+        if(this.blanked !== 0) {
+            this.blanked = 0;
+            return;
+        }
+
         if(this.currentPages === undefined) {
             this.setupPages();
         }
-        this.pageIndex++;
-        if(this.pageIndex > this.currentPages.length - 1) {
-            this.pageIndex = 0;
+        if(this.pageIndex >= this.currentPages.length - 1) {
             this.nextVerse();
+        } else {
+            this.pageIndex++;
+            this.currentPage = this.currentPages[this.pageIndex];
         }
-        this.currentPage = this.currentPages[this.pageIndex];
     };
 
     prevPage = () => {
+        if(this.blanked !== 0) {
+            this.blanked = 0;
+            return;
+        }
+
         if(this.currentPages === undefined) {
             this.setupPages();
         }
-        this.pageIndex--;
-        if(this.pageIndex < 0) {
-            this.pageIndex = 0;
+        if(this.pageIndex <= 0) {
             this.prevVerse();
+        } else {
+            this.pageIndex--;
+            this.currentPage = this.currentPages[this.pageIndex];
         }
-        this.currentPage = this.currentPages[this.pageIndex];
     }
 
     setVerse = (index) => {
@@ -91,6 +109,32 @@ export class DisplaySong extends Song {
     setupPages = () => {
         arrayNumber = -1;
         this.currentPages = this.currentVerse.text.split('\n').reduce(arrayReducer, []);
+    }
+
+    getBackgroundColor = () => {
+        if(this.blanked == BLACKED) {
+            return "#000";
+        } else if (this.blanked == WHITE) {
+            return "#fff";
+        } else {
+            return "#000";
+        }
+    }
+
+    setBlack = () => {
+        if(this.blanked == BLACKED) {
+            this.blanked = 0;
+            return;
+        }
+        this.blanked = BLACKED;
+    }
+
+    setWhite = () => {
+        if(this.blanked == WHITE) {
+            this.blanked = 0;
+            return;
+        }
+        this.blanked = WHITE;
     }
 
 }
