@@ -1,10 +1,12 @@
 import { extendObservable, action, computed } from 'mobx';
 import { Song } from './Song'
 
+const NUM_LINES = 6;
+
 var arrayNumber = -1;
 const arrayReducer = (accumulator, currentValue, currentIndex, array) => { 
     if(currentValue !== "") {
-        if(currentIndex % 4 === 0) {
+        if(currentIndex % NUM_LINES === 0) {
         arrayNumber++;
         accumulator[arrayNumber] = currentValue;
         } else {
