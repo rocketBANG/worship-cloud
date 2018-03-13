@@ -11,6 +11,7 @@ export class Verse {
             updateText: action(this.updateText),
             title: computed(this.getTitle),
             setChorus: action(this.setChorus),
+            numPages: -1,
         });
     }
 
@@ -32,6 +33,10 @@ export class Verse {
         let type = this.type === "verse" ? "chorus" : "verse";
         this.type = type;
         return API.updateVerseType(this.id, type).then(() => this.state = "loaded");
+    }
+
+    setNumberOfPages = (num) => {
+        this.numPages = num;
     }
 
 }

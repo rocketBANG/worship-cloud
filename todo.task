@@ -1,6 +1,5 @@
 Doing: 
     [ ] 38 Add indicator for black/white screen and what page in the verse the presenter display is at
-
 Backlog:
     [ ] 37 Add line spacing options
     [ ] 35 Load all songs on presenter view on load
@@ -13,6 +12,8 @@ Backlog:
     [ ] 21 Ability to remove choruses
 
 Done: 
+    [x] 39 Add PresenterDisplay component that has a display in it to handle all local storage, sending shortcuts,
+            background color etc.
     [x] 28 Keyboard shortcuts
     [x] 36 Add black and white screens
     [x] 38 Add top padding

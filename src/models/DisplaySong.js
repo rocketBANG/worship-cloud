@@ -111,6 +111,7 @@ export class DisplaySong extends Song {
     setupPages = () => {
         arrayNumber = -1;
         this.currentPages = this.currentVerse.text.split('\n').reduce(arrayReducer, []);
+        this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 
     getBackgroundColor = () => {
