@@ -5,6 +5,7 @@ import 'any-resize-event'
 import PropTypes from 'prop-types'
 import Display from '../components/Display';
 import DisplayControls from './DisplayControls';
+import DisplayOverlay from './DisplayOverlay';
 
 const PresenterDisplay = observer(class PresenterDisplay extends React.Component {
     state = {
@@ -55,6 +56,7 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
                     backgroundColor={backgroundColor}>
                     <DisplayControls song={this.props.song} fontChange={this.onFontChange}/>
                 </Display>
+                <DisplayOverlay pageIndicator="1/2" blankIndicator="blanked" />
             </div>
         );
     }    

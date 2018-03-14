@@ -1,7 +1,8 @@
 import React from 'react';
 import { List } from './List';
+import { observer } from 'mobx-react';
 
-class DisplayVerseList extends React.Component {
+const DisplayVerseList = observer(class DisplayVerseList extends React.Component {
 
     onVerseClick = (names, indexes) => {
         if(indexes.length < 1) {
@@ -10,7 +11,6 @@ class DisplayVerseList extends React.Component {
 
         this.props.song.setVerse(indexes[0]);
     };
-
 
     render = () => {
         let song = this.props.song || {};
@@ -33,10 +33,6 @@ class DisplayVerseList extends React.Component {
             </div>
         )
     }
-}
-
-DisplayVerseList.propTypes = {
-
-}
+});
 
 export { DisplayVerseList };

@@ -35,6 +35,8 @@ export class DisplaySong extends Song {
             prevVerse: action(this.prevVerse),
             nextPage: action(this.nextPage),
             prevPage: action(this.prevPage),
+            setVerse: action(this.setVerse),
+            setupPages: action(this.setupPages),
             wordFontSize: "20px",
             titleFontSize: "40px",
             setWhite: action(this.setWhite),
