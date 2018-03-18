@@ -21,7 +21,6 @@ export const WHITE = -1;
 
 export class DisplaySong extends Song {
 
-    verseIndex = -1;
     pageIndex = 0;
     currentPages = [];
 
@@ -42,7 +41,8 @@ export class DisplaySong extends Song {
             setWhite: action(this.setWhite),
             setBlack: action(this.setBlack),
             isBlanked: computed(() => this.blanked !== 0),
-            backgroundColor: computed(this.getBackgroundColor)
+            backgroundColor: computed(this.getBackgroundColor),
+            verseIndex: -1
         });
     }
 

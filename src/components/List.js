@@ -41,7 +41,7 @@ class List extends React.Component {
             }</option>)
         );
 
-        let selected =  [optionsKeys[this.props.selectedIndex]];
+        let selected;
     
         if(this.props.selectedIndex !== undefined) {
             if(this.props.selectedIndex.constructor === Array) {
