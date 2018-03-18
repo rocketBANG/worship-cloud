@@ -21,9 +21,6 @@ export const WHITE = -1;
 
 export class DisplaySong extends Song {
 
-    pageIndex = 0;
-    currentPages = [];
-
     constructor(songName, songTitle) {
         super(songName, songTitle);
         extendObservable(this, {
@@ -42,7 +39,10 @@ export class DisplaySong extends Song {
             setBlack: action(this.setBlack),
             isBlanked: computed(() => this.blanked !== 0),
             backgroundColor: computed(this.getBackgroundColor),
-            verseIndex: -1
+            verseIndex: -1,
+            currentPages: [],
+            currentNumPages: computed(() => this.currentPages.length),
+            pageIndex: 0
         });
     }
 
@@ -64,7 +64,7 @@ export class DisplaySong extends Song {
         this.verseIndex--;
         this.currentVerse = this.verseOrder[this.verseIndex];
         this.setupPages();
-        this.pageIndex = 0;
+        this.pageIndex = this.currentPages.length - 1;
         this.currentPage = this.currentPages[this.pageIndex];
     }
 

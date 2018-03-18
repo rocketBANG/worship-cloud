@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-// import '../style/PresenterDisplay.css'
+import '../style/PresenterDisplay.css'
 import 'any-resize-event'
 import PropTypes from 'prop-types'
 import Display from '../components/Display';
@@ -54,9 +54,11 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
                     isItallic={currentVerse.type === 'chorus'} 
                     words={words}
                     backgroundColor={backgroundColor}>
-                    <DisplayControls song={this.props.song} fontChange={this.onFontChange}/>
+                    <DisplayControls song={currentSong} fontChange={this.onFontChange}/>
                 </Display>
-                <DisplayOverlay pageIndicator="1/2" blankIndicator="blanked" />
+                <DisplayOverlay currentPage={currentSong && (currentSong.pageIndex+1)}
+                    totalPages={currentSong && currentSong.currentNumPages}
+                    blankIndicator={currentSong.isBlanked ? "Blanked" : ""} />
             </div>
         );
     }    
