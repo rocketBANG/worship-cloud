@@ -1,7 +1,8 @@
 import React from 'react';
 import { List } from './List';
+import { observer } from 'mobx-react';
 
-class DisplayVerseList extends React.Component {
+const DisplayVerseList = observer(class DisplayVerseList extends React.Component {
 
     onVerseClick = (names, indexes) => {
         if(indexes.length < 1) {
@@ -11,14 +12,19 @@ class DisplayVerseList extends React.Component {
         this.props.song.setVerse(indexes[0]);
     };
 
-
     render = () => {
         let song = this.props.song || {};
-        const options = (song.verseOrder || []).map((verse, index) => ({
-            id: verse.id,
-            text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
-            altText: ""
-        }));
+        const options = (song.verseOrder || []).map((verse, index) => {
+            let verseText = verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title;
+            if(verse.numPages > 1) {
+                verseText += " (" + verse.numPages + ")";
+            }
+            return {
+                id: verse.id,
+                text: verseText,
+                altText: ""
+            }
+        });
     
         return ( 
             <div className="VerseList">
@@ -27,10 +33,6 @@ class DisplayVerseList extends React.Component {
             </div>
         )
     }
-}
-
-DisplayVerseList.propTypes = {
-
-}
+});
 
 export { DisplayVerseList };

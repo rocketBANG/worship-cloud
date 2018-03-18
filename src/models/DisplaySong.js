@@ -21,10 +21,6 @@ export const WHITE = -1;
 
 export class DisplaySong extends Song {
 
-    verseIndex = -1;
-    pageIndex = 0;
-    currentPages = [];
-
     constructor(songName, songTitle) {
         super(songName, songTitle);
         extendObservable(this, {
@@ -35,12 +31,18 @@ export class DisplaySong extends Song {
             prevVerse: action(this.prevVerse),
             nextPage: action(this.nextPage),
             prevPage: action(this.prevPage),
+            setVerse: action(this.setVerse),
+            setupPages: action(this.setupPages),
             wordFontSize: "20px",
             titleFontSize: "40px",
             setWhite: action(this.setWhite),
             setBlack: action(this.setBlack),
             isBlanked: computed(() => this.blanked !== 0),
-            backgroundColor: computed(this.getBackgroundColor)
+            backgroundColor: computed(this.getBackgroundColor),
+            verseIndex: -1,
+            currentPages: [],
+            currentNumPages: computed(() => this.currentPages.length),
+            pageIndex: 0
         });
     }
 
@@ -62,7 +64,7 @@ export class DisplaySong extends Song {
         this.verseIndex--;
         this.currentVerse = this.verseOrder[this.verseIndex];
         this.setupPages();
-        this.pageIndex = 0;
+        this.pageIndex = this.currentPages.length - 1;
         this.currentPage = this.currentPages[this.pageIndex];
     }
 
@@ -111,6 +113,7 @@ export class DisplaySong extends Song {
     setupPages = () => {
         arrayNumber = -1;
         this.currentPages = this.currentVerse.text.split('\n').reduce(arrayReducer, []);
+        this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 
     getBackgroundColor = () => {

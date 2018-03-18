@@ -42,7 +42,7 @@ class List extends React.Component {
         );
 
         let selected;
-
+    
         if(this.props.selectedIndex !== undefined) {
             if(this.props.selectedIndex.constructor === Array) {
                 selected = optionsKeys.filter((v, i) => this.props.selectedIndex.indexOf(i) !== -1);

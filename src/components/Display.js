@@ -4,6 +4,9 @@ import '../style/Display.css'
 import 'any-resize-event'
 import PropTypes from 'prop-types'
 
+const wordFontSize = 0.0011;
+const titleFontSize = 0.0012;
+
 const Display = observer(class Display extends React.Component {
     ratio = 4.0/3.0;
     wrapper = undefined;
@@ -23,7 +26,7 @@ const Display = observer(class Display extends React.Component {
     splitLines(text) {
         if(text) {
             return text.split("\n").map((line, index) => {
-                return (<span key={index}>{line}<br /></span>)
+                return (<p key={index}>{line}<br /></p>)
             });
         } else {
             return "";
@@ -37,8 +40,8 @@ const Display = observer(class Display extends React.Component {
             this.setState({
                 width: '100%',
                 height: '100%',
-                titleFontSize: window.innerWidth * fontSize * 0.0016 + "px",
-                verseFontSize: window.innerWidth * fontSize * 0.001 + "px",    
+                titleFontSize: window.innerWidth * fontSize * titleFontSize + "px",
+                verseFontSize: window.innerWidth * fontSize * wordFontSize + "px",    
             });
             return;
         }
@@ -52,15 +55,15 @@ const Display = observer(class Display extends React.Component {
             this.setState({
                 width: maxWidth,
                 height: "100%",
-                titleFontSize: maxWidth * fontSize * 0.0016 + "px",
-                verseFontSize: maxWidth * fontSize * 0.001 + "px",    
+                titleFontSize: maxWidth * fontSize * titleFontSize + "px",
+                verseFontSize: maxWidth * fontSize * wordFontSize + "px",    
             })
         } else {
             this.setState({
                 height: maxHeight,
                 width: "100%",
-                titleFontSize: maxHeight * this.ratio * fontSize * 0.0016 + "px",
-                verseFontSize: maxHeight * this.ratio * fontSize * 0.001 + "px",    
+                titleFontSize: maxHeight * this.ratio * fontSize * titleFontSize + "px",
+                verseFontSize: maxHeight * this.ratio * fontSize * wordFontSize + "px",    
             })
         }
     }
