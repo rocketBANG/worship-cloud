@@ -16,11 +16,11 @@ const DisplayControls = observer(class DisplayControls extends React.Component {
 
         if(keyName === 'ArrowRight') {
             this.onNext();
-        } else if(keyName == 'ArrowLeft') {
+        } else if(keyName === 'ArrowLeft') {
             this.onPrev();
-        } else if(keyName == 'b') {
+        } else if(keyName === 'b') {
             this.props.song.setBlack();
-        } else if(keyName == 'w') {
+        } else if(keyName === 'w') {
             this.props.song.setWhite();
         }
     }

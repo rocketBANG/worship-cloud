@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import SongLibrary from '../components/SongLibrary';
-import Display from '../components/Display';
-import DisplayControls from '../components/DisplayControls';
 import '../style/Presenter.css'
 import '../style/Display.css'
 import { observable } from 'mobx';

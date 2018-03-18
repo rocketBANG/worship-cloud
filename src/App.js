@@ -6,6 +6,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import Viewer from './pages/Viewer';
 import { Toolbar } from './components/Toolbar';
 import SermonEditor from './pages/SermonEditor';
+import { SettingsPage } from './pages/SettingsPage';
 
 class App extends Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class App extends Component {
 
                     <Route exact path='/editor' component={Toolbar}/>
                     <Route exact path='/presenter' component={Toolbar}/>
+                    <Route exact path='/settings' component={Toolbar}/>
                     <Route exact path='/sermoneditor' component={Toolbar}/>
                     <Route exact path='/' component={Toolbar}/>
 
@@ -42,6 +44,8 @@ class App extends Component {
                     <Route path="/sermoneditor" component={SermonEditor}/>
 
                     <Route path="/presenter" component={Presenter}/>
+
+                    <Route path="/settings" component={SettingsPage}/>
                 </div>
             </BrowserRouter>
         );

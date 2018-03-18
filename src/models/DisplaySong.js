@@ -117,9 +117,9 @@ export class DisplaySong extends Song {
     }
 
     getBackgroundColor = () => {
-        if(this.blanked == BLACKED) {
+        if(this.blanked === BLACKED) {
             return "#000";
-        } else if (this.blanked == WHITE) {
+        } else if (this.blanked === WHITE) {
             return "#fff";
         } else {
             return "#000";
@@ -127,7 +127,7 @@ export class DisplaySong extends Song {
     }
 
     setBlack = () => {
-        if(this.blanked == BLACKED) {
+        if(this.blanked === BLACKED) {
             this.blanked = 0;
             return;
         }
@@ -135,7 +135,7 @@ export class DisplaySong extends Song {
     }
 
     setWhite = () => {
-        if(this.blanked == WHITE) {
+        if(this.blanked === WHITE) {
             this.blanked = 0;
             return;
         }

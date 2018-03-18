@@ -1,18 +1,21 @@
 Doing: 
-    [ ] 38 Add indicator for black/white screen and what page in the verse the presenter display is at
-Backlog:
+    [ ] 39 Add user settings
     [ ] 37 Add line spacing options
+    [ ] 42 Add options for how many lines to move page when they cannot fit on one page
+
+Backlog:
+    [ ] 40 Add search bar to song library
+    [ ] 41 Add ability to create song lists
+    [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 27 Add context/right click menus
     [ ] 32 Add checking for pending changes on tab close
-    [ ] 33 Authorization
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     [ ] 5 Select the newly added verse in the verse select when added
-    [ ] 18 Add an ID generator to local and api so that verses can be added without waiting for response
-    [ ] 21 Ability to remove choruses
     
-
 Done: 
+    [x] 38 Add indicator for black/white screen and what page in the verse the presenter display is at
+    [x] 21 Ability to remove choruses
     [x] 39 Add PresenterDisplay component that has a display in it to handle all local storage, sending shortcuts,background color etc.
     [x] 28 Keyboard shortcuts
     [x] 36 Add black and white screens
@@ -45,3 +48,4 @@ Done:
 
 Canceled: 
     [-] 22 Error checking for multiple choruses
+    [-] 18 Add an ID generator to local and api so that verses can be added without waiting for response

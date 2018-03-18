@@ -2,7 +2,6 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import '../style/PresenterDisplay.css'
 import 'any-resize-event'
-import PropTypes from 'prop-types'
 import Display from '../components/Display';
 import DisplayControls from './DisplayControls';
 import DisplayOverlay from './DisplayOverlay';
