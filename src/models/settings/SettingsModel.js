@@ -3,6 +3,10 @@ import * as API from '../../store/api'
 import { ModelState } from "../ModelState";
 
 export class SettingsModel {
+
+    savedSettingsObj = {};
+    uploadTimer = {};
+
     constructor() {
         extendObservable(this, {
             wordFontSize: 50,
@@ -44,12 +48,26 @@ export class SettingsModel {
         );
     }
 
-    saveSettings() {
+    saveSettings = (key, value) => {
+        this.state = ModelState.DIRTY;
+        this[key] = value;
+        this.savedSettingsObj[key] = value;
+        clearTimeout(this.uploadTimer);
+        this.uploadTimer = setTimeout(this.uploadSettings, 1000);
+    }
+
+    uploadSettings = () => {
+        const settingsToUpload = Object.assign({}, this.savedSettingsObj);
+        this.savedSettingsObj = {};
+        API.updateSettings("rocketbang", settingsToUpload).then(() => {
+            if(Object.keys(this.savedSettingsObj).length === 0) {
+                this.state = ModelState.LOADED;
+            }
+        });
 
     }
 
     changeWordFont = (amount) => {
-        this.wordFontSize += amount;
-        API.updateSettings("rocketbang", {wordFontSize: this.wordFontSize});
+        this.saveSettings("wordFontSize", this.wordFontSize + amount);
     }
 }

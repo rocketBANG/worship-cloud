@@ -202,7 +202,7 @@ export const getSettings = (username) => {
     return fetch(databaseURL + `/settings/` + username, {
         method: 'GET',
     }).then(
-        response => response.json().then(json => json[0].settings)
+        response => response.json().then(json => json[0].settings || {})
     )
 }
 

@@ -2,7 +2,8 @@ const ModelState = {
     LOADING: "loading",
     LOADED: "loaded",
     UNLOADED: "unloaded",
-    ERROR: "error"
+    ERROR: "error",
+    DIRTY: "dirty"
 }
 
 export { ModelState };
