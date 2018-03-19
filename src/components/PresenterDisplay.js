@@ -5,21 +5,25 @@ import 'any-resize-event'
 import Display from '../components/Display';
 import DisplayControls from './DisplayControls';
 import DisplayOverlay from './DisplayOverlay';
+import { SettingsModel } from '../models/settings/SettingsModel';
 
 const PresenterDisplay = observer(class PresenterDisplay extends React.Component {
-    state = {
-        fontSize: 50
-    };
-
     fontIncrement = 3;
+
+    settingsModel = new SettingsModel();
+
+    constructor(props) {
+        super(props);
+        this.settingsModel.loadSettings();
+    }
 
     // true if the font size should increase
     // false if the font size should decrease
     onFontChange = (fontChange) => {
         if(fontChange) {
-            this.setState({fontSize: this.state.fontSize + this.fontIncrement});
+            this.settingsModel.changeWordFont(this.fontIncrement);
         } else {
-            this.setState({fontSize: this.state.fontSize - this.fontIncrement});
+            this.settingsModel.changeWordFont(-this.fontIncrement);
         }
     };
 
@@ -41,13 +45,13 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
         localStorage.setItem('display-setTitle', title);
         localStorage.setItem('display-setWords', words);
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' || false);
-        localStorage.setItem('display-setFontSize', this.state.fontSize || 0);
+        localStorage.setItem('display-setFontSize', this.settingsModel.wordFontSize || 0);
         localStorage.setItem('display-setBackgroundColor', backgroundColor);
 
         return (
             <div className="PresenterDisplay">
                 <Display 
-                    fontSize={this.state.fontSize}
+                    fontSize={this.settingsModel.wordFontSize}
                     id='PresenterDisplay' 
                     title={title} 
                     isItallic={currentVerse.type === 'chorus'} 

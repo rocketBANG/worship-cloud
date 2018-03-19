@@ -198,6 +198,27 @@ export const updateOrder = (order, songName) => {
 
 };
 
+export const getSettings = (username) => {
+    return fetch(databaseURL + `/settings/` + username, {
+        method: 'GET',
+    }).then(
+        response => response.json().then(json => json[0].settings)
+    )
+}
+
+export const updateSettings = (username, settings) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return fetch(databaseURL + `/settings/` + username, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify(settings)
+    }).then(
+        response => response.json()
+    )
+}
+
 function subscribeToSocket(cb) {
     socket.on('newDataEvent', data => cb(data));
 }
