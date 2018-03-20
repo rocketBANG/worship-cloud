@@ -1,6 +1,6 @@
 Doing: 
-    [ ] 37 Add line spacing options
     [ ] 42 Add options for how many lines to move page when they cannot fit on one page
+    [ ] 43 Measure lines including lines that have wrapped as 2 lines
 
 Backlog:
     [ ] 40 Add search bar to song library
@@ -9,10 +9,12 @@ Backlog:
     [ ] 35 Load all songs on presenter view on load
     [ ] 27 Add context/right click menus
     [ ] 32 Add checking for pending changes on tab close
+    [ ] 43 Add preview on settings page of how display will look with the current settings
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     [ ] 5 Select the newly added verse in the verse select when added
     
 Done: 
+    [x] 37 Add line spacing options
     [x] 39 Add user settings
     [x] 38 Add indicator for black/white screen and what page in the verse the presenter display is at
     [x] 21 Ability to remove choruses

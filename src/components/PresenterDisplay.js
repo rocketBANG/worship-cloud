@@ -10,7 +10,7 @@ import { SettingsModel } from '../models/settings/SettingsModel';
 const PresenterDisplay = observer(class PresenterDisplay extends React.Component {
     fontIncrement = 3;
 
-    settingsModel = new SettingsModel();
+    settingsModel = SettingsModel.settingsModel;
 
     constructor(props) {
         super(props);
@@ -47,6 +47,8 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' || false);
         localStorage.setItem('display-setFontSize', this.settingsModel.wordFontSize || 0);
         localStorage.setItem('display-setBackgroundColor', backgroundColor);
+        localStorage.setItem('display-setLineHeight', this.settingsModel.lineHeight);
+        localStorage.setItem('display-setIndentAmount', this.settingsModel.indentAmount);
 
         return (
             <div className="PresenterDisplay">
@@ -56,7 +58,10 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
                     title={title} 
                     isItallic={currentVerse.type === 'chorus'} 
                     words={words}
-                    backgroundColor={backgroundColor}>
+                    backgroundColor={backgroundColor}
+                    lineHeight={this.settingsModel.lineHeight}
+                    indentAmount={this.settingsModel.indentAmount}
+                >
                     <DisplayControls song={currentSong} fontChange={this.onFontChange}/>
                 </Display>
                 <DisplayOverlay currentPage={currentSong && (currentSong.pageIndex+1)}

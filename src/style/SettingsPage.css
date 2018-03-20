@@ -1,3 +1,4 @@
-.SettingsPage {
-    
+.SettingsList {
+    display: flex;
+    flex-wrap: wrap;
 }

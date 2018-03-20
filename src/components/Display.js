@@ -86,11 +86,20 @@ const Display = observer(class Display extends React.Component {
         return (
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
-                <div className="Display" style={{width: this.state.width, height: this.state.height, backgroundColor: this.props.backgroundColor}}>
+                <div className="Display" style={{
+                    width: this.state.width, 
+                    height: this.state.height, 
+                    backgroundColor: this.props.backgroundColor,
+                }}>
                     <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
                         {this.props.title}
                     </div>
-                    <div className="VerseText" style={{fontSize: this.state.verseFontSize}}>
+                    <div className="VerseText" style={{
+                        fontSize: this.state.verseFontSize,
+                        lineHeight: this.props.lineHeight,
+                        paddingLeft: this.props.indentAmount + "em",
+                        textIndent: (-this.props.indentAmount) + "em",
+                    }}>
                         {words}
                     </div>
                 </div>

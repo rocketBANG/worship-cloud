@@ -4,6 +4,21 @@ import { ModelState } from "../ModelState";
 
 export class SettingsModel {
 
+    static settingsModel = new SettingsModel();
+
+    static settingsList = [
+        "wordFontSize", 
+        "titleFontSize", 
+        "lineHeight", 
+        "minimumPageLines", 
+        "maximumPageLines", 
+        "topMargin", 
+        "leftMargin", 
+        "rightMargin", 
+        "titleMargin", 
+        "indentAmount",
+    ];
+
     savedSettingsObj = {};
     uploadTimer = {};
 
@@ -17,10 +32,12 @@ export class SettingsModel {
             topMargin: 3,
             leftMargin: 3,
             rightMargin: 0,
-            bottomMargin: 0,
+            titleMargin: 0,
+            indentAmount: 1.0,
             loadSettings: action(this.loadSettings),
             state: ModelState.UNLOADED,
             changeWordFont: action(this.changeWordFont),
+            changeSetting: action(this.changeSetting)
         });
     }
 
@@ -31,15 +48,9 @@ export class SettingsModel {
         this.state = ModelState.LOADING;
         API.getSettings("rocketbang").then(
             json => {
-                this.wordFontSize = json.wordFontSize || this.wordFontSize;
-                this.titleFontSize = json.titleFontSize || this.titleFontSize;
-                this.lineHeight = json.lineHeight || this.lineHeight;
-                this.minimumPageLines = json.minimumPageLines || this.minimumPageLines;
-                this.maximumPageLines = json.maximumPageLines || this.maximumPageLines;
-                this.topMargin = json.topMargin || this.topMargin;
-                this.rightMargin = json.rightMargin || this.rightMargin;
-                this.leftMargin = json.leftMargin || this.leftMargin;
-                this.bottomMargin = json.bottomMargin || this.bottomMargin;
+                SettingsModel.settingsList.forEach((settingName) => {
+                    this[settingName] = json[settingName] || this[settingName];
+                });
                 this.state = ModelState.LOADED;
             },
             err => {
@@ -48,7 +59,7 @@ export class SettingsModel {
         );
     }
 
-    saveSettings = (key, value) => {
+    changeSetting = (key, value) => {
         this.state = ModelState.DIRTY;
         this[key] = value;
         this.savedSettingsObj[key] = value;
@@ -64,10 +75,9 @@ export class SettingsModel {
                 this.state = ModelState.LOADED;
             }
         });
-
     }
 
     changeWordFont = (amount) => {
-        this.saveSettings("wordFontSize", this.wordFontSize + amount);
+        this.changeSetting("wordFontSize", this.wordFontSize + amount);
     }
 }

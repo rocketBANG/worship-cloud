@@ -1,28 +1,30 @@
 import { extendObservable, action, computed } from 'mobx';
 import { Song } from './Song'
-
-const NUM_LINES = 6;
-
-var arrayNumber = -1;
-const arrayReducer = (accumulator, currentValue, currentIndex, array) => { 
-    if(currentValue !== "") {
-        if(currentIndex % NUM_LINES === 0) {
-        arrayNumber++;
-        accumulator[arrayNumber] = currentValue;
-        } else {
-        accumulator[arrayNumber] = accumulator[arrayNumber] + '\n' + currentValue;
-        }
-    }
-    return accumulator;
-}
+import { SettingsModel } from './settings/SettingsModel';
 
 export const BLACKED = 1;
 export const WHITE = -1;
 
 export class DisplaySong extends Song {
 
+    arrayNumber = -1;
+    arrayReducer = (accumulator, currentValue, currentIndex, array) => { 
+        if(currentValue !== "") {
+            if(currentIndex % this.settingsModel.maximumPageLines === 0) {
+                this.arrayNumber++;
+                accumulator[this.arrayNumber] = currentValue;
+            } else {
+                accumulator[this.arrayNumber] = accumulator[this.arrayNumber] + '\n' + currentValue;
+            }
+        }
+        return accumulator;
+    }
+    
+    settingsModel = SettingsModel.settingsModel
+
     constructor(songName, songTitle) {
         super(songName, songTitle);
+        this.settingsModel.loadSettings();
         extendObservable(this, {
             blanked: 0, // 1 = black, -1 = white
             currentVerse: undefined,
@@ -111,8 +113,8 @@ export class DisplaySong extends Song {
     }
 
     setupPages = () => {
-        arrayNumber = -1;
-        this.currentPages = this.currentVerse.text.split('\n').reduce(arrayReducer, []);
+        this.arrayNumber = -1;
+        this.currentPages = this.currentVerse.text.split('\n').reduce(this.arrayReducer, []);
         this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 

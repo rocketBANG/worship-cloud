@@ -70,6 +70,14 @@ class Viewer extends Component {
         if (event.key === 'display-setBackgroundColor') {
             this.setState({backgroundColor: localStorage.getItem('display-setBackgroundColor')});
         }
+        
+        if (event.key === 'display-setLineHeight') {
+            this.setState({lineHeight: localStorage.getItem('display-setLineHeight')});
+        }
+
+        if (event.key === 'display-setIndentAmount') {
+            this.setState({indentAmount: localStorage.getItem('display-setIndentAmount')});
+        }
 
         // if (event.key == 'display-setColor') {
         //     document.getElementById("main").style.backgroundColor = localStorage.getItem('display-setColor');
@@ -89,7 +97,9 @@ class Viewer extends Component {
                     words={this.state.words} 
                     isFullscreen={this.state.isFullscreen}
                     fontSize={this.state.fontSize}
-                    backgroundColor={this.state.backgroundColor}/>
+                    backgroundColor={this.state.backgroundColor}
+                    lineHeight={this.state.lineHeight}
+                    indentAmount={this.state.indentAmount}/>
                 { !this.state.isFullscreen && <div className='viewerControls'>
                     <button onClick={this.onFullscreenClick}>Go fullscreen</button>
                 </div> }
