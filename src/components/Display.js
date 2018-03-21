@@ -26,7 +26,7 @@ const Display = observer(class Display extends React.Component {
     splitLines(text) {
         if(text) {
             return text.split("\n").map((line, index) => {
-                return (<p key={index}>{line}<br /></p>)
+                return (<p key={index}>{line}</p>)
             });
         } else {
             return "";
@@ -80,8 +80,40 @@ const Display = observer(class Display extends React.Component {
         this.updateSize(nextProps.fontSize);
     }
 
+    getStyles = () => {
+        return  {
+            fontSize: this.state.verseFontSize,
+            lineHeight: this.props.lineHeight,
+            paddingLeft: this.props.indentAmount + "em",
+            textIndent: (-this.props.indentAmount) + "em"
+        };
+    }
+
+    testLines = (text) => {
+        let div = document.createElement("div");
+        document.body.appendChild(div);
+
+        div.classList.add("VerseText");
+
+        let styles = this.getStyles();
+        for(let style in styles) {
+            if(styles.hasOwnProperty(style)) {
+                div.style[style] = styles[style];
+            }
+        }
+        div.style.boxSizing = "border-box";
+        div.style.width = this.verseText.clientWidth-1 + "px";
+        let maxHeight = this.wrapper.clientHeight;
+
+        div.innerHTML = "<p>" + text.split("\n").join("</p><p>") + "</p>";
+        let heightFraction = div.clientHeight / maxHeight;
+        document.body.removeChild(div);
+        return heightFraction;
+    }
+
     render() {
-        const words = this.props.isItallic ? <i>{this.splitLines(this.props.words)}</i> : this.splitLines(this.props.words);
+        let wordsToUse = this.words || this.props.words;
+        const words = this.props.isItallic ? <i>{this.splitLines(wordsToUse)}</i> : this.splitLines(wordsToUse);
 
         return (
             <div className="DisplayWrapper"
@@ -94,12 +126,9 @@ const Display = observer(class Display extends React.Component {
                     <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
                         {this.props.title}
                     </div>
-                    <div className="VerseText" style={{
-                        fontSize: this.state.verseFontSize,
-                        lineHeight: this.props.lineHeight,
-                        paddingLeft: this.props.indentAmount + "em",
-                        textIndent: (-this.props.indentAmount) + "em",
-                    }}>
+                    <div
+                        ref = {r => this.verseText = r}
+                        className="VerseText" style={this.getStyles()}>
                         {words}
                     </div>
                 </div>

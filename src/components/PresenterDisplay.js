@@ -27,6 +27,10 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
         }
     };
 
+    componentWillReceiveProps = (nextProps) => {
+        nextProps.song && nextProps.song.setDisplay(this.display);
+    }
+
     render() {
         let currentSong = this.props.song || {};
         let currentVerse = currentSong.currentVerse || {};
@@ -53,6 +57,7 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
         return (
             <div className="PresenterDisplay">
                 <Display 
+                    ref={r => this.display = r}
                     fontSize={this.settingsModel.wordFontSize}
                     id='PresenterDisplay' 
                     title={title} 

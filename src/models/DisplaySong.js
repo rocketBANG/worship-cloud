@@ -35,8 +35,6 @@ export class DisplaySong extends Song {
             prevPage: action(this.prevPage),
             setVerse: action(this.setVerse),
             setupPages: action(this.setupPages),
-            wordFontSize: "20px",
-            titleFontSize: "40px",
             setWhite: action(this.setWhite),
             setBlack: action(this.setBlack),
             isBlanked: computed(() => this.blanked !== 0),
@@ -44,8 +42,15 @@ export class DisplaySong extends Song {
             verseIndex: -1,
             currentPages: [],
             currentNumPages: computed(() => this.currentPages.length),
-            pageIndex: 0
+            pageIndex: 0,
+            setDisplay: action(this.setDisplay),
         });
+    }
+
+    setDisplay = (display) => {
+        this.display = display;
+        display.testLines("So we pour out our praise to You only");
+
     }
 
     nextVerse = () => {
@@ -115,6 +120,7 @@ export class DisplaySong extends Song {
     setupPages = () => {
         this.arrayNumber = -1;
         this.currentPages = this.currentVerse.text.split('\n').reduce(this.arrayReducer, []);
+        console.log(this.display && this.display.testLines(this.currentVerse.text));
         this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 
