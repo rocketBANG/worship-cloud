@@ -15,7 +15,7 @@ const SettingsPage = observer(class SettingsPage extends React.Component {
     }
 
     handleSettingsChange = (changeEvent) => {
-        this.settingsModel.changeSetting(changeEvent.target.name, changeEvent.target.value);
+        this.settingsModel.changeSetting(changeEvent.name, changeEvent.value);
     }
 
     render() {

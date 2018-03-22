@@ -61,7 +61,6 @@ export class SettingsModel {
 
     changeSetting = (key, value) => {
         this.state = ModelState.DIRTY;
-        value = parseInt(value, 10) || 0;
         this[key] = value;
         this.savedSettingsObj[key] = value;
         clearTimeout(this.uploadTimer);
