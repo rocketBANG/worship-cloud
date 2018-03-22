@@ -8,6 +8,11 @@ export class SettingsInput extends React.Component {
         isError: false,
     }
 
+    constructor(props) {
+        super(props);
+        this.state = {value: props.value, isError: false};
+    }
+
     componentWillReceiveProps = (nextProps) => {
         this.setState({value: nextProps.value});
     }
