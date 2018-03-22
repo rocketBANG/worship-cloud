@@ -89,7 +89,7 @@ const Display = observer(class Display extends React.Component {
         };
     }
 
-    testLines = (text) => {
+    measureLines = (textArray) => {
         let div = document.createElement("div");
         document.body.appendChild(div);
 
@@ -103,12 +103,16 @@ const Display = observer(class Display extends React.Component {
         }
         div.style.boxSizing = "border-box";
         div.style.width = this.verseText.clientWidth-1 + "px";
-        let maxHeight = this.wrapper.clientHeight;
+        div.innerHTML = "<p>test</p>";
+        let singleLineHeight = div.clientHeight;
 
-        div.innerHTML = "<p>" + text.split("\n").join("</p><p>") + "</p>";
-        let heightFraction = div.clientHeight / maxHeight;
+        let weightedLines = textArray.map(t => {
+            div.innerHTML = "<p>" + t + "</p>";
+            return {text: t, lines: div.clientHeight / singleLineHeight};
+        })
+
         document.body.removeChild(div);
-        return heightFraction;
+        return weightedLines;
     }
 
     render() {

@@ -7,19 +7,6 @@ export const WHITE = -1;
 
 export class DisplaySong extends Song {
 
-    arrayNumber = -1;
-    arrayReducer = (accumulator, currentValue, currentIndex, array) => { 
-        if(currentValue !== "") {
-            if(currentIndex % this.settingsModel.maximumPageLines === 0) {
-                this.arrayNumber++;
-                accumulator[this.arrayNumber] = currentValue;
-            } else {
-                accumulator[this.arrayNumber] = accumulator[this.arrayNumber] + '\n' + currentValue;
-            }
-        }
-        return accumulator;
-    }
-    
     settingsModel = SettingsModel.settingsModel
 
     constructor(songName, songTitle) {
@@ -49,8 +36,6 @@ export class DisplaySong extends Song {
 
     setDisplay = (display) => {
         this.display = display;
-        display.testLines("So we pour out our praise to You only");
-
     }
 
     nextVerse = () => {
@@ -118,9 +103,48 @@ export class DisplaySong extends Song {
     }
 
     setupPages = () => {
-        this.arrayNumber = -1;
-        this.currentPages = this.currentVerse.text.split('\n').reduce(this.arrayReducer, []);
-        console.log(this.display && this.display.testLines(this.currentVerse.text));
+        if(this.display === undefined) {
+            return;
+        }
+        let allLines = this.currentVerse.text.split('\n');
+        allLines = allLines.filter(l => l !== "");
+        this.currentPages = [];
+
+        let weightedLines = this.display.measureLines(allLines);
+        let totalLines = weightedLines.reduce((accumulator, val) => 
+            accumulator + val.lines
+        , 0);
+
+        let maxLines = this.settingsModel.maximumPageLines;
+        let minLines = this.settingsModel.minimumPageLines;
+
+        let currentLine = 0;
+        let pageI = 0;
+
+        while(totalLines > 0) {
+            let selectedLines = totalLines < maxLines ? totalLines : maxLines;
+
+            // Check if there is enough lines left over for the next page
+            if(totalLines - maxLines < minLines && totalLines - maxLines > 0) {
+                selectedLines = totalLines - minLines;
+            }
+
+            for(let i = currentLine; i < selectedLines + currentLine; i++) {
+                let seperator = '\n';
+                if(this.currentPages.length - 1 < pageI) {
+                    seperator = "";
+                    this.currentPages.push("");
+                }
+
+                // adjust index for 'lines' that are actually 2 in length
+                this.currentPages[pageI] += seperator + allLines[i];
+                currentLine -= weightedLines[i].lines-1;
+            }
+            currentLine += selectedLines;
+            totalLines -= selectedLines;
+            pageI++;
+        }
+
         this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 
