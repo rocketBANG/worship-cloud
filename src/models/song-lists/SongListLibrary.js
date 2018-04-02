@@ -16,7 +16,7 @@ class SongListLibrary {
     load = () => {
         API.getSongLists().then(lists => {
             lists.forEach(l => {
-                this.lists.push(new SongListModel(l.id, l.name, l.songs));
+                this.lists.push(new SongListModel(l.id, l.name));
             })
         });
     }

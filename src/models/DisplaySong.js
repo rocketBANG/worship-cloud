@@ -1,4 +1,4 @@
-import { extendObservable, action, computed } from 'mobx';
+import { extendObservable, action, computed, autorun } from 'mobx';
 import { Song } from './Song'
 import { SettingsModel } from './settings/SettingsModel';
 
@@ -31,7 +31,10 @@ export class DisplaySong extends Song {
             currentNumPages: computed(() => this.currentPages.length),
             pageIndex: 0,
             setDisplay: action(this.setDisplay),
+            loadSong: action(this.loadSong)
         });
+
+        autorun(() => {if(this.isLoaded) this.nextVerse()});
     }
 
     setDisplay = (display) => {

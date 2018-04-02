@@ -10,7 +10,7 @@ const SongList = observer(class SongList extends React.Component {
             songText: '',
             selectedSongNames: []
         };
-      }    
+    }    
 
     onSongClick = (names, indexes) => {
         if(names.length < 1) {
@@ -34,7 +34,7 @@ const SongList = observer(class SongList extends React.Component {
     };
 
     onSongListAdd = () => {
-        this.props.state.currentList.addSong(this.props.state.currentSong);
+        this.props.state.currentList.library.addSong(this.props.state.currentSong);
     };
 
     onSongRemove = () => {
@@ -50,6 +50,7 @@ const SongList = observer(class SongList extends React.Component {
     };
     
     render() {
+        let { filteredLibrary, hideControls } = this.props;
         const options = this.props.songList.songs.map((song, index) => ({
             id: song.name,
             text: song.title,
@@ -60,12 +61,12 @@ const SongList = observer(class SongList extends React.Component {
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <List onUpdate={this.onSongClick} options={options} />
-                <div className="ListControls">
-                    <input value={this.state.songText} onChange={this.handleChange} />
-                    <button onClick={this.onSongAdd} >Add Song</button>
+                {!hideControls && <div className="ListControls">
+                    {!filteredLibrary && <input value={this.state.songText} onChange={this.handleChange} />}
+                    {!filteredLibrary && <button onClick={this.onSongAdd} >Add Song</button>}
                     <button onClick={this.onSongRemove}>Remove Song</button>
-                    <button onClick={this.onSongListAdd} disabled={this.props.state.currentList === undefined}>Add to Song List</button>
-                </div>
+                    {!filteredLibrary && <button onClick={this.onSongListAdd} disabled={this.props.state.currentList === undefined}>Add to Song List</button>}
+                </div>}
                 {this.props.songList.state === "pending" ? "Saving" : ""}
             </div>
         )    

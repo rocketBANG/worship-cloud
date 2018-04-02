@@ -3,6 +3,10 @@ import './SongLists.css';
 import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
 import { List } from '../List';
+import SongList from '../SongList';
+import { SongLibraryModel } from '../../models/SongLibraryModel';
+import { SongListApi } from '../../store/SongListApi';
+import { Song } from '../../models/Song';
 
 const SongLists = observer(class SongLists extends React.Component {
     state = {
@@ -36,9 +40,11 @@ const SongLists = observer(class SongLists extends React.Component {
         if(indexes.length < 1) {
             return;
         }
-        let newList = this.songListLibrary.lists[indexes[0]];
-        this.props.editorState.currentList = newList;
-        newList.loadList();
+        let selectedList = this.songListLibrary.lists[indexes[0]];
+        let api = new SongListApi(selectedList.id);
+        api.load();
+        this.props.editorState.currentList = { library: new SongLibraryModel(api, this.props.songClass || Song), model: selectedList};
+        this.props.editorState.currentList.library.loadSongs();
     }
 
     onSongClick = (names, indexes) => {
@@ -47,23 +53,23 @@ const SongLists = observer(class SongLists extends React.Component {
             this.props.editorState.currentList = undefined;
             return;
         }
-        let newSong = this.props.editorState.currentList.songs[indexes[0]];
+        let newSong = this.props.editorState.currentList.library.songs[indexes[0]];
         this.props.editorState.currentSong = newSong;
         newSong.loadSong();
     }
 
     deleteSongList = () => {
         let {currentList} = this.props.editorState;
-        currentList.dlete();
+        currentList.model.delete();
     }
 
     removeSongFromList = () => {
-        let {currentList} = this.props.editorState;
-        currentList.removeSongs(this.state.selectedIndexes);
+        let currentList = this.props.editorState.currentList;
+        currentList.library.removeSongs(this.state.selectedIndexes);
     }
 
     render() {
-        let {currentList} = this.props.editorState;
+        let currentList = this.props.editorState.currentList;
         let options = this.songListLibrary.lists.map(list => ({
             id: list.id,
             text: list.name,
@@ -72,30 +78,29 @@ const SongLists = observer(class SongLists extends React.Component {
 
         let mainView = <List onUpdate={this.onListClick} options={options} />;
         if(currentList !== undefined) {
-            options = currentList.songs.map(song => ({
-                id: song.name,
-                text: song.title,
-                altText: song.name
-            }));
-            mainView = <List onUpdate={this.onSongClick} options={options} />;
+            mainView = <SongList songList={currentList.library} filteredLibrary={true} state={this.props.editorState} hideControls={this.props.hideControls}/>;
         }
 
         const backButton = currentList !== undefined ? <button onClick={() => this.props.editorState.currentList = undefined}>{"<-"}</button> : "";
 
-        const controls = currentList === undefined
-            ? (<button onClick={this.onAddSongList}>Add song list</button>)
-            : (<React.Fragment>
-                <button onClick={this.deleteSongList} disabled={true}>Delete this song list</button>
-                <button onClick={this.removeSongFromList} disabled={this.state.selectedIndexes.length < 1}>Remove song from list</button>
+        let controls;
+        if(currentList === undefined && !this.props.hideControls) {
+            controls = (<React.Fragment>
+                <input value={this.state.songListName} onChange={this.songListNameChange} />
+                <button onClick={this.onAddSongList}>Add song list</button>
                 </React.Fragment>);
+        } else if(!this.props.hideControls){
+            controls = (<React.Fragment>
+                <button onClick={this.deleteSongList} disabled={true}>Delete this song list</button>
+                </React.Fragment>);
+        }
 
         return (
             <div className="SongLists EditorContainer">
-                <div className="ListHeader">{currentList === undefined ? "Song Lists:" : "Song List " + currentList.name + ":"}</div>
+                <div className="ListHeader">{currentList === undefined ? "Song Lists:" : "Song List " + currentList.model.name + ":"}</div>
                 {backButton}
                 {mainView}
                 <div className="SongListsControls">
-                    <input value={this.state.songListName} onChange={this.songListNameChange} />
                     {controls}
                 </div>
             </div>  

@@ -12,9 +12,7 @@ const SongLibrary = observer(class SongLibrary extends React.Component {
 
         this.props.state.currentSong = this.props.songList.songs[indexes[0]];
         if (this.props.state.currentSong.state === "unloaded") {
-            this.props.state.currentSong.loadSong().then(() => {
-                this.props.state.currentSong.nextVerse();
-            });
+            this.props.state.currentSong.loadSong();
         }
     };
 

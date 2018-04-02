@@ -4,7 +4,7 @@ import VerseOrderList from '../components/VerseOrderList';
 import SongEditor from '../components/SongEditor';
 import SongList from '../components/SongList';
 import '../style/Editor.css';
-import { SongLibraryModel } from '../models/SongListModel'
+import { SongLibraryModel } from '../models/SongLibraryModel'
 import { observable } from 'mobx';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
@@ -36,7 +36,6 @@ export default class Editor extends Component {
             <div className='editorPage'>
                 <div className='editor'>
                     <TabFrame tabs={tabs} />
-                    
                     <VerseList state={this.editorState}/>
                     <VerseOrderList state={this.editorState}/>
                     <SongEditor state={this.editorState}/>

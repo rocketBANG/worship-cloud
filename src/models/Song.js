@@ -4,8 +4,6 @@ import { Verse } from './Verse'
 
 export class Song {
 
-    isLoaded = false;
-
     constructor(songName, songTitle) {
 
         extendObservable(this, {
@@ -26,6 +24,7 @@ export class Song {
             removeFromOrder: action(this.removeFromOrder),
             reorder: action(this.reorder),
             setChorus: action(this.setChorus),
+            isLoaded: false,
         });
     }
 

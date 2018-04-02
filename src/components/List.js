@@ -5,6 +5,10 @@ class List extends React.Component {
 
     keySeperator = "_-";
 
+    state = {
+        selected: []
+    }
+
     removeUnique(string) {
         let endIndex = string.indexOf(this.keySeperator);
         return string.substring(0, endIndex);
@@ -17,10 +21,14 @@ class List extends React.Component {
         
         for(let i = 0; i < options.length; i++) {
             if(options[i].selected) {
-                selectedValues.push(this.removeUnique(options[i].value));
+                selectedValues.push(options[i].value);
                 selectedIndexes.push(i);
             }
         }
+
+        this.setState({selected: selectedValues});
+
+        selectedValues = selectedValues.map(v => this.removeUnique(v));
 
         this.props.onUpdate(selectedValues, selectedIndexes)
     }
@@ -41,8 +49,7 @@ class List extends React.Component {
             }</option>)
         );
 
-        let selected;
-    
+        let selected = this.state.selected;
         if(this.props.selectedIndex !== undefined) {
             if(this.props.selectedIndex.constructor === Array) {
                 selected = optionsKeys.filter((v, i) => this.props.selectedIndex.indexOf(i) !== -1);

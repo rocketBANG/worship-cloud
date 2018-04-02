@@ -1,15 +1,16 @@
 import { extendObservable, action } from 'mobx';
 import { Song } from './Song';
-import * as API from '../store/api';
 import { subscribeToSocket } from '../store/api';
+import { SongLibraryApi } from '../store/SongLibraryApi';
 
 export class SongLibraryModel {
     
     addingSong = false;
     
-    constructor(classType = Song) {
+    constructor(apiManager = new SongLibraryApi(), classType = Song) {
         this.classType = classType;
-        
+        this.apiManager = apiManager;
+
         extendObservable(this, {
             songs: [],
             addSong: action(this.addSong),
@@ -20,7 +21,7 @@ export class SongLibraryModel {
     }
     
     loadSongs = () => {
-        API.fetchSongs().then((json) => {
+        this.apiManager.fetchSongs().then((json) => {
             json.forEach(songJson => {
                 let song = new this.classType(songJson.name, songJson.title);
                 this.songs.push(song);
@@ -34,7 +35,7 @@ export class SongLibraryModel {
     onSocketAdd = (data) => {
         if(this.state !== 'pending') {
             if(data.action === 'createSong') {
-                this.songs.push(new Song(data.data.name));
+                this.songs.push(new this.classType(data.data.name));
             }
             else if(data.action === 'removeSong') {
                 let i = this.songs.findIndex(s => s.name === data.data.name);
@@ -49,7 +50,7 @@ export class SongLibraryModel {
         this.state = 'pending';
         this.addingSong = true;
         
-        API.uploadSong(song.name).then(
+        this.apiManager.addSong(song.name).then(
             body => {
                 this.state = 'done';
                 this.songs.push(song);
@@ -67,6 +68,6 @@ export class SongLibraryModel {
         this.songs = this.songs.filter((song) => {
             return song.name !== songName;
         });
-        API.removeSong(songName).then(() => this.state = 'done');
+        this.apiManager.removeSong(songName).then(() => this.state = 'done');
     };
 }
