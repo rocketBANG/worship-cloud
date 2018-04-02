@@ -278,6 +278,21 @@ export const loadSongList = (listId) => {
     )
 };
 
+export const downloadSongs = (songNames) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return fetch(databaseURL + `/songpptx/`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(songNames)
+    }).then(
+        response => response.blob(),
+
+        error => console.log('An error occured.', error)
+    )
+};
+
 
 function subscribeToSocket(cb) {
     socket.on('newDataEvent', data => cb(data));

@@ -7,6 +7,7 @@ import SongList from '../SongList';
 import { SongLibraryModel } from '../../models/SongLibraryModel';
 import { SongListApi } from '../../store/SongListApi';
 import { Song } from '../../models/Song';
+import * as API from '../../store/api';
 
 const SongLists = observer(class SongLists extends React.Component {
     state = {
@@ -68,6 +69,19 @@ const SongLists = observer(class SongLists extends React.Component {
         currentList.library.removeSongs(this.state.selectedIndexes);
     }
 
+    downloadSongList = () => {
+        let songs = this.props.editorState.currentList.library.songs.map(s => s.name);
+        API.downloadSongs(songs).then(blob => {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            let url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = this.props.editorState.currentList.model.name + ".pptx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+    }
+
     render() {
         let currentList = this.props.editorState.currentList;
         let options = this.songListLibrary.lists.map(list => ({
@@ -92,6 +106,7 @@ const SongLists = observer(class SongLists extends React.Component {
         } else if(!this.props.hideControls){
             controls = (<React.Fragment>
                 <button onClick={this.deleteSongList} disabled={true}>Delete this song list</button>
+                <button onClick={this.downloadSongList}>Download songs as powerpoint</button>
                 </React.Fragment>);
         }
 
