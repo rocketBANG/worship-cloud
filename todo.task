@@ -1,10 +1,8 @@
 Doing: 
-    [ ] 42 Add options for how many lines to move page when they cannot fit on one page
-    [ ] 43 Measure lines including lines that have wrapped as 2 lines
+    [ ] 41 Add ability to create song lists
+    [ ] 40 Add search bar to song library
 
 Backlog:
-    [ ] 40 Add search bar to song library
-    [ ] 41 Add ability to create song lists
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 27 Add context/right click menus
@@ -14,6 +12,8 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     
 Done: 
+    [x] 42 Add options for how many lines to move page when they cannot fit on one page
+    [x] 43 Measure lines including lines that have wrapped as 2 lines
     [x] 37 Add line spacing options
     [x] 39 Add user settings
     [x] 38 Add indicator for black/white screen and what page in the verse the presenter display is at
