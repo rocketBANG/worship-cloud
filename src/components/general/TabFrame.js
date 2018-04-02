@@ -4,27 +4,36 @@ import "./TabFrame.css"
 class TabFrame extends React.Component {
 
     state = {
-        currentTab: 0
+        currentTabs: [ 0 ]
     }
 
     onTabClick = (tabIndex) => {
-        this.setState({currentTab: tabIndex});
+        let newCurrentTabs = [tabIndex];
+        if(this.props.multiple) {
+            newCurrentTabs = this.state.currentTabs;
+            if(newCurrentTabs.indexOf(tabIndex) > -1) {
+                newCurrentTabs = newCurrentTabs.filter(i => i !== tabIndex);
+            } else {
+                newCurrentTabs.push(tabIndex);
+            }
+        }
+        this.setState({currentTabs: newCurrentTabs});
     }
 
     render() {
         let {tabs} = this.props;
-        let {currentTab} = this.state;
+        let {currentTabs} = this.state;
 
         const tabButtons = tabs.map((t, i) => {
             return (
-                <div className={(i === currentTab ? "selected" : "") + " tabButton"} onClick={() => this.onTabClick(i)} key={i}>{t.name}</div>
+                <div className={(currentTabs.indexOf(i) > -1 ? "selected" : "") + " tabButton"} onClick={() => this.onTabClick(i)} key={i}>{t.name}</div>
             );
         });
 
         return (
             <div className="TabFrame">
                 <div className="TabFrameViewer">
-                    {tabs[currentTab].component}
+                    {currentTabs.map((t, i) => React.cloneElement(tabs[t].component, {key: i}))}
                 </div>
                 <div className="TabFrameControls">
                     {tabButtons}

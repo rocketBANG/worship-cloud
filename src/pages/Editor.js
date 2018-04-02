@@ -35,7 +35,7 @@ export default class Editor extends Component {
         return (
             <div className='editorPage'>
                 <div className='editor'>
-                    <TabFrame tabs={tabs} />
+                    <TabFrame tabs={tabs} multiple={true}/>
                     <VerseList state={this.editorState}/>
                     <VerseOrderList state={this.editorState}/>
                     <SongEditor state={this.editorState}/>
