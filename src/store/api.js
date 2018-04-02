@@ -219,6 +219,66 @@ export const updateSettings = (username, settings) => {
     )
 }
 
+export const addSongList = (listName, songIds) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    let list = {
+        name: listName,
+        songs: songIds
+    }
+
+    return fetch(databaseURL + `/songlists/`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(list)
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+};
+
+export const updateSongList = (listId, songIds) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    let list = {
+        songs: songIds
+    }
+
+    return fetch(databaseURL + `/songlists/` + listId, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(list)
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+};
+
+export const getSongLists = () => {
+    return fetch(databaseURL + `/songlists/`, {
+        method: 'GET'
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+};
+
+export const loadSongList = (listId) => {
+    return fetch(databaseURL + `/songlists/` + listId, {
+        method: 'GET'
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+};
+
+
 function subscribeToSocket(cb) {
     socket.on('newDataEvent', data => cb(data));
 }

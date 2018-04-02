@@ -33,6 +33,10 @@ const SongList = observer(class SongList extends React.Component {
         this.props.songList.addSong(new Song(this.state.songText));
     };
 
+    onSongListAdd = () => {
+        this.props.state.currentList.addSong(this.props.state.currentSong);
+    };
+
     onSongRemove = () => {
         this.state.selectedSongNames.forEach(songName => {
             this.props.songList.removeSong(songName);
@@ -60,6 +64,7 @@ const SongList = observer(class SongList extends React.Component {
                     <input value={this.state.songText} onChange={this.handleChange} />
                     <button onClick={this.onSongAdd} >Add Song</button>
                     <button onClick={this.onSongRemove}>Remove Song</button>
+                    <button onClick={this.onSongListAdd} disabled={this.props.state.currentList === undefined}>Add to Song List</button>
                 </div>
                 {this.props.songList.state === "pending" ? "Saving" : ""}
             </div>

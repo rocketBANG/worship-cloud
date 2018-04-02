@@ -4,7 +4,7 @@ import '../style/Presenter.css'
 import '../style/Display.css'
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { SongListModel } from '../models/SongListModel';
+import { SongLibraryModel } from '../models/SongListModel';
 import { DisplaySong } from '../models/DisplaySong';
 import { DisplayVerseList } from '../components/DisplayVerseList';
 import PresenterDisplay from '../components/PresenterDisplay';
@@ -14,7 +14,7 @@ const Presenter = observer(class Presenter extends Component {
     constructor(props) {
         super(props);
         
-        this.songList = new SongListModel(DisplaySong);
+        this.songList = new SongLibraryModel(DisplaySong);
         this.songList.loadSongs();
 
         this.presenterState = observable({

@@ -3,7 +3,7 @@ import { Song } from './Song';
 import * as API from '../store/api';
 import { subscribeToSocket } from '../store/api';
 
-export class SongListModel {
+export class SongLibraryModel {
     
     addingSong = false;
     
