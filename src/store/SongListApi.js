@@ -41,8 +41,11 @@ class SongListApi {
     };
 
     addSong = async (songName) => {
-        !this.isLoaded && await this.load();
-        return this.updateSongList([...this.songs, {name: songName}]);
+        if(!this.isLoaded) await this.load();
+        return this.updateSongList([...this.songs, {name: songName}]).then(response => {
+            this.songs = [...this.songs, {name: songName}];
+            return response;
+        });
     };
 
     updateSongList(songs) {
@@ -67,7 +70,10 @@ class SongListApi {
 
     removeSong = async (songName) => {
         !this.isLoaded && await this.load();
-        return this.updateSongList(this.songs.filter(s => s.name !== songName));
+        return this.updateSongList(this.songs.filter(s => s.name !== songName)).then(response => {
+            this.songs = this.songs.filter(s => s.name !== songName);
+            return response;
+        });
         
     };
 }
