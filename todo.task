@@ -1,7 +1,10 @@
 Doing: 
-    [ ] 40 Add search bar to song library
+    [ ] 44 Fix repeated lines when lines wrap on 2nd page
+    [ ] 45 Change minimum lines to be actual lines not wrapped lines
+    [ ] 46 Only show title on first page of first verse
 
 Backlog:
+    [ ] 40 Add search bar to song library
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 27 Add context/right click menus
