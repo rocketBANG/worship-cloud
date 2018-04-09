@@ -121,6 +121,10 @@ export class DisplaySong extends Song {
         let maxLines = this.settingsModel.maximumPageLines;
         let minLines = this.settingsModel.minimumPageLines;
 
+        // let actualMinimum = weightedLines.reduce((accumulator, val, i) => 
+        //     i >= weightedLines.length - minLines - 1 ? accumulator + val.lines : accumulator
+        // , 0);
+
         let currentLine = 0;
         let pageI = 0;
 
@@ -131,8 +135,9 @@ export class DisplaySong extends Song {
             if(totalLines - maxLines < minLines && totalLines - maxLines > 0) {
                 selectedLines = totalLines - minLines;
             }
-
-            for(let i = currentLine; i < selectedLines + currentLine; i++) {
+            let i = currentLine;
+            let usedLines = 0;
+            for(i; i < selectedLines + currentLine; i++) {
                 let seperator = '\n';
                 if(this.currentPages.length - 1 < pageI) {
                     seperator = "";
@@ -142,9 +147,10 @@ export class DisplaySong extends Song {
                 // adjust index for 'lines' that are actually 2 in length
                 this.currentPages[pageI] += seperator + allLines[i];
                 currentLine -= weightedLines[i].lines-1;
+                usedLines += weightedLines[i].lines;
             }
-            currentLine += selectedLines;
-            totalLines -= selectedLines;
+            currentLine += usedLines;
+            totalLines -= usedLines;
             pageI++;
         }
 

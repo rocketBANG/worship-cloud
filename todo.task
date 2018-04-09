@@ -1,6 +1,4 @@
 Doing: 
-    [ ] 44 Fix repeated lines when lines wrap on 2nd page
-    [ ] 45 Change minimum lines to be actual lines not wrapped lines
     [ ] 46 Only show title on first page of first verse
 
 Backlog:
@@ -14,6 +12,7 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     
 Done: 
+    [x] 44 Fix repeated lines when lines wrap on 2nd page
     [x] 41 Add ability to create song lists
     [x] 42 Add options for how many lines to move page when they cannot fit on one page
     [x] 43 Measure lines including lines that have wrapped as 2 lines
@@ -52,5 +51,6 @@ Done:
     [x] 24 Change order to use verseId instead of index
 
 Canceled: 
+    [-] 45 Change minimum lines to be actual lines not wrapped lines
     [-] 22 Error checking for multiple choruses
     [-] 18 Add an ID generator to local and api so that verses can be added without waiting for response
