@@ -36,7 +36,7 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
         let currentVerse = currentSong.currentVerse || {};
         let currentPage = currentSong.currentPage || "";
 
-        let title = currentSong.verseIndex > 0 ? "" : currentSong.name || '';
+        let title = currentSong.verseIndex > 0 || currentSong.pageIndex > 0? "" : currentSong.name || '';
         let words = currentPage || '';
         let backgroundColor = currentSong.backgroundColor;
 
