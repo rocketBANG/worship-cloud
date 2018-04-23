@@ -1,6 +1,6 @@
 import { extendObservable, action } from 'mobx';
 import { Song } from './Song';
-import { subscribeToSocket } from '../store/api';
+// import { subscribeToSocket } from '../store/api';
 import { SongLibraryApi } from '../store/SongLibraryApi';
 
 export class SongLibraryModel {
@@ -28,7 +28,7 @@ export class SongLibraryModel {
             });
         });
         
-        subscribeToSocket(this.onSocketAdd);
+        // subscribeToSocket(this.onSocketAdd);
         
     };
     

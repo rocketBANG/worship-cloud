@@ -140,8 +140,6 @@ export class DisplaySong extends Song {
             let i = currentLine;
             let usedLines = 0;
 
-            console.log(selectedLines);
-
             for(i; i < selectedLines + currentLine; i++) {
                 let seperator = '\n';
                 if(this.currentPages.length === 0) {
