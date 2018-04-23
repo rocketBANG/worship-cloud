@@ -45,27 +45,28 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
             words = '';
         }
 
+        let props = {
+            lineHeight: this.settingsModel.lineHeight,
+            indentAmount: this.settingsModel.indentAmount,
+            backgroundColor: backgroundColor,
+            fontSize: this.settingsModel.wordFontSize || 0
+        }
+
         // Broadcast to viewer
         localStorage.setItem('display-setTitle', title);
         localStorage.setItem('display-setWords', words);
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' || false);
-        localStorage.setItem('display-setFontSize', this.settingsModel.wordFontSize || 0);
-        localStorage.setItem('display-setBackgroundColor', backgroundColor);
-        localStorage.setItem('display-setLineHeight', this.settingsModel.lineHeight);
-        localStorage.setItem('display-setIndentAmount', this.settingsModel.indentAmount);
+        localStorage.setItem('display-setStyle', JSON.stringify(props));
 
         return (
             <div className="PresenterDisplay">
                 <Display 
                     ref={r => this.display = r}
-                    fontSize={this.settingsModel.wordFontSize}
                     id='PresenterDisplay' 
                     title={title} 
                     isItallic={currentVerse.type === 'chorus'} 
                     words={words}
-                    backgroundColor={backgroundColor}
-                    lineHeight={this.settingsModel.lineHeight}
-                    indentAmount={this.settingsModel.indentAmount}
+                    {...props}
                 >
                     <DisplayControls song={currentSong} fontChange={this.onFontChange}/>
                 </Display>

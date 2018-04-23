@@ -9,8 +9,7 @@ class Viewer extends Component {
         title: undefined,
         isItallic: undefined,
         isFullscreen: false,
-        fontSize: 0,
-        backgroundColor: "#000"
+        props: {}
     };
 
     constructor(props) {
@@ -63,29 +62,10 @@ class Viewer extends Component {
             this.setState({isItallic: localStorage.getItem('display-setIsItallic')});
         }
 
-        if (event.key === 'display-setFontSize') {
-            this.setState({fontSize: localStorage.getItem('display-setFontSize')});
+        if (event.key === 'display-setStyle') {
+            this.setState({props: JSON.parse(localStorage.getItem('display-setStyle'))});
         }
 
-        if (event.key === 'display-setBackgroundColor') {
-            this.setState({backgroundColor: localStorage.getItem('display-setBackgroundColor')});
-        }
-        
-        if (event.key === 'display-setLineHeight') {
-            this.setState({lineHeight: localStorage.getItem('display-setLineHeight')});
-        }
-
-        if (event.key === 'display-setIndentAmount') {
-            this.setState({indentAmount: localStorage.getItem('display-setIndentAmount')});
-        }
-
-        // if (event.key == 'display-setColor') {
-        //     document.getElementById("main").style.backgroundColor = localStorage.getItem('display-setColor');
-        // }
-
-        // if (event.key == 'display-setFontSize') {
-        //     document.getElementById("songWords").style.fontSize = localStorage.getItem('display-setFontSize') + "vw";
-        // }
     };
 
     render() {
@@ -96,10 +76,8 @@ class Viewer extends Component {
                     isItallic={this.state.isItallic === 'true'} 
                     words={this.state.words} 
                     isFullscreen={this.state.isFullscreen}
-                    fontSize={this.state.fontSize}
-                    backgroundColor={this.state.backgroundColor}
-                    lineHeight={this.state.lineHeight}
-                    indentAmount={this.state.indentAmount}/>
+                    {...this.state.props}
+                    />
                 { !this.state.isFullscreen && <div className='viewerControls'>
                     <button onClick={this.onFullscreenClick}>Go fullscreen</button>
                 </div> }
