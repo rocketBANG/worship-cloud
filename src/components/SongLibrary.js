@@ -24,7 +24,7 @@ const SongLibrary = observer(class SongLibrary extends React.Component {
         }));
     
         return ( 
-            <div className="SongLibrary">
+            <div className="SongLibrary EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <List onUpdate={this.onSongClick} options={options}/>
             </div>

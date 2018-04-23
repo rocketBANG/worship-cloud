@@ -27,7 +27,7 @@ const DisplayVerseList = observer(class DisplayVerseList extends React.Component
         });
     
         return ( 
-            <div className="VerseList">
+            <div className="VerseList EditorContainer">
                 <div className="ListHeader">Verses:</div>
                 <List onUpdate={this.onVerseClick} options={options} selectedIndex={song.verseIndex}/>
             </div>

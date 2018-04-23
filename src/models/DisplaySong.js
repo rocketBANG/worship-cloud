@@ -129,6 +129,8 @@ export class DisplaySong extends Song {
         let pageI = 0;
 
         while(totalLines > 0) {
+            this.currentPages.push("");
+
             let selectedLines = totalLines < maxLines ? totalLines : maxLines;
 
             // Check if there is enough lines left over for the next page
@@ -137,18 +139,24 @@ export class DisplaySong extends Song {
             }
             let i = currentLine;
             let usedLines = 0;
+
+            console.log(selectedLines);
+
             for(i; i < selectedLines + currentLine; i++) {
                 let seperator = '\n';
-                if(this.currentPages.length - 1 < pageI) {
+                if(this.currentPages.length === 0) {
                     seperator = "";
-                    this.currentPages.push("");
                 }
 
-                // adjust index for 'lines' that are actually 2 in length
-                this.currentPages[pageI] += seperator + allLines[i];
-                currentLine -= weightedLines[i].lines-1;
-                usedLines += weightedLines[i].lines;
+                // check there is space for the new lines on this page
+                if(i + 1 <= selectedLines + currentLine - weightedLines[i].lines + 1) {
+                    this.currentPages[pageI] += seperator + allLines[i];
+                    // adjust index for 'lines' that are actually 2 in length
+                    currentLine -= weightedLines[i].lines-1;
+                    usedLines += weightedLines[i].lines;
+                }
             }
+            
             currentLine += usedLines;
             totalLines -= usedLines;
             pageI++;
