@@ -18,9 +18,9 @@ const SongLibrary = observer(class SongLibrary extends React.Component {
 
     render = () => {
         const options = this.props.songList.songs.map((song, index) => ({
-            id: song.name,
+            id: song.id,
             text: song.title,
-            altText: song.name
+            altText: song.title
         }));
     
         return ( 

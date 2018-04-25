@@ -14,9 +14,9 @@ class SongLibraryApi {
         );
     };
 
-    addSong = (songName) => {
+    addSong = (songTitle) => {
         let song = {
-            name: songName,
+            title: songTitle,
             verses: [],
             order: []
         };
@@ -42,10 +42,10 @@ class SongLibraryApi {
         )
     };
 
-    removeSong = (songName) => {
+    removeSong = (songId) => {
         let headers = new Headers();
     
-        return fetch(databaseURL + `/songs/` + songName, {
+        return fetch(databaseURL + `/songs/` + songId, {
             method: 'DELETE',
             headers: headers
         });

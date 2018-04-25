@@ -9,8 +9,8 @@ export class DisplaySong extends Song {
 
     settingsModel = SettingsModel.settingsModel
 
-    constructor(songName, songTitle) {
-        super(songName, songTitle);
+    constructor(songTitle, id) {
+        super(songTitle, id);
         this.settingsModel.loadSettings();
         extendObservable(this, {
             blanked: 0, // 1 = black, -1 = white

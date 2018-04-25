@@ -4,18 +4,15 @@ import { Verse } from './Verse'
 
 export class Song {
 
-    constructor(songName, songTitle) {
+    constructor(songTitle, id) {
 
         extendObservable(this, {
-            name: songName,
+            id: id,
             title: songTitle,
             state: "unloaded", // "loading" / "loaded" / "error" / "unloaded"
             chorus: undefined,
             order: [],
             verses: new Map(),
-            get songName() {
-                return this.title || this.name;
-            },
             completeVerses: computed(this.completeVerses),
             verseOrder: computed(this.verseOrder),
             loadSong: action(this.loadSong),
@@ -31,10 +28,10 @@ export class Song {
     loadSong = () => {
         if(!this.isLoaded) {
             this.state = "loading";
-            return API.fetchVerses(this.name).then((json) => {
+            return API.fetchVerses(this.id).then((json) => {
                 json.verses.forEach(verse => {
-                    var newVerse = new Verse(verse.id, verse.text, verse.type);
-                    this.verses.set(verse.id, newVerse);
+                    var newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
+                    this.verses.set(verse._id, newVerse);
                 });
 
                 this.order = json.order;
@@ -48,7 +45,7 @@ export class Song {
     addToOrder = (verseId) => {
         this.state = "uploading";
         this.order = this.order.concat(verseId);
-        API.updateOrder(this.order, this.name).then(() => {
+        API.updateOrder(this.order, this.id).then(() => {
             this.state = "loaded";
         });
     };
@@ -63,7 +60,7 @@ export class Song {
             this.order.splice(from + to, 0, this.order.splice(from, 1)[0]);
         }
 
-        API.updateOrder(this.order, this.name).then(() => {
+        API.updateOrder(this.order, this.id).then(() => {
             this.state = "loaded";
         });
     };
@@ -76,7 +73,7 @@ export class Song {
         } else {
             this.order.splice(index, 1);
         }
-        API.updateOrder(this.order, this.name).then(() => {
+        API.updateOrder(this.order, this.id).then(() => {
             this.state = "loaded";
         });
     };
@@ -100,8 +97,8 @@ export class Song {
  
     addVerse = (text) => {
         this.state = "uploading";
-        API.addVerse(text, this.name).then((verse) => {
-            this.verses.set(verse.id, new Verse(verse.id, verse.text));
+        API.addVerse(text, this.id).then((verse) => {
+            this.verses.set(verse._id, new Verse(verse._id, this.id, verse.text));
             this.state = "loaded";
         });
     };
@@ -114,9 +111,9 @@ export class Song {
         let promises = [];
         verseIds.forEach(v => { 
             this.verses.delete(v);
-            promises.push(API.removeVerse(v, this.name));
+            promises.push(API.removeVerse(v, this.id));
         });
-        promises.push(API.updateOrder(this.order, this.name));
+        promises.push(API.updateOrder(this.order, this.id));
         Promise.all(promises).then((json) => {
             this.state = "loaded";
         });    
