@@ -1,14 +1,13 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
-import { Song } from '../models/Song'
 
 const SongList = observer(class SongList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             songText: '',
-            selectedSongNames: []
+            selectedSongIds: []
         };
     }    
 
@@ -16,7 +15,7 @@ const SongList = observer(class SongList extends React.Component {
         if(names.length < 1) {
             this.props.state.currentSong = undefined;
             this.setState({
-                selectedSongNames: []
+                selectedSongIds: []
             })    
             return;
         }
@@ -30,7 +29,7 @@ const SongList = observer(class SongList extends React.Component {
     };
 
     onSongAdd = () => {
-        this.props.songList.addSong(new Song(this.state.songText));
+        this.props.songList.addSong(this.state.songText);
     };
 
     onSongListAdd = () => {
@@ -38,8 +37,8 @@ const SongList = observer(class SongList extends React.Component {
     };
 
     onSongRemove = () => {
-        this.state.selectedSongNames.forEach(songName => {
-            this.props.songList.removeSong(songName);
+        this.state.selectedSongIds.forEach(songId => {
+            this.props.songList.removeSong(songId);
         })
     };
 
@@ -52,9 +51,9 @@ const SongList = observer(class SongList extends React.Component {
     render() {
         let { filteredLibrary, hideControls } = this.props;
         const options = this.props.songList.songs.map((song, index) => ({
-            id: song.name,
+            id: song.id,
             text: song.title,
-            altText: song.name
+            altText: ""
         }));
     
         return (

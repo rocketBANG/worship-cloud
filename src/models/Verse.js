@@ -2,9 +2,10 @@ import { extendObservable, action, computed } from 'mobx';
 import * as API from '../store/api'
 
 export class Verse {
-    constructor(verseId, text = "", type = "verse") {
+    constructor(verseId, songId, text = "", type = "verse") {
         extendObservable(this, {
             id: verseId,
+            songId: songId,
             text: text,
             type: type,
             state: "loaded", // "loading" / "loaded" / "error" / "unloaded",
@@ -19,7 +20,7 @@ export class Verse {
         this.state = "uploading";
         this.text = text;
 
-        API.updateVerse(text, this.id).then((verse) => {
+        API.updateVerse(text, this.songId, this.id).then((verse) => {
             this.state = "loaded";
         });
     };
@@ -32,7 +33,7 @@ export class Verse {
         this.state = "uploading";
         let type = this.type === "verse" ? "chorus" : "verse";
         this.type = type;
-        return API.updateVerseType(this.id, type).then(() => this.state = "loaded");
+        return API.updateVerseType(this.id, this.songId, type).then(() => this.state = "loaded");
     }
 
     setNumberOfPages = (num) => {

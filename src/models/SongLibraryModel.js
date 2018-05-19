@@ -23,7 +23,7 @@ export class SongLibraryModel {
     loadSongs = () => {
         this.apiManager.fetchSongs().then((json) => {
             json.forEach(songJson => {
-                let song = new this.classType(songJson.name, songJson.title);
+                let song = new this.classType(songJson.title, songJson._id);
                 this.songs.push(song);
             });
         });
@@ -35,10 +35,10 @@ export class SongLibraryModel {
     onSocketAdd = (data) => {
         if(this.state !== 'pending') {
             if(data.action === 'createSong') {
-                this.songs.push(new this.classType(data.data.name));
+                this.songs.push(new this.classType(data.data.title, data.data._id));
             }
             else if(data.action === 'removeSong') {
-                let i = this.songs.findIndex(s => s.name === data.data.name);
+                let i = this.songs.findIndex(s => s.id === data.data._id);
                 if(i !== -1) {
                     this.songs.splice(i,  1);
                 }
@@ -46,14 +46,14 @@ export class SongLibraryModel {
         }
     };
     
-    addSong = (song) => {
+    addSong = (songTitle) => {
         this.state = 'pending';
         this.addingSong = true;
         
-        this.apiManager.addSong(song.name).then(
-            body => {
+        this.apiManager.addSong(songTitle).then(
+            song => {
                 this.state = 'done';
-                this.songs.push(song);
+                this.songs.push(new Song(song.title, song._id));
                 this.addingSong = false;
             },
             error => {
@@ -63,11 +63,11 @@ export class SongLibraryModel {
         );
     };
     
-    removeSong = (songName) => {
+    removeSong = (songId) => {
         this.state = 'pending';
         this.songs = this.songs.filter((song) => {
-            return song.name !== songName;
+            return song.id !== songId;
         });
-        this.apiManager.removeSong(songName).then(() => this.state = 'done');
+        this.apiManager.removeSong(songId).then(() => this.state = 'done');
     };
 }

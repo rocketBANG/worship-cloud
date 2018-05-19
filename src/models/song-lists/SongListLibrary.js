@@ -16,14 +16,14 @@ class SongListLibrary {
     load = () => {
         API.getSongLists().then(lists => {
             lists.forEach(l => {
-                this.lists.push(new SongListModel(l.id, l.name));
+                this.lists.push(new SongListModel(l._id, l.name));
             })
         });
     }
 
     addList = (name) => {
         API.addSongList(name).then(list => {
-            this.lists.push(new SongListModel(list.id, list.name));
+            this.lists.push(new SongListModel(list._id, list.name));
         });
     }
 }

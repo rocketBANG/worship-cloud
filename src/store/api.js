@@ -71,10 +71,10 @@ export const fetchSongs = () => {
     );
 };
 
-export const fetchVerses = (songName) => {
+export const fetchVerses = (songId) => {
     let headers = new Headers();
 
-    return fetch(databaseURL + `/songs/` + songName + `/verses`, {
+    return fetch(databaseURL + `/songs/` + songId + `/verses`, {
         method: 'GET',
         headers: headers,
     })
@@ -84,38 +84,16 @@ export const fetchVerses = (songName) => {
     );
 };
 
-export const addChorus = (text, songName) => {
+export const addVerse = (text, songId) => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
     let verse = {
         text,
-        songName: songName,
-        type: "chorus"
-    };
-
-    return fetch(databaseURL + `/songs/` + songName + `/chorus`, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(verse)
-    }).then(
-        response => response.json(),
-
-        error => console.log('An error occured.', error)
-    )
-};
-
-export const addVerse = (text, songName) => {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    let verse = {
-        text,
-        songName: songName,
         type: "verse"
     };
 
-    return fetch(databaseURL + `/songs/` + songName + `/verses`, {
+    return fetch(databaseURL + `/songs/` + songId + `/verses`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(verse)
@@ -126,11 +104,11 @@ export const addVerse = (text, songName) => {
     )
 };
 
-export const removeVerse = (verseId, songName) => {
+export const removeVerse = (verseId, songId) => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return fetch(databaseURL + `/verses/` + verseId, {
+    return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
         method: 'DELETE',
         headers: headers
     }).then(
@@ -140,7 +118,7 @@ export const removeVerse = (verseId, songName) => {
     )
 };
 
-export const updateVerse = (text, verseId) => {
+export const updateVerse = (text, songId, verseId) => {
     let headers = new Headers();
     // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
     headers.append('Content-Type', 'application/json');
@@ -149,7 +127,7 @@ export const updateVerse = (text, verseId) => {
         text: text
     };
 
-    return fetch(databaseURL + `/verses/` + verseId, {
+    return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -159,7 +137,7 @@ export const updateVerse = (text, verseId) => {
     )
 };
 
-export const updateVerseType = (verseId, type) => {
+export const updateVerseType = (verseId, songId, type) => {
     let headers = new Headers();
     // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
     headers.append('Content-Type', 'application/json');
@@ -168,7 +146,7 @@ export const updateVerseType = (verseId, type) => {
         type: type
     };
 
-    return fetch(databaseURL + `/verses/` + verseId, {
+    return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -178,7 +156,7 @@ export const updateVerseType = (verseId, type) => {
     )
 };
 
-export const updateOrder = (order, songName) => {
+export const updateOrder = (order, songId) => {
     let headers = new Headers();
     // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
     headers.append('Content-Type', 'application/json');
@@ -187,7 +165,7 @@ export const updateOrder = (order, songName) => {
         order: order
     };
 
-    return fetch(databaseURL + `/songs/` + songName, {
+    return fetch(databaseURL + `/songs/` + songId, {
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -268,24 +246,14 @@ export const getSongLists = () => {
     )
 };
 
-export const loadSongList = (listId) => {
-    return fetch(databaseURL + `/songlists/` + listId, {
-        method: 'GET'
-    }).then(
-        response => response.json(),
-
-        error => console.log('An error occured.', error)
-    )
-};
-
-export const downloadSongs = (songNames) => {
+export const downloadSongs = (songIds) => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/songpptx/`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(songNames)
+        body: JSON.stringify(songIds)
     }).then(
         response => response.blob(),
 

@@ -70,7 +70,7 @@ const SongLists = observer(class SongLists extends React.Component {
     }
 
     downloadSongList = () => {
-        let songs = this.props.editorState.currentList.library.songs.map(s => s.name);
+        let songs = this.props.editorState.currentList.library.songs.map(s => s.id);
         API.downloadSongs(songs).then(blob => {
             var a = document.createElement("a");
             document.body.appendChild(a);
