@@ -23,7 +23,7 @@ const SongList = observer(class SongList extends React.Component {
         this.props.state.currentSong = this.props.songList.songs[indexes[0]];
         this.props.state.currentSong.loadSong();
         this.setState({
-            selectedSongNames: names
+            selectedSongIds: names
         })
 
     };
@@ -37,6 +37,7 @@ const SongList = observer(class SongList extends React.Component {
     };
 
     onSongRemove = () => {
+        console.log(this.state.selectedSongIds);
         this.state.selectedSongIds.forEach(songId => {
             this.props.songList.removeSong(songId);
         })
