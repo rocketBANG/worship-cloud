@@ -22,7 +22,7 @@ export class SongLibraryModel {
     
     loadSongs = () => {
         this.apiManager.fetchSongs().then((json) => {
-            json.forEach(songJson => {
+            json && json.forEach(songJson => {
                 let song = new this.classType(songJson.title, songJson._id);
                 this.songs.push(song);
             });
@@ -49,7 +49,6 @@ export class SongLibraryModel {
     addSong = (songTitle) => {
         this.state = 'pending';
         this.addingSong = true;
-        
         this.apiManager.addSong(songTitle).then(
             song => {
                 this.state = 'done';
@@ -57,6 +56,7 @@ export class SongLibraryModel {
                 this.addingSong = false;
             },
             error => {
+                console.log(error);
                 this.state = 'done';
                 this.addingSong = false;
             },

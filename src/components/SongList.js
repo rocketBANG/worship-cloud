@@ -37,7 +37,6 @@ const SongList = observer(class SongList extends React.Component {
     };
 
     onSongRemove = () => {
-        console.log(this.state.selectedSongIds);
         this.state.selectedSongIds.forEach(songId => {
             this.props.songList.removeSong(songId);
         })

@@ -40,11 +40,13 @@ class SongListApi {
         ).then(response => response.songs);
     };
 
-    addSong = async (songId) => {
+    addSong = async (song) => {
         if(!this.isLoaded) await this.load();
-        return this.updateSongList([...this.songs, songId]).then(response => {
-            this.songs = [...this.songs, songId];
-            return response;
+        this.songs = this.songs || [];
+        return this.updateSongList([...this.songs, song.id]).then(response => {
+            this.songs = [...this.songs, song];
+            console.log(this.songs);
+            return {title: song.title, _id: song.id};
         });
     };
 
