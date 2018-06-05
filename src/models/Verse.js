@@ -1,19 +1,15 @@
-import { extendObservable, action, computed } from 'mobx';
+import { action, computed, decorate, observable } from 'mobx';
 import * as API from '../store/api'
 
 export class Verse {
+    state = "loaded" // "loading" / "loaded" / "error" / "unloaded",
+    numPages = -1
+
     constructor(verseId, songId, text = "", type = "verse") {
-        extendObservable(this, {
-            id: verseId,
-            songId: songId,
-            text: text,
-            type: type,
-            state: "loaded", // "loading" / "loaded" / "error" / "unloaded",
-            updateText: action(this.updateText),
-            title: computed(this.getTitle),
-            setChorus: action(this.setChorus),
-            numPages: -1,
-        });
+        this.id = verseId
+        this.songId = songId
+        this.text = text
+        this.type = type
     }
 
     updateText = (text) => {
@@ -25,7 +21,7 @@ export class Verse {
         });
     };
 
-    getTitle = () => {
+    get title() {
         return this.text.split("\n")[0];
     };
 
@@ -39,5 +35,16 @@ export class Verse {
     setNumberOfPages = (num) => {
         this.numPages = num;
     }
-
 }
+
+decorate(Verse, {
+    id: observable,
+    songId: observable,
+    text: observable,
+    type: observable,
+    state: observable, // "loading" / "loaded" / "error" / "unloaded",
+    numPages: observable,
+    updateText: action,
+    title: computed,
+    setChorus: action,
+})

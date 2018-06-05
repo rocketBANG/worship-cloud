@@ -1,51 +1,34 @@
-import { extendObservable, action } from 'mobx';
+import { action, decorate, observable, computed } from 'mobx';
 import { Song } from './Song';
 // import { subscribeToSocket } from '../store/api';
 import { SongLibraryApi } from '../store/SongLibraryApi';
+import { SongManager } from '../services/SongManager';
 
 export class SongLibraryModel {
-    
-    addingSong = false;
-    
+
+    state = "done"; // "pending" / "done" / "error",
+        
     constructor(apiManager = new SongLibraryApi(), classType = Song) {
         this.classType = classType;
         this.apiManager = apiManager;
 
-        extendObservable(this, {
-            songs: [],
-            addSong: action(this.addSong),
-            state: 'done', // "pending" / "done" / "error",
-            removeSong: action(this.removeSong),
-            loadSongs: action(this.loadSongs),
-        });
+        this.songManager = SongManager.getManager();
+    }
+
+    get songs(): Song[] {
+        return this.songManager.songs || [];
     }
     
     loadSongs = () => {
         this.apiManager.fetchSongs().then((json) => {
             json && json.forEach(songJson => {
-                let song = new this.classType(songJson.title, songJson._id);
-                this.songs.push(song);
+                this.songManager.addSong(songJson.title, songJson._id);
+                // let song = new this.classType(songJson.title, songJson._id);
+                // this.songs.push(song);
             });
         });
-        
-        // subscribeToSocket(this.onSocketAdd);
-        
     };
-    
-    onSocketAdd = (data) => {
-        if(this.state !== 'pending') {
-            if(data.action === 'createSong') {
-                this.songs.push(new this.classType(data.data.title, data.data._id));
-            }
-            else if(data.action === 'removeSong') {
-                let i = this.songs.findIndex(s => s.id === data.data._id);
-                if(i !== -1) {
-                    this.songs.splice(i,  1);
-                }
-            }
-        }
-    };
-    
+        
     addSong = (songTitle) => {
         this.state = 'pending';
         this.addingSong = true;
@@ -53,17 +36,15 @@ export class SongLibraryModel {
             song => {
                 this.state = 'done';
                 this.songs.push(new Song(song.title, song._id));
-                this.addingSong = false;
             },
             error => {
                 console.log(error);
                 this.state = 'done';
-                this.addingSong = false;
             },
         );
     };
     
-    removeSong = (songId) => {
+    removeSong = (songId: string) => {
         this.state = 'pending';
         this.songs = this.songs.filter((song) => {
             return song.id !== songId;
@@ -71,3 +52,11 @@ export class SongLibraryModel {
         this.apiManager.removeSong(songId).then(() => this.state = 'done');
     };
 }
+
+decorate(SongLibraryModel, {
+    songs: computed,
+    addSong: action,
+    state: observable,
+    removeSong: action,
+    loadSongs: action,
+})

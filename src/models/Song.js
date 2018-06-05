@@ -1,28 +1,20 @@
-import { extendObservable, action, computed } from 'mobx';
+import { action, computed, decorate, observable } from 'mobx';
 import * as API from '../store/api'
 import { Verse } from './Verse'
 
 export class Song {
 
-    constructor(songTitle, id) {
+    state = "unloaded"
+    chorus = undefined
+    order = []
+    verses = observable(new Map())
+    isLoaded = false
+    id = "";
+    title = "";
 
-        extendObservable(this, {
-            id: id,
-            title: songTitle,
-            state: "unloaded", // "loading" / "loaded" / "error" / "unloaded"
-            chorus: undefined,
-            order: [],
-            verses: new Map(),
-            completeVerses: computed(this.completeVerses),
-            verseOrder: computed(this.verseOrder),
-            loadSong: action(this.loadSong),
-            addVerse: action(this.addVerse),
-            addToOrder: action(this.addToOrder),
-            removeFromOrder: action(this.removeFromOrder),
-            reorder: action(this.reorder),
-            setChorus: action(this.setChorus),
-            isLoaded: false,
-        });
+    constructor(songTitle: String, id: String) {
+        this.id = id;
+        this.title = songTitle;
     }
 
     loadSong = () => {
@@ -78,12 +70,13 @@ export class Song {
         });
     };
 
-    completeVerses = () => {
-        let verses = this.verses.values();
+    get completeVerses() {
+        let verses = Array.from(this.verses.values());
+        console.log(verses);
         return verses;
     };
 
-    verseOrder = () => {
+    get verseOrder() {
         let verseOrder = [];
 
         if(this.state !== "loading" && this.state !== "unloaded") {
@@ -126,3 +119,20 @@ export class Song {
 
     }
 }
+
+decorate(Song, {
+    title: observable,
+    id: observable,
+    state : observable,
+    chorus: observable, 
+    order: observable,
+    isLoaded: observable,
+    completeVerses: computed,
+    verseOrder: computed,
+    loadSong: action,
+    addVerse: action,
+    addToOrder: action,
+    removeFromOrder: action,
+    reorder: action,
+    setChorus: action,
+})

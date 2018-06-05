@@ -1,8 +1,13 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
+import { EditorState } from '../pages/Editor';
 
-const SongList = observer(class SongList extends React.Component {
+type Props = {
+    state: EditorState
+};
+
+const SongList = observer(class SongList extends React.Component<Props> {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,6 +26,7 @@ const SongList = observer(class SongList extends React.Component {
         }
         
         this.props.state.currentSong = this.props.songList.songs[indexes[0]];
+        console.log(this.props.state.currentSong);
         this.props.state.currentSong.loadSong();
         this.setState({
             selectedSongIds: names

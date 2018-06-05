@@ -8,8 +8,26 @@ import { SongLibraryModel } from '../models/SongLibraryModel'
 import { observable } from 'mobx';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
+import { Song } from '../models/Song';
+import { Verse } from '../models/Verse';
+import { SongListModel } from '../models/song-lists/SongListModel';
 
-export default class Editor extends Component {
+type Props = {
+};
+
+export type EditorState = {
+    currentSong: Song,
+    currentVerse: Verse,
+    currentList: SongListModel
+}
+
+export default class Editor extends Component<Props> {
+    
+    editorState: EditorState = observable({
+        currentSong: undefined,
+        currentVerse: undefined,
+        currentList: undefined
+    })
 
     constructor(props) {
         super(props);
@@ -18,12 +36,6 @@ export default class Editor extends Component {
         this.songList.loadSongs();
 
         this.state = { verses: undefined };
-
-        this.editorState = observable({
-            currentSong: undefined,
-            currentVerse: undefined,
-            currentList: undefined
-        })
 
     }
 

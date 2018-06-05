@@ -1,18 +1,11 @@
-import { extendObservable, action } from 'mobx';
+import { action, decorate, observable } from 'mobx';
 import * as API from '../../store/api';
 import { SongListModel } from './SongListModel';
 
 class SongListLibrary {
-        
-    constructor() {
-        
-        extendObservable(this, {
-            addList: action(this.addList),
-            lists: [],
-            load: action(this.load),
-        });
-    }
 
+    lists: SongListModel[] = [];
+        
     load = () => {
         API.getSongLists().then(lists => {
             lists.forEach(l => {
@@ -27,5 +20,11 @@ class SongListLibrary {
         });
     }
 }
+
+decorate(SongListLibrary, {
+    addList: action,
+    lists: observable,
+    load: action,
+})
 
 export {SongListLibrary}

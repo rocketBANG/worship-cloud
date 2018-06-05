@@ -1,4 +1,4 @@
-import { extendObservable, action } from "mobx";
+import { action, decorate, observable } from "mobx";
 import * as API from '../../store/api'
 import { ModelState } from "../ModelState";
 
@@ -22,24 +22,18 @@ export class SettingsModel {
     savedSettingsObj = {};
     uploadTimer = {};
 
-    constructor() {
-        extendObservable(this, {
-            wordFontSize: 50,
-            titleFontSize: 25,
-            lineHeight: 1.3,
-            minimumPageLines: 2,
-            maximumPageLines: 6,
-            topMargin: 3,
-            leftMargin: 3,
-            rightMargin: 0,
-            titleMargin: 0,
-            indentAmount: 1.0,
-            loadSettings: action(this.loadSettings),
-            state: ModelState.UNLOADED,
-            changeWordFont: action(this.changeWordFont),
-            changeSetting: action(this.changeSetting)
-        });
-    }
+    wordFontSize = 50
+    titleFontSize = 25
+    lineHeight = 1.3
+    minimumPageLines = 2
+    maximumPageLines = 6
+    topMargin = 3
+    leftMargin = 3
+    rightMargin = 0
+    titleMargin = 0
+    indentAmount = 1.0
+    state = ModelState.UNLOADED
+
 
     loadSettings = () => {
         if(this.state !== ModelState.UNLOADED) {
@@ -81,3 +75,21 @@ export class SettingsModel {
         this.changeSetting("wordFontSize", this.wordFontSize + amount);
     }
 }
+
+decorate(SettingsModel, {
+    wordFontSize: observable,
+    titleFontSize: observable,
+    lineHeight: observable,
+    minimumPageLines: observable,
+    maximumPageLines: observable,
+    topMargin: observable,
+    leftMargin: observable,
+    rightMargin: observable,
+    titleMargin: observable,
+    indentAmount: observable,
+    state: observable,
+    loadSettings: observable,
+    changeWordFont: observable,
+    changeSetting: action
+
+})
