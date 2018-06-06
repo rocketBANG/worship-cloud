@@ -6,7 +6,6 @@ import { List } from '../List';
 import SongList from '../SongList';
 import { SongLibraryModel } from '../../models/SongLibraryModel';
 import { SongListApi } from '../../store/SongListApi';
-import { Song } from '../../models/Song';
 import * as API from '../../store/api';
 
 const SongLists = observer(class SongLists extends React.Component {
@@ -44,7 +43,7 @@ const SongLists = observer(class SongLists extends React.Component {
         let selectedList = this.songListLibrary.lists[indexes[0]];
         let api = new SongListApi(selectedList.id);
         api.load();
-        this.props.editorState.currentList = { library: new SongLibraryModel(api, this.props.songClass || Song), model: selectedList};
+        this.props.editorState.currentList = { library: new SongLibraryModel(api, selectedList.songIds), model: selectedList};
         this.props.editorState.currentList.library.loadSongs();
     }
 

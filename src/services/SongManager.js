@@ -28,6 +28,12 @@ export class SongManager {
     getSong = (songId: string): Song => {
         return this.songs.find((s) => s.id === songId);
     }
+
+    removeSong = (songId: string): Song => {
+        this.songs = this.songs.filter((song) => {
+            return song.id !== songId;
+        });
+    }
 }
 
 decorate(SongManager, {

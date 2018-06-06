@@ -9,7 +9,7 @@ class SongListLibrary {
     load = () => {
         API.getSongLists().then(lists => {
             lists.forEach(l => {
-                this.lists.push(new SongListModel(l._id, l.name));
+                this.lists.push(new SongListModel(l._id, l.name, l.songIds));
             })
         });
     }
