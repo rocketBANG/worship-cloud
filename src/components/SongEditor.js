@@ -1,15 +1,24 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 
-const SongEditor = observer(class SongEditor extends React.Component {
+type Props = {
+    currentVerse: IObservableValue<Verse>,
+    currentSong: IObservableValue<Song>
+}
+
+type State = {
+
+}
+
+const SongEditor = observer(class SongEditor extends React.Component<Props, State> {
     onEdit = (event) => {
-        this.props.state.currentVerse.updateText(event.target.value);
+        this.props.currentVerse.get().updateText(event.target.value);
     };
 
     render() {
-        const disabled = this.props.state.currentVerse === undefined;
-        const verse = this.props.state.currentVerse || {};
-        const song = this.props.state.currentSong || {};
+        const disabled = this.props.currentVerse.get() === undefined;
+        const verse = this.props.currentVerse.get() || {};
+        const song = this.props.currentSong.get() || {};
         
         return (
             <div className="SongEditor EditorContainer">

@@ -11,6 +11,8 @@ import PresenterDisplay from '../components/PresenterDisplay';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
 import { Song } from '../models/Song';
+import { Verse } from '../models/Verse';
+import { SongListModel } from '../models/song-lists/SongListModel';
 
 
 const Presenter = observer(class Presenter extends Component {
@@ -21,18 +23,22 @@ const Presenter = observer(class Presenter extends Component {
         this.songLibrary.getAllSongs();
 
         this.currentSong = observable.box(Song);
+        this.currentVerse = observable.box(Verse);
+        this.currentVerse.set(undefined);
+        this.currentList = observable.box(SongListModel);
+
     }
 
     render() {
         const tabs = [
             {component: <SongLibrary library={this.songLibrary} currentSong={this.currentSong}/>, name: "Song Library"},
-            {component: <SongLists editorState={this.presenterState} songClass={DisplaySong} hideControls={true}/>, name: "Song Lists"},
+            {component: <SongLists currentSong={this.currentSong} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
         ];
         return (
             <div className="Presenter">
                 <TabFrame tabs={tabs} />
-                <DisplayVerseList id='displayVerseList' song={this.presenterState.currentSong} />
-                <PresenterDisplay song={this.presenterState.currentSong} />
+                <DisplayVerseList id='displayVerseList' currentSong={this.currentSong} />
+                <PresenterDisplay currentSong={this.currentSong} />
             </div>
         );
     }

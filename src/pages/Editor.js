@@ -32,6 +32,7 @@ export default class Editor extends Component<Props> {
         
         this.currentSong = observable.box(Song);
         this.currentVerse = observable.box(Verse);
+        this.currentVerse.set(undefined);
         this.currentList = observable.box(SongListModel);
         this.currentList.set(undefined);
 
@@ -55,8 +56,8 @@ export default class Editor extends Component<Props> {
                 <div className='editor'>
                     <TabFrame tabs={tabs} multiple={true} keepOrder={true}/>
                     <VerseList currentSong={this.currentSong} currentVerse={this.currentVerse}/>
-                    <VerseOrderList state={this.editorState}/>
-                    <SongEditor state={this.editorState}/>
+                    <VerseOrderList currentSong={this.currentSong} currentVerse={this.currentVerse}/>
+                    <SongEditor currentSong={this.currentSong} currentVerse={this.currentVerse}/>
                 </div>
             </div>
         );

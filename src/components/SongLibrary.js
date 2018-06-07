@@ -23,12 +23,16 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
     onSongClick = (names, indexes) => {
         if(names.length < 1) {
             this.props.currentSong.set(undefined);
+            
+            if(this.props.selectedSongs === undefined) return;
             this.props.selectedSongs.clear();
             return;
         }
         
         this.props.currentSong.set(this.props.library.songs[indexes[0]]);
         this.props.currentSong.get().loadSong();
+
+        if(this.props.selectedSongs === undefined) return;
         this.props.selectedSongs.clear();
         this.props.selectedSongs.push(...names);
     };
