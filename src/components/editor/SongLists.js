@@ -4,11 +4,21 @@ import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
 import { List } from '../List';
 import SongList from '../SongList';
-import { SongLibraryModel } from '../../models/SongLibraryModel';
-import { SongListApi } from '../../store/SongListApi';
 import * as API from '../../store/api';
+import { Song } from '../../models/Song';
+import { SongLibraryModel } from '../../models/SongLibraryModel';
+import { observable, IObservableValue } from 'mobx';
+import { SongListModel } from '../../models/song-lists/SongListModel';
 
-const SongLists = observer(class SongLists extends React.Component {
+type Props = {
+    library: SongLibraryModel,
+    currentList: IObservableValue<SongListModel>,
+    currentSong: IObservableValue<Song>
+}
+
+type State = {}
+
+const SongLists = observer(class SongLists extends React.Component<Props, State> {
     state = {
         songListName: "",
         selectedIndexes: [],
@@ -16,13 +26,16 @@ const SongLists = observer(class SongLists extends React.Component {
 
     songListLibrary = new SongListLibrary();
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         this.songListLibrary.load();
+
+        this.currentSong = observable.box(Song);
     }
 
     songListNameChange = (e) => {
+        
         this.setState({songListName: e.target.value});
     }
 
@@ -41,10 +54,7 @@ const SongLists = observer(class SongLists extends React.Component {
             return;
         }
         let selectedList = this.songListLibrary.lists[indexes[0]];
-        let api = new SongListApi(selectedList.id);
-        api.load();
-        this.props.editorState.currentList = { library: new SongLibraryModel(api, selectedList.songIds), model: selectedList};
-        this.props.editorState.currentList.library.loadSongs();
+        this.props.currentList.set(selectedList);
     }
 
     onSongClick = (names, indexes) => {
@@ -59,18 +69,17 @@ const SongLists = observer(class SongLists extends React.Component {
     }
 
     deleteSongList = () => {
-        let {currentList} = this.props.editorState;
-        currentList.model.delete();
+        let {currentList} = this.props;
+        currentList.get().delete();
     }
 
     removeSongFromList = () => {
-        let currentList = this.props.editorState.currentList;
-        currentList.library.removeSongs(this.state.selectedIndexes);
+        this.props.library.removeSongs(this.state.selectedIndexes);
     }
 
     downloadSongList = () => {
-        let songs = this.props.editorState.currentList.library.songs.map(s => s.id);
-        API.downloadSongs(songs).then(blob => {
+        let songIds = this.props.currentList.get().songIds;
+        API.downloadSongs(songIds).then(blob => {
             var a = document.createElement("a");
             document.body.appendChild(a);
             let url = window.URL.createObjectURL(blob);
@@ -82,7 +91,7 @@ const SongLists = observer(class SongLists extends React.Component {
     }
 
     render() {
-        let currentList = this.props.editorState.currentList;
+        let currentList = this.props.currentList.get();
         let options = this.songListLibrary.lists.map(list => ({
             id: list.id,
             text: list.name,
@@ -91,10 +100,10 @@ const SongLists = observer(class SongLists extends React.Component {
 
         let mainView = <List onUpdate={this.onListClick} options={options} />;
         if(currentList !== undefined) {
-            mainView = <SongList songList={currentList.library} filteredLibrary={true} state={this.props.editorState} hideControls={this.props.hideControls}/>;
+            mainView = <SongList songList={currentList} currentSong={this.props.currentSong} library={this.props.library}/>;
         }
 
-        const backButton = currentList !== undefined ? <button onClick={() => this.props.editorState.currentList = undefined}>{"<-"}</button> : "";
+        const backButton = currentList !== undefined ? <button onClick={() => this.props.currentList.set(undefined)}>{"<-"}</button> : "";
 
         let controls;
         if(currentList === undefined && !this.props.hideControls) {
@@ -111,7 +120,7 @@ const SongLists = observer(class SongLists extends React.Component {
 
         return (
             <div className="SongLists EditorContainer">
-                <div className="ListHeader">{currentList === undefined ? "Song Lists:" : "Song List " + currentList.model.name + ":"}</div>
+                <div className="ListHeader">{currentList === undefined ? "Song Lists:" : "Song List " + currentList.name + ":"}</div>
                 {backButton}
                 {mainView}
                 <div className="SongListsControls">

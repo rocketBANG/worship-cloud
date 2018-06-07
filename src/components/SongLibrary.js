@@ -1,34 +1,52 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List';
+import { SongLibraryModel } from '../models/SongLibraryModel';
+import { IObservableValue, IObservableArray } from 'mobx';
 
-const SongLibrary = observer(class SongLibrary extends React.Component {
+type Props = {
+    currentSong: IObservableValue<Song>,
+    library: SongLibraryModel,
+    selectedSongs: IObservableArray<string>
+};
 
-    onSongClick = (names, indexes) => {
-        if(indexes.length < 1) {
-            this.props.state.currentSong = undefined;
-            return;
-        }
+type State = {
+    songText: string,
+    selectedSongIds: string[]
+}
 
-        this.props.state.currentSong = this.props.songList.songs[indexes[0]];
-        if (this.props.state.currentSong.state === "unloaded") {
-            this.props.state.currentSong.loadSong();
-        }
+const SongLibrary = observer(class SongLibrary extends React.Component<Props, State> {
+    state: State = {
+        songText: '',
     };
 
-    render = () => {
-        const options = this.props.songList.songs.map((song, index) => ({
+    onSongClick = (names, indexes) => {
+        if(names.length < 1) {
+            this.props.currentSong.set(undefined);
+            this.props.selectedSongs.clear();
+            return;
+        }
+        
+        this.props.currentSong.set(this.props.library.songs[indexes[0]]);
+        this.props.currentSong.get().loadSong();
+        this.props.selectedSongs.clear();
+        this.props.selectedSongs.push(...names);
+    };
+
+    render() {
+        const options = this.props.library.songs.map(song => ({
             id: song.id,
             text: song.title,
-            altText: song.title
+            altText: ""
         }));
-    
-        return ( 
-            <div className="SongLibrary EditorContainer">
+
+        return (
+            <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
-                <List onUpdate={this.onSongClick} options={options}/>
+                <List onUpdate={this.onSongClick} options={options} />
+                {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
-        )
+        )    
     }
 });
 

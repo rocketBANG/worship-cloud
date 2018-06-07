@@ -10,25 +10,22 @@ import { DisplayVerseList } from '../components/DisplayVerseList';
 import PresenterDisplay from '../components/PresenterDisplay';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
+import { Song } from '../models/Song';
 
 
 const Presenter = observer(class Presenter extends Component {
     constructor(props) {
         super(props);
         
-        this.songList = new SongLibraryModel(undefined, DisplaySong);
-        this.songList.loadSongs();
+        this.songLibrary = new SongLibraryModel(undefined, DisplaySong);
+        this.songLibrary.getAllSongs();
 
-        this.presenterState = observable({
-            currentSong: undefined,
-            currentList: undefined
-        });
-
+        this.currentSong = observable.box(Song);
     }
 
     render() {
         const tabs = [
-            {component: <SongLibrary songList={this.songList} state={this.presenterState}/>, name: "Song Library"},
+            {component: <SongLibrary library={this.songLibrary} currentSong={this.currentSong}/>, name: "Song Library"},
             {component: <SongLists editorState={this.presenterState} songClass={DisplaySong} hideControls={true}/>, name: "Song Lists"},
         ];
         return (

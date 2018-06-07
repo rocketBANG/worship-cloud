@@ -72,7 +72,6 @@ export class Song {
 
     get completeVerses() {
         let verses = Array.from(this.verses.values());
-        console.log(verses);
         return verses;
     };
 

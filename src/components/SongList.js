@@ -1,62 +1,53 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
-import { EditorState } from '../pages/Editor';
+import { SongLibraryModel } from '../models/SongLibraryModel';
+import { SongListModel } from '../models/song-lists/SongListModel';
 
 type Props = {
-    state: EditorState
+    library: SongLibraryModel,
+    currentSong: ObservableValue<Song>,
+    songList: SongListModel
 };
 
-const SongList = observer(class SongList extends React.Component<Props> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            songText: '',
-            selectedSongIds: []
-        };
-    }    
+type State = {
+    songText: string,
+    selectedSongIds: string[]
+}
+
+const SongList = observer(class SongList extends React.Component<Props, State> {
+    state: State = {
+        songText: '',
+        selectedSongIds: []
+    };
 
     onSongClick = (names, indexes) => {
         if(names.length < 1) {
-            this.props.state.currentSong = undefined;
+            this.props.currentSong.set(undefined)
             this.setState({
                 selectedSongIds: []
             })    
             return;
         }
         
-        this.props.state.currentSong = this.props.songList.songs[indexes[0]];
-        console.log(this.props.state.currentSong);
-        this.props.state.currentSong.loadSong();
+        this.props.currentSong.set(this.props.library.songs[indexes[0]])
+        this.props.currentSong.get().loadSong();
         this.setState({
             selectedSongIds: names
         })
-
-    };
-
-    onSongAdd = () => {
-        this.props.songList.addSong(this.state.songText);
-    };
-
-    onSongListAdd = () => {
-        this.props.state.currentList.library.addSong(this.props.state.currentSong);
     };
 
     onSongRemove = () => {
-        this.state.selectedSongIds.forEach(songId => {
-            this.props.songList.removeSong(songId);
+        this.state.selectedSongIds.forEach(id => {
+            this.props.songList.removeSong(id);
         })
-    };
-
-    handleChange = (event) => {
-        this.setState({
-            songText: event.target.value
-        })
-    };
+    }
     
     render() {
-        let { filteredLibrary, hideControls } = this.props;
-        const options = this.props.songList.songs.map((song, index) => ({
+        let songs = this.props.library.songs;
+        songs = songs.filter(s => this.props.songList.songIds.indexOf(s.id) !== -1);
+
+        const options = songs.map((song, index) => ({
             id: song.id,
             text: song.title,
             altText: ""
@@ -66,12 +57,9 @@ const SongList = observer(class SongList extends React.Component<Props> {
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <List onUpdate={this.onSongClick} options={options} />
-                {!hideControls && <div className="ListControls">
-                    {!filteredLibrary && <input value={this.state.songText} onChange={this.handleChange} />}
-                    {!filteredLibrary && <button onClick={this.onSongAdd} >Add Song</button>}
+                <div className="ListControls">
                     <button onClick={this.onSongRemove}>Remove Song</button>
-                    {!filteredLibrary && <button onClick={this.onSongListAdd} disabled={this.props.state.currentList === undefined}>Add to Song List</button>}
-                </div>}
+                </div>
                 {this.props.songList.state === "pending" ? "Saving" : ""}
             </div>
         )    
