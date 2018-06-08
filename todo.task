@@ -1,7 +1,8 @@
 Doing: 
 
 Backlog:
-    [ ] 40 Add search bar to song library
+    [ ] 47 Allow changing song names
+    [ ] 48 Allow deleting song lists
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 27 Add context/right click menus
@@ -11,6 +12,7 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     
 Done: 
+    [x] 40 Add search bar to song library
     [x] 46 Only show title on first page of first verse
     [x] 44 Fix repeated lines when lines wrap on 2nd page
     [x] 41 Add ability to create song lists

@@ -31,7 +31,7 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
             return;
         }
         
-        this.props.currentSong.set(this.props.library.songs[indexes[0]]);
+        this.props.currentSong.set(this.props.library.songs.sort(this.songSort)[indexes[0]]);
         this.props.currentSong.get().loadSong();
 
         if(this.props.selectedSongs === undefined) return;
@@ -43,8 +43,12 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
         this.setState({search: change.target.value.toLowerCase()});
     }
 
+    songSort = (songA, songB) => {
+        return songA.title.toLowerCase() > songB.title.toLowerCase();
+    }
+
     render() {
-        let songs = this.props.library.songs.sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase());
+        let songs = this.props.library.songs.sort(this.songSort);
         if(this.state.search !== '') {
             songs = songs.filter(s => s.title.toLowerCase().indexOf(this.state.search) !== -1);
         }
