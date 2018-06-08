@@ -13,7 +13,7 @@ const SermonPageList = observer(class SermonPageList extends React.Component {
     };
 
 
-    render = () => {
+    render() {
         let pages = this.props.pageList.pages || [];
         const options = pages.map((page, index) => ({
             id: index + '',

@@ -19,7 +19,7 @@ const ComponentList = observer(class ComponentList extends React.Component {
     };
 
 
-    render = () => {
+    render() {
         let components = this.props.sermonPage.components || [];
         const options = components.map((component, index) => ({
             id: index + '',

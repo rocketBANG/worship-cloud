@@ -1,40 +1,33 @@
-import { extendObservable, action, computed, autorun } from 'mobx';
+import { observable, action, computed, autorun, decorate } from 'mobx';
 import { Song } from './Song'
 import { SettingsModel } from './settings/SettingsModel';
 
 export const BLACKED = 1;
 export const WHITE = -1;
 
-export class DisplaySong extends Song {
+export class DisplaySong {
+
+    // TODO change this to be a wrapper for a song
+    // When a song is selected from the song library, add extra functionality to it using this class
 
     settingsModel = SettingsModel.settingsModel
 
-    constructor(songTitle, id) {
-        super(songTitle, id);
-        this.settingsModel.loadSettings();
-        extendObservable(this, {
-            blanked: 0, // 1 = black, -1 = white
-            currentVerse: undefined,
-            currentPage: "",
-            nextVerse: action(this.nextVerse),
-            prevVerse: action(this.prevVerse),
-            nextPage: action(this.nextPage),
-            prevPage: action(this.prevPage),
-            setVerse: action(this.setVerse),
-            setupPages: action(this.setupPages),
-            setWhite: action(this.setWhite),
-            setBlack: action(this.setBlack),
-            isBlanked: computed(() => this.blanked !== 0),
-            backgroundColor: computed(this.getBackgroundColor),
-            verseIndex: -1,
-            currentPages: [],
-            currentNumPages: computed(() => this.currentPages.length),
-            pageIndex: 0,
-            setDisplay: action(this.setDisplay),
-            loadSong: action(this.loadSong)
-        });
+    blanked = 0; // 1 = black, -1 = white,
+    currentVerse = undefined;
+    currentPage = "";
+    pageIndex = 0;
+    verseIndex = -1;
+    currentPages = [];
+    id = '';
 
-        autorun(() => {if(this.isLoaded) this.nextVerse()});
+    constructor(song: Song) {
+        this.song = song;
+        this.title = song.title;
+        this.id = song.id;
+
+        this.settingsModel.loadSettings();
+
+        autorun(() => {if(song.isLoaded) this.nextVerse()});
     }
 
     setDisplay = (display) => {
@@ -42,11 +35,11 @@ export class DisplaySong extends Song {
     }
 
     nextVerse = () => {
-        if(this.verseIndex >= this.verseOrder.length - 1) {
+        if(this.verseIndex >= this.song.verseOrder.length - 1) {
             return;
         }
         this.verseIndex++;
-        this.currentVerse = this.verseOrder[this.verseIndex];
+        this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = 0;
         this.currentPage = this.currentPages[this.pageIndex];
@@ -57,7 +50,7 @@ export class DisplaySong extends Song {
             return;
         }
         this.verseIndex--;
-        this.currentVerse = this.verseOrder[this.verseIndex];
+        this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = this.currentPages.length - 1;
         this.currentPage = this.currentPages[this.pageIndex];
@@ -99,7 +92,7 @@ export class DisplaySong extends Song {
 
     setVerse = (index) => {
         this.verseIndex = index;
-        this.currentVerse = this.verseOrder[this.verseIndex];
+        this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = 0;
         this.currentPage = this.currentPages[this.pageIndex];
@@ -163,7 +156,7 @@ export class DisplaySong extends Song {
         this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 
-    getBackgroundColor = () => {
+    get backgroundColor() {
         if(this.blanked === BLACKED) {
             return "#000";
         } else if (this.blanked === WHITE) {
@@ -189,4 +182,39 @@ export class DisplaySong extends Song {
         this.blanked = WHITE;
     }
 
+    get isBlanked() {
+        return this.blanked !== 0;
+    }
+
+    get currentNumPages() {
+        return this.currentPages.length;
+    }
+
+    get verseOrder() {
+        return this.song.verseOrder;
+    }
+
 }
+
+decorate(DisplaySong, {
+    blanked: observable, // 1 = black, -1 = white,
+    title: observable,
+    currentVerse: observable,
+    currentPage: observable,
+    pageIndex: observable,
+    verseIndex: observable,
+    currentPages: observable,
+    nextVerse: action,
+    prevVerse: action,
+    nextPage: action,
+    prevPage: action,
+    setVerse: action,
+    setupPages: action,
+    setWhite: action,
+    setBlack: action,
+    isBlanked: computed,
+    backgroundColor: computed,
+    currentNumPages: computed,
+    verseOrder: computed,
+    setDisplay: action
+})

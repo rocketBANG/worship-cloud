@@ -6,9 +6,10 @@ import Display from '../components/Display';
 import DisplayControls from './DisplayControls';
 import DisplayOverlay from './DisplayOverlay';
 import { SettingsModel } from '../models/settings/SettingsModel';
+import { DisplaySong } from '../models/DisplaySong';
 
 type Props = {
-    currentSong: IObservableValue<Song>,
+    currentSong: DisplaySong,
 };
 
 type State = {
@@ -35,11 +36,11 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
     };
 
     componentWillReceiveProps = (nextProps) => {
-        nextProps.currentSong && nextProps.currentSong.get().setDisplay(this.display);
+        nextProps.currentSong && nextProps.currentSong.setDisplay(this.display);
     }
 
     render() {
-        let currentSong = this.props.currentSong.get() || {};
+        let currentSong = this.props.currentSong || {};
         let currentVerse = currentSong.currentVerse || {};
         let currentPage = currentSong.currentPage || "";
 

@@ -1,9 +1,10 @@
 import React from 'react';
 import { List } from './List';
 import { observer } from 'mobx-react';
+import { DisplaySong } from '../models/DisplaySong';
 
 type Props = {
-    currentSong: IObservableValue<Song>,
+    currentSong: DisplaySong,
 };
 
 type State = {
@@ -16,11 +17,11 @@ const DisplayVerseList = observer(class DisplayVerseList extends React.Component
             return;
         }
 
-        this.props.currentSong.get().setVerse(indexes[0]);
+        this.props.currentSong.setVerse(indexes[0]);
     };
 
-    render = () => {
-        let song = this.props.currentSong.get() || {};
+    render() {
+        let song = this.props.currentSong || {};
         const options = (song.verseOrder || []).map((verse, index) => {
             let verseText = verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title;
             if(verse.numPages > 1) {

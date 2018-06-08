@@ -7,7 +7,7 @@ import { PropTypes } from 'prop-types';
 const ComponentEditor = observer(class ComponentEditor extends React.Component {
     
     
-    render = () => {
+    render() {
         let component = this.props.component || {};
         
         return (
