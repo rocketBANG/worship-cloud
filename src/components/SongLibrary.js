@@ -12,12 +12,14 @@ type Props = {
 
 type State = {
     songText: string,
-    selectedSongIds: string[]
+    selectedSongIds: string[],
+    search: string
 }
 
 const SongLibrary = observer(class SongLibrary extends React.Component<Props, State> {
     state: State = {
         songText: '',
+        search: '',
     };
 
     onSongClick = (names, indexes) => {
@@ -37,8 +39,16 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
         this.props.selectedSongs.push(...names);
     };
 
+    searchChange = (change) => {
+        this.setState({search: change.target.value.toLowerCase()});
+    }
+
     render() {
-        const options = this.props.library.songs.map(song => ({
+        let songs = this.props.library.songs.sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase());
+        if(this.state.search !== '') {
+            songs = songs.filter(s => s.title.toLowerCase().indexOf(this.state.search) !== -1);
+        }
+        const options = songs.map(song => ({
             id: song.id,
             text: song.title,
             altText: ""
@@ -47,6 +57,7 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
+                <input onChange={this.searchChange} />
                 <List onUpdate={this.onSongClick} options={options} />
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
