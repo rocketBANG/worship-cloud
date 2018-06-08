@@ -44,7 +44,10 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
     }
 
     songSort = (songA, songB) => {
-        return songA.title.toLowerCase() > songB.title.toLowerCase();
+        let a = songA.title.toLowerCase(), b = songB.title.toLowerCase();
+        if(a > b) return 1;
+        if(a < b) return -1;
+        return 0;
     }
 
     render() {
