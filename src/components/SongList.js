@@ -28,9 +28,8 @@ const SongList = observer(class SongList extends React.Component<Props, State> {
                 selectedSongIds: []
             })    
             return;
-        }
-        
-        this.props.currentSong.set(this.props.library.songs[indexes[0]])
+        }        
+        this.props.currentSong.set(this.props.library.songs.find(s => s.id === names[0]))
         this.props.currentSong.get().loadSong();
         this.setState({
             selectedSongIds: names
