@@ -36,6 +36,7 @@ const Presenter = observer(class Presenter extends Component {
         this.currentVerse = observable.box(Verse);
         this.currentVerse.set(undefined);
         this.currentList = observable.box(SongListModel);
+        this.currentList.set(undefined);
     }
 
     componentWillUnmount() {
