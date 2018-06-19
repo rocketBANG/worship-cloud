@@ -14,7 +14,7 @@ type State = {
 
 }
 
-const VerseList = observer(class VerseList extends React.Component<Props, State> {
+const VerseList = observer(class extends React.Component<Props, State> {
 
     onVerseClick = (names, indexes) => {
 

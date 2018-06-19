@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 
-const DisplayControls = observer(class DisplayControls extends React.Component {
+const DisplayControls = observer(class extends React.Component {
     
     componentDidMount = () => {
         window.addEventListener('keydown', this.processKeyDown)

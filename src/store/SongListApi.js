@@ -71,7 +71,7 @@ class SongListApi {
     }
 
     removeSong = async (songId) => {
-        !this.isLoaded && await this.load();
+        if(!this.isLoaded) await this.load();
         return this.updateSongList(this.songs.filter(s => s !== songId)).then(response => {
             this.songs = this.songs.filter(s => s !== songId);
             return response;

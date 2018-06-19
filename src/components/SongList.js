@@ -15,7 +15,7 @@ type State = {
     selectedSongIds: string[]
 }
 
-const SongList = observer(class SongList extends React.Component<Props, State> {
+const SongList = observer(class extends React.Component<Props, State> {
     state: State = {
         songText: '',
         selectedSongIds: []

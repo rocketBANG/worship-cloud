@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
 
-export const SermonComponent = observer(class SermonComponent extends Component {
+export const SermonComponent = observer(class extends Component {
 
     componentDiv = undefined;
 

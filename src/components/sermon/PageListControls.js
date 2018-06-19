@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 
-const PageListControls = observer(class PageListControls extends React.Component {
+const PageListControls = observer(class extends React.Component {
 
     render() {
         

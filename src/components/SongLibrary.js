@@ -16,7 +16,7 @@ type State = {
     search: string
 }
 
-const SongLibrary = observer(class SongLibrary extends React.Component<Props, State> {
+const SongLibrary = observer(class extends React.Component<Props, State> {
     state: State = {
         songText: '',
         search: '',
@@ -26,7 +26,7 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
         if(names.length < 1) {
             this.props.currentSong.set(undefined);
             
-            if(this.props.selectedSongs === undefined) return;
+            if(this.props.selectedSongs === undefined) { return; }
             this.props.selectedSongs.clear();
             return;
         }
@@ -44,7 +44,8 @@ const SongLibrary = observer(class SongLibrary extends React.Component<Props, St
     }
 
     songSort = (songA, songB) => {
-        let a = songA.title.toLowerCase(), b = songB.title.toLowerCase();
+        let a = songA.title.toLowerCase();
+        let b = songB.title.toLowerCase();
         if(a > b) return 1;
         if(a < b) return -1;
         return 0;

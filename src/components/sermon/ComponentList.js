@@ -2,7 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { List } from '../List';
 
-const ComponentList = observer(class ComponentList extends React.Component {
+const ComponentList = observer(class extends React.Component {
 
     onComponentClick = (comps, indexes) => {
         if(indexes.length < 1) {

@@ -4,7 +4,7 @@ import '../../style/ComponentEditor.css';
 import { SermonComponentModel } from '../../models/SermonComponentModel';
 import { PropTypes } from 'prop-types';
 
-const ComponentEditor = observer(class ComponentEditor extends React.Component {
+const ComponentEditor = observer(class extends React.Component {
     
     
     render() {

@@ -2,7 +2,7 @@ import React from 'react';
 import { List } from './List';
 import { observer } from 'mobx-react';
 
-const SermonPageList = observer(class SermonPageList extends React.Component {
+const SermonPageList = observer(class extends React.Component {
 
     onPageClick = (names, indexes) => {
         if(indexes.length < 1) {

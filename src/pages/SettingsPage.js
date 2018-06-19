@@ -3,7 +3,7 @@ import React from 'react';
 import "../style/SettingsPage.css"
 import { SettingsInput } from "../components/settings/SettingsInput";
 import { SettingsModel } from "../models/settings/SettingsModel";
-const SettingsPage = observer(class SettingsPage extends React.Component {
+const SettingsPage = observer(class extends React.Component {
 
     state = { }
 

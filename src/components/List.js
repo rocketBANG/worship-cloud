@@ -9,9 +9,9 @@ class List extends React.Component {
         selected: []
     }
 
-    removeUnique(string) {
-        let endIndex = string.indexOf(this.keySeperator);
-        return string.substring(0, endIndex);
+    removeUnique(word) {
+        let endIndex = word.indexOf(this.keySeperator);
+        return word.substring(0, endIndex);
     }
 
     returnSelected = () => {

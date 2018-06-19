@@ -2,11 +2,11 @@ import { extendObservable, action } from "mobx";
 
 export class SermonComponentModel {
 
-    constructor(text, x, y) {
+    constructor(text, a, b) {
         extendObservable(this, {
             text: text,
-            x: x,
-            y: y,
+            x: a,
+            y: b,
             selected: false,
             toggleSelected: action(this.toggleSelected),
             move: action(this.move),

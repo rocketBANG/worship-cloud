@@ -10,7 +10,7 @@ type State = {
 
 }
 
-const SongEditor = observer(class SongEditor extends React.Component<Props, State> {
+const SongEditor = observer(class extends React.Component<Props, State> {
     onEdit = (event) => {
         this.props.currentVerse.get().updateText(event.target.value);
     };

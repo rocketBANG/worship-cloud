@@ -18,7 +18,7 @@ type Props = {
 
 type State = {}
 
-const SongLists = observer(class SongLists extends React.Component<Props, State> {
+const SongLists = observer(class extends React.Component<Props, State> {
     state = {
         songListName: "",
         selectedIndexes: [],

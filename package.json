@@ -3,26 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/react-router-dom": "^4.2.7",
     "any-resize-event": "^1.0.0",
-    "mobx": "^4.3.1",
-    "mobx-react": "^5.2.0",
-    "mongodb": "^2.2.35",
-    "prop-types": "^15.6.1",
+    "mobx": "^5.0.2",
+    "mobx-react": "^5.2.3",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
-    "react-redux": "^5.0.7",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "^1.1.4",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.3.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts-ts": "2.16.0",
     "socket.io-client": "^2.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/jest": "^23.0.1",
+    "@types/node": "^10.3.2",
+    "@types/react": "^16.3.17",
+    "@types/react-dom": "^16.0.6",
+    "typescript": "^2.9.1"
+  }
 }

@@ -11,7 +11,7 @@ import { SermonPageModel } from '../models/SermonPageModel';
 import { observer } from 'mobx-react';
 import PageListControls from '../components/sermon/PageListControls';
 
-export default observer(class SermonEditor extends Component {
+export default observer(class extends Component {
 
     possibleDragging = false;
 

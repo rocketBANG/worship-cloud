@@ -15,7 +15,7 @@ import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
 
 
-const Presenter = observer(class Presenter extends Component {
+const Presenter = observer(class extends Component {
 
     autorun = undefined;
 

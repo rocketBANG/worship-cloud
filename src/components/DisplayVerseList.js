@@ -10,7 +10,7 @@ type Props = {
 type State = {
 }
 
-const DisplayVerseList = observer(class DisplayVerseList extends React.Component<Props, State> {
+const DisplayVerseList = observer(class extends React.Component<Props, State> {
 
     onVerseClick = (names, indexes) => {
         if(indexes.length < 1) {
@@ -28,9 +28,9 @@ const DisplayVerseList = observer(class DisplayVerseList extends React.Component
                 verseText += " (" + verse.numPages + ")";
             }
             return {
+                altText: "",
                 id: verse.id,
                 text: verseText,
-                altText: ""
             }
         });
     

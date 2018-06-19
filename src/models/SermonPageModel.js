@@ -5,7 +5,7 @@ export class SermonPageModel {
     constructor(title) {
         extendObservable(this, {
             components: [],
-            title: title | '',
+            title: title || '',
             addComponent: action(this.addComponent)
         })
     }

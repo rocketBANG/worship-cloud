@@ -7,17 +7,17 @@ import PropTypes from 'prop-types'
 const wordFontSize = 0.0011;
 const titleFontSize = 0.0012;
 
-const Display = observer(class Display extends React.Component {
+const Display = observer(class extends React.Component {
     ratio = 4.0/3.0;
     wrapper = undefined;
 
     constructor(props) {
         super(props);
         this.state= {
-            width: 400,
             height: 300,
             titleFontSize: "40px",
             verseFontSize: "20px",
+            width: 400,
         };
 
         this.updateSize = this.updateSize.bind(this);
@@ -38,10 +38,10 @@ const Display = observer(class Display extends React.Component {
 
         if(this.props.isFullscreen) {    
             this.setState({
-                width: '100%',
                 height: '100%',
                 titleFontSize: window.innerWidth * fontSize * titleFontSize + "px",
-                verseFontSize: window.innerWidth * fontSize * wordFontSize + "px",    
+                verseFontSize: window.innerWidth * fontSize * wordFontSize + "px", 
+                width: '100%',   
             });
             return;
         }
@@ -53,17 +53,17 @@ const Display = observer(class Display extends React.Component {
         let maxHeight = this.wrapper.offsetWidth / this.ratio;
         if(maxWidth < this.wrapper.offsetWidth) {
             this.setState({
-                width: maxWidth,
                 height: "100%",
                 titleFontSize: maxWidth * fontSize * titleFontSize + "px",
                 verseFontSize: maxWidth * fontSize * wordFontSize + "px",    
+                width: maxWidth,
             })
         } else {
             this.setState({
                 height: maxHeight,
-                width: "100%",
                 titleFontSize: maxHeight * this.ratio * fontSize * titleFontSize + "px",
-                verseFontSize: maxHeight * this.ratio * fontSize * wordFontSize + "px",    
+                verseFontSize: maxHeight * this.ratio * fontSize * wordFontSize + "px",   
+                width: "100%", 
             })
         }
     }
@@ -123,9 +123,9 @@ const Display = observer(class Display extends React.Component {
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
                 <div className="Display" style={{
-                    width: this.state.width, 
+                                        backgroundColor: this.props.backgroundColor,
                     height: this.state.height, 
-                    backgroundColor: this.props.backgroundColor,
+                    width: this.state.width, 
                 }}>
                     <div className="TitleText" style={{fontSize: this.state.titleFontSize}}>
                         {this.props.title}
@@ -144,9 +144,9 @@ const Display = observer(class Display extends React.Component {
     }
     
     static propTypes = {
-        words: PropTypes.string,
+        isItallic: PropTypes.bool,
         title: PropTypes.string,
-        isItallic: PropTypes.bool
+        words: PropTypes.string
     };
     
     

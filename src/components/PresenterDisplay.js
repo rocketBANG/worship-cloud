@@ -15,7 +15,7 @@ type Props = {
 type State = {
 }
 
-const PresenterDisplay = observer(class PresenterDisplay extends React.Component<Props, State> {
+const PresenterDisplay = observer(class extends React.Component<Props, State> {
     fontIncrement = 3;
 
     settingsModel = SettingsModel.settingsModel;
@@ -36,7 +36,9 @@ const PresenterDisplay = observer(class PresenterDisplay extends React.Component
     };
 
     componentWillReceiveProps = (nextProps) => {
-        nextProps.currentSong && nextProps.currentSong.setDisplay(this.display);
+        if(nextProps.currentSong) {
+            nextProps.currentSong.setDisplay(this.display);
+        }
     }
 
     render() {

@@ -2,7 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import '../style/DisplayOverlay.css'
 
-const DisplayOverlay = observer(class DisplayOverlay extends React.Component {
+const DisplayOverlay = observer(class extends React.Component {
 
     render() {
         let pageIndicator = "";

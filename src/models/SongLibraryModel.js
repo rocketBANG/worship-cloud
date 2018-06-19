@@ -20,9 +20,11 @@ export class SongLibraryModel {
     
     getAllSongs = async () => {
         return await this.apiManager.fetchSongs().then((json) => {
-            json && json.forEach(songJson => {
-                this.songs.push(new Song(songJson.title, songJson._id));        
-            });
+            if(json) {
+                    json.forEach(songJson => {
+                    this.songs.push(new Song(songJson.title, songJson._id));        
+                });
+            }
         });
     };
         

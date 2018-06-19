@@ -17,7 +17,10 @@ class TabFrame extends React.Component {
                 newCurrentTabs.push(tabIndex);
             }
         }
-        this.props.keepOrder && newCurrentTabs.sort();
+        
+        if(this.props.keepOrder) {
+            newCurrentTabs.sort();
+        }
         
         this.setState({currentTabs: newCurrentTabs});
     }
