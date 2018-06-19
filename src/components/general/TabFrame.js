@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import "./TabFrame.css"
 
 class TabFrame extends React.Component {

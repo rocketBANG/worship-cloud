@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import SongLibrary from '../components/SongLibrary';
-import '../style/Presenter.css'
 import '../style/Display.css'
-import { observable, autorun } from 'mobx';
+import '../style/Presenter.css'
+
+import { observable, autorun, IObservableValue, IReactionDisposer } from 'mobx';
 import { observer } from 'mobx-react';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { DisplaySong } from '../models/DisplaySong';
@@ -15,15 +16,19 @@ import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
 
 
-const Presenter = observer(class extends Component {
-
-    autorun = undefined;
-
-    state = {
+const Presenter = observer(class extends React.Component {
+    public state = {
         displaySong: undefined
     }
 
-    displaySongs = [];
+    private autorun: IReactionDisposer = undefined;
+
+    private displaySongs = [];
+
+    private songLibrary: SongLibraryModel;
+    private currentSong: IObservableValue<Song>;
+    private currentVerse: IObservableValue<Verse>;
+    private currentList: IObservableValue<SongListModel>;
 
     constructor(props) {
         super(props);
@@ -31,28 +36,19 @@ const Presenter = observer(class extends Component {
         this.songLibrary = new SongLibraryModel();
         this.songLibrary.getAllSongs();
 
-        this.currentSong = observable.box(Song);
+        this.currentSong = observable.box();
         this.currentSong.set(undefined);
-        this.currentVerse = observable.box(Verse);
+        this.currentVerse = observable.box();
         this.currentVerse.set(undefined);
-        this.currentList = observable.box(SongListModel);
+        this.currentList = observable.box();
         this.currentList.set(undefined);
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
         this.autorun();
     }
 
-    getDisplaySong = (song: Song) => {
-        let displaySong = this.displaySongs.find(d => d.id === song.id);
-        if(displaySong === undefined) {
-            displaySong = new DisplaySong(this.currentSong.get());
-            this.displaySongs.push(displaySong);
-        }
-        return displaySong;
-    }
-
-    componentDidMount() {
+    public componentDidMount() {
         this.autorun = autorun(() => {
             if(this.currentSong.get() === undefined) {
                 this.setState({displaySong: undefined });
@@ -63,7 +59,7 @@ const Presenter = observer(class extends Component {
         });
     }
 
-    render() {
+    public render() {
         const tabs = [
             {component: <SongLibrary library={this.songLibrary} currentSong={this.currentSong}/>, name: "Song Library"},
             {component: <SongLists currentSong={this.currentSong} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
@@ -75,6 +71,15 @@ const Presenter = observer(class extends Component {
                 <PresenterDisplay currentSong={this.state.displaySong} />
             </div>
         );
+    }
+
+    private getDisplaySong = (song: Song) => {
+        let displaySong = this.displaySongs.find(d => d.id === song.id);
+        if(displaySong === undefined) {
+            displaySong = new DisplaySong(this.currentSong.get());
+            this.displaySongs.push(displaySong);
+        }
+        return displaySong;
     }
 });
 

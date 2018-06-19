@@ -1,28 +1,30 @@
-import React from 'react'
+import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { IObservableValue, IObservableArray } from 'mobx';
+import { Song } from '../models/Song';
 
-type Props = {
+interface IProps {
     currentSong: IObservableValue<Song>,
     library: SongLibraryModel,
-    selectedSongs: IObservableArray<string>
+    selectedSongs?: IObservableArray<string>
 };
 
-type State = {
+interface IState {
     songText: string,
     selectedSongIds: string[],
     search: string
 }
 
-const SongLibrary = observer(class extends React.Component<Props, State> {
-    state: State = {
+const SongLibrary = observer(class extends React.Component<IProps, IState> {
+    public state = {
         songText: '',
         search: '',
+        selectedSongIds: []
     };
 
-    onSongClick = (names, indexes) => {
+    private onSongClick = (names, indexes) => {
         if(names.length < 1) {
             this.props.currentSong.set(undefined);
             
@@ -31,7 +33,7 @@ const SongLibrary = observer(class extends React.Component<Props, State> {
             return;
         }
         
-        this.props.currentSong.set(this.props.library.songs.sort(this.songSort)[indexes[0]]);
+        this.props.currentSong.set(this.getFilteredSongs()[indexes[0]]);
         this.props.currentSong.get().loadSong();
 
         if(this.props.selectedSongs === undefined) return;
@@ -39,23 +41,28 @@ const SongLibrary = observer(class extends React.Component<Props, State> {
         this.props.selectedSongs.push(...names);
     };
 
-    searchChange = (change) => {
+    private searchChange = (change) => {
         this.setState({search: change.target.value.toLowerCase()});
     }
 
-    songSort = (songA, songB) => {
-        let a = songA.title.toLowerCase();
-        let b = songB.title.toLowerCase();
+    private songSort = (songA, songB) => {
+        const a = songA.title.toLowerCase();
+        const b = songB.title.toLowerCase();
         if(a > b) return 1;
         if(a < b) return -1;
         return 0;
     }
 
-    render() {
+    private getFilteredSongs = (): Song[] => {
         let songs = this.props.library.songs.sort(this.songSort);
         if(this.state.search !== '') {
             songs = songs.filter(s => s.title.toLowerCase().indexOf(this.state.search) !== -1);
         }
+        return songs;
+    }
+
+    public render() {
+        const songs = this.getFilteredSongs();
         const options = songs.map(song => ({
             id: song.id,
             text: song.title,
