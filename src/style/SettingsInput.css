@@ -1,0 +1,8 @@
+.SettingsInput {
+    padding: 5px;
+}
+
+.SettingsInput label {
+    text-align: left;
+    width: 100%;
+}

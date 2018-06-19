@@ -1,0 +1,79 @@
+.editor {
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+    grid-template-rows: 50% 50%;
+    height: 100%;
+}
+
+.editorPage {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.toolbar {
+    background-color: #dddddd;
+}
+
+.toolbar ul {
+    display: flex;
+    flex-direction: row;
+    margin: 5px 0px;
+    padding-left: 0px;
+}
+
+.toolbar li {
+    list-style: none;
+    margin-left: 20px;
+    font-weight: normal;
+}
+
+.toolbar li .selected {
+    font-weight: bold;
+}
+
+.toolbar a {
+    color: #444444;
+    text-decoration: none;
+}
+
+.SongEditor > textarea {
+    width: 95%;
+    height: 80%;
+}
+
+.List {
+    width: 100%;
+    height: calc(100% - 110px);
+    flex: 1;
+}
+
+.List > option {
+    padding: 10px 5px;        
+}
+
+.ListControls {
+    max-height: 50px;
+    flex: 1;
+}
+
+.ListHeader {
+    flex: 1;
+    max-height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.EditorContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.SongEditor {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+}

@@ -1,0 +1,30 @@
+.TitleText{
+    font-weight: bold;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.VerseText {
+    text-align: left;
+    margin-left: 3%;
+}
+
+.VerseText p {
+    margin: 0px;
+}
+
+.Display {
+    background-color: black;
+    color: white;
+}
+
+.DisplayWrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.DisplayWrapper > iframe {
+    border: none;
+}

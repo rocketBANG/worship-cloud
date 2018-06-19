@@ -1,0 +1,9 @@
+.Viewer {
+    height: 100%;
+    width: 100%;
+}
+
+.viewerControls {
+    position: relative;
+    bottom: 50px;
+}

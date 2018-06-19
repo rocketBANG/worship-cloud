@@ -1,0 +1,58 @@
+Doing: 
+
+Backlog:
+    [ ] 47 Allow changing song names
+    [ ] 48 Allow deleting song lists
+    [ ] 33 Authorization
+    [ ] 35 Load all songs on presenter view on load
+    [ ] 27 Add context/right click menus
+    [ ] 32 Add checking for pending changes on tab close
+    [ ] 43 Add preview on settings page of how display will look with the current settings
+    [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
+    [ ] 5 Select the newly added verse in the verse select when added
+    
+Done: 
+    [x] 40 Add search bar to song library
+    [x] 46 Only show title on first page of first verse
+    [x] 44 Fix repeated lines when lines wrap on 2nd page
+    [x] 41 Add ability to create song lists
+    [x] 42 Add options for how many lines to move page when they cannot fit on one page
+    [x] 43 Measure lines including lines that have wrapped as 2 lines
+    [x] 37 Add line spacing options
+    [x] 39 Add user settings
+    [x] 38 Add indicator for black/white screen and what page in the verse the presenter display is at
+    [x] 21 Ability to remove choruses
+    [x] 39 Add PresenterDisplay component that has a display in it to handle all local storage, sending shortcuts,background color etc.
+    [x] 28 Keyboard shortcuts
+    [x] 36 Add black and white screens
+    [x] 38 Add top padding
+    [x] 34 Add multiple pages if a verse is too long
+    [x] 33 Add verse viewer on presenter screen to see the selected song's verses
+    [x] 32 Add toolbar for switching between the different views
+    [x] 20 Ability to select/manupulate multiple verses
+    [x] 30 Font size controls
+    [x] 26 Automatically resize display view on page load
+    [x] 29 Fullscreen for viewer
+    [x] 1 Assign new verses a random ID that is not already taken
+    [x] 2 Change the verse editing text when a new song is selected
+    [x] 3 Style verse select so it is always visible
+    [x] 4 Change the name of verses in select to "NEW VERSE" if there is no text
+    [x] 6 Add a List react component for VerseList, SongList and OrderList to use
+    [x] 8 Fix selection for the VerseOrderList to still have the verse selected on moving up/down
+    [x] 10 Organise files into folders
+    [x] 11 Remove verse from order when removing from song
+    [x] 13 Allow the display to scale to any size
+    [x] 14 Add node to database
+    [x] 16 Make actions.js more readable
+    [x] 17 Move API calls out of actions.js and into another file
+    [x] 12 Create choruses
+    [x] 15 Add chorus type of verse
+    [x] 9 Create the presenter and display views
+    [x] 19 Only show the first line as the verse title
+    [x] 23 Create presenter view
+    [x] 24 Change order to use verseId instead of index
+
+Canceled: 
+    [-] 45 Change minimum lines to be actual lines not wrapped lines
+    [-] 22 Error checking for multiple choruses
+    [-] 18 Add an ID generator to local and api so that verses can be added without waiting for response

@@ -1,0 +1,35 @@
+.TabFrame {
+    display: flex;
+    flex-direction: column;
+    grid-row-end: span 2;
+}
+
+.TabFrameViewer {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #aaa;
+}
+
+.TabFrameViewer>* {
+    flex: 1 1 auto;
+}
+
+.TabFrameControls {
+    flex: 0 0 auto;
+}
+
+.TabFrameControls>.tabButton {
+    cursor: default;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.0);
+    border: none;
+    padding: 3px 10px;
+    padding-top: 5px;
+    margin-right: 10px;
+}
+
+.TabFrameControls>.tabButton.selected {
+    border-bottom: 4px solid lightblue;
+}
