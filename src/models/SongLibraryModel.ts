@@ -1,8 +1,10 @@
-import { action, decorate, observable } from 'mobx';
+import { action, decorate, observable, IObservableArray } from 'mobx';
 import { Song } from './Song';
 import { SongLibraryApi } from '../store/SongLibraryApi';
+import { Verse } from './Verse';
+import { SongListModel } from './song-lists/SongListModel';
 
-export type SongLibraryState = {
+export interface ISongLibraryState {
     currentSong: Song,
     currentVerse: Verse,
     currentList: SongListModel
@@ -10,15 +12,19 @@ export type SongLibraryState = {
 
 export class SongLibraryModel {
 
-    state = "done"; // "pending" / "done" / "error",
+    public state = "done"; // "pending" / "done" / "error",
 
-    songs: Song[] = [];
+    public songs: Song[] = [];
+
+    public selectedSongs: IObservableArray<string> = observable.array();
+    private addingSong = false;
+    private apiManager: SongLibraryApi
         
     constructor() {
         this.apiManager = new SongLibraryApi();
     }
     
-    getAllSongs = async () => {
+    public getAllSongs = async () => {
         return await this.apiManager.fetchSongs().then((json) => {
             if(json) {
                     json.forEach(songJson => {
@@ -28,22 +34,25 @@ export class SongLibraryModel {
         });
     };
         
-    addSong = (songTitle) => {
+    public addSong = async (songTitle): Promise<Song> => {
         this.state = 'pending';
         this.addingSong = true;
-        this.apiManager.addSong(songTitle).then(
+        return this.apiManager.addSong(songTitle).then(
             song => {
                 this.state = 'done';
-                this.songs.push(new Song(song.title, song._id));        
+                const newSong = new Song(song.title, song._id);
+                this.songs.push(newSong);   
+                return newSong;     
             },
             error => {
                 console.log(error);
                 this.state = 'done';
+                return undefined;
             },
         );
     };
     
-    removeSong = (songId: string) => {
+    public removeSong = (songId: string) => {
         this.state = 'pending';
         this.songs = this.songs.filter((song) => {
             return song.id !== songId;

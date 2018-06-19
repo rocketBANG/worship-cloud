@@ -28,17 +28,17 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         if(names.length < 1) {
             this.props.currentSong.set(undefined);
             
-            if(this.props.selectedSongs === undefined) { return; }
-            this.props.selectedSongs.clear();
+            if(this.props.library.selectedSongs === undefined) { return; }
+            this.props.library.selectedSongs.clear();
             return;
         }
         
         this.props.currentSong.set(this.getFilteredSongs()[indexes[0]]);
         this.props.currentSong.get().loadSong();
 
-        if(this.props.selectedSongs === undefined) return;
-        this.props.selectedSongs.clear();
-        this.props.selectedSongs.push(...names);
+        if(this.props.library.selectedSongs === undefined) return;
+        this.props.library.selectedSongs.clear();
+        this.props.library.selectedSongs.push(...names);
     };
 
     private searchChange = (change) => {
@@ -54,7 +54,7 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
     }
 
     private getFilteredSongs = (): Song[] => {
-        let songs = this.props.library.songs.sort(this.songSort);
+        let songs = this.props.library.songs.slice().sort(this.songSort);
         if(this.state.search !== '') {
             songs = songs.filter(s => s.title.toLowerCase().indexOf(this.state.search) !== -1);
         }
@@ -69,11 +69,14 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             altText: ""
         }));
 
+        const selectedSongIndexes = this.props.library.selectedSongs.map(s => 
+            songs.findIndex(song => song.id === s));
+
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <List onUpdate={this.onSongClick} options={options} />
+                <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongIndexes} />
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
         )    

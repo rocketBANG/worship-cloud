@@ -1,8 +1,8 @@
 import { SongLibraryModel } from "../models/SongLibraryModel";
-import { IObservableValue, IObservableArray } from "mobx";
+import { IObservableValue, IObservableArray, observable } from "mobx";
 import { SongListModel } from "../models/song-lists/SongListModel";
 import { Song } from "../models/Song";
-import React from 'react';
+import * as React from 'react';
 import { observer } from "mobx-react";
 
 type Props = {
@@ -23,12 +23,16 @@ const SongLibraryControls = observer(class extends React.Component<Props, State>
         selectedSongIds: []
     };
 
-    onSongAdd = () => {
-        this.props.library.addSong(this.state.songText);
+    onSongAdd = async () => {
+        const newSong = await this.props.library.addSong(this.state.songText);
+        this.props.library.selectedSongs.clear();
+        this.props.library.selectedSongs.push(newSong.id);
+        this.props.currentSong.set(newSong);
+        newSong.loadSong();
     };
 
     onSongRemove = () => {
-        this.props.selectedSongs.forEach(songId => {
+        this.props.library.selectedSongs.forEach(songId => {
             this.props.library.removeSong(songId);
         })
     };
