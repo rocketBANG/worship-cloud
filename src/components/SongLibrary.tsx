@@ -4,6 +4,8 @@ import { List } from './List';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { IObservableValue, IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
+import { FloatingMenu } from './FloatingMenu';
+import { ContextMenu } from './ContextMenu';
 
 interface IProps {
     selectedSongs: IObservableArray<Song>,
@@ -67,7 +69,9 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
+                <ContextMenu items={[{text: "hello"}, {text: "goodbye"}]}>
+                    <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
+                </ContextMenu>
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
         )    

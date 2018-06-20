@@ -9,7 +9,10 @@ export interface IOptions {
 interface IProps {
     selectedIndex?: number[],
     onUpdate: (a: string[], b: string[]) => any,
-    options: IOptions[]
+    options: IOptions[],
+    onClick?: (event: React.MouseEvent<any>) => void,
+    onDoubleClick?: (event: React.MouseEvent<any>) => void,
+    onContextMenu?: (event: React.MouseEvent<any>) => void
 }
 
 class List extends React.Component<IProps> {
@@ -73,6 +76,9 @@ class List extends React.Component<IProps> {
         return (
             <select value={selected} className="List" multiple ref={(node) => this.select = node} 
             onChange={this.returnSelected}
+            onClick={this.props.onClick}
+            onDoubleClick={this.props.onDoubleClick}
+            onContextMenu={this.props.onContextMenu}
             // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
             >
                 {options}
