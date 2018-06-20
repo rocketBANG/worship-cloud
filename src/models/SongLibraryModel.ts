@@ -16,7 +16,6 @@ export class SongLibraryModel {
 
     public songs: Song[] = [];
 
-    public selectedSongs: IObservableArray<string> = observable.array();
     private addingSong = false;
     private apiManager: SongLibraryApi
         

@@ -7,9 +7,8 @@ import { observer } from "mobx-react";
 
 type Props = {
     library: SongLibraryModel,
-    currentSong: IObservableValue<Song>,
     currentList: IObservableValue<SongListModel>,
-    selectedSongs: IObservableArray<string>
+    selectedSongs: IObservableArray<Song>
 };
 
 type State = {
@@ -25,15 +24,14 @@ const SongLibraryControls = observer(class extends React.Component<Props, State>
 
     onSongAdd = async () => {
         const newSong = await this.props.library.addSong(this.state.songText);
-        this.props.library.selectedSongs.clear();
-        this.props.library.selectedSongs.push(newSong.id);
-        this.props.currentSong.set(newSong);
+        this.props.selectedSongs.clear();
+        this.props.selectedSongs.push(newSong);
         newSong.loadSong();
     };
 
     onSongRemove = () => {
-        this.props.library.selectedSongs.forEach(songId => {
-            this.props.library.removeSong(songId);
+        this.props.selectedSongs.forEach(song => {
+            this.props.library.removeSong(song.id);
         })
     };
 
@@ -44,7 +42,9 @@ const SongLibraryControls = observer(class extends React.Component<Props, State>
     };
     
     onSongListAdd = () => {
-        this.props.currentList.get().addSong(this.props.currentSong.get().id);
+        this.props.selectedSongs.forEach(s => {
+            this.props.currentList.get().addSong(s.id);
+        });
     };
 
     render() {

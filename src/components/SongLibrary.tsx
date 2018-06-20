@@ -6,9 +6,8 @@ import { IObservableValue, IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
 
 interface IProps {
-    currentSong: IObservableValue<Song>,
+    selectedSongs: IObservableArray<Song>,
     library: SongLibraryModel,
-    selectedSongs?: IObservableArray<string>
 };
 
 interface IState {
@@ -24,21 +23,14 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         selectedSongIds: []
     };
 
-    private onSongClick = (names, indexes) => {
+    private onSongClick = (names, indexes: string[]) => {
+        this.props.selectedSongs.clear();
         if(names.length < 1) {
-            this.props.currentSong.set(undefined);
-            
-            if(this.props.library.selectedSongs === undefined) { return; }
-            this.props.library.selectedSongs.clear();
             return;
         }
-        
-        this.props.currentSong.set(this.getFilteredSongs()[indexes[0]]);
-        this.props.currentSong.get().loadSong();
 
-        if(this.props.library.selectedSongs === undefined) return;
-        this.props.library.selectedSongs.clear();
-        this.props.library.selectedSongs.push(...names);
+        this.props.selectedSongs.push(...this.getFilteredSongs().filter(s => names.indexOf(s.id) > -1));
+        this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
     };
 
     private searchChange = (change) => {
@@ -69,14 +61,13 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             altText: ""
         }));
 
-        const selectedSongIndexes = this.props.library.selectedSongs.map(s => 
-            songs.findIndex(song => song.id === s));
+        const selectedSongs = this.props.selectedSongs.map(s => songs.findIndex(song => song.id === s.id));
 
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongIndexes} />
+                <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
         )    

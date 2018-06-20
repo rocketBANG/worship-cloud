@@ -1,9 +1,9 @@
-import React from 'react'
+import * as React from 'react'
 import { observer } from 'mobx-react'
 
 type Props = {
     currentVerse: IObservableValue<Verse>,
-    currentSong: IObservableValue<Song>
+    currentSong: Song
 }
 
 type State = {
@@ -18,7 +18,7 @@ const SongEditor = observer(class extends React.Component<Props, State> {
     render() {
         const disabled = this.props.currentVerse.get() === undefined;
         const verse = this.props.currentVerse.get() || {};
-        const song = this.props.currentSong.get() || {};
+        const song = this.props.currentSong || {};
         
         return (
             <div className="SongEditor EditorContainer">

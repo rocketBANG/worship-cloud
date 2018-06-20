@@ -1,12 +1,13 @@
-import React from 'react'
+import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { SongListModel } from '../models/song-lists/SongListModel';
+import { IObservableArray } from 'mobx';
 
 type Props = {
     library: SongLibraryModel,
-    currentSong: ObservableValue<Song>,
+    selectedSongs: IObservableArray<Song>,
     songList: SongListModel
 };
 
@@ -22,23 +23,18 @@ const SongList = observer(class extends React.Component<Props, State> {
     };
 
     onSongClick = (names, indexes) => {
+        this.props.selectedSongs.clear();
+
         if(names.length < 1) {
-            this.props.currentSong.set(undefined)
-            this.setState({
-                selectedSongIds: []
-            })    
             return;
-        }        
-        this.props.currentSong.set(this.props.library.songs.find(s => s.id === names[0]))
-        this.props.currentSong.get().loadSong();
-        this.setState({
-            selectedSongIds: names
-        })
+        }
+        this.props.selectedSongs.push(...this.props.library.songs.filter(s => names.indexOf(s.id) > -1));
+        this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
     };
 
     onSongRemove = () => {
-        this.state.selectedSongIds.forEach(id => {
-            this.props.songList.removeSong(id);
+        this.props.selectedSongs.forEach(song => {
+            this.props.songList.removeSong(song.id);
         })
     }
     
@@ -51,11 +47,13 @@ const SongList = observer(class extends React.Component<Props, State> {
             text: song.title,
             altText: ""
         }));
+
+        const selectedSongs = this.props.selectedSongs.map(s => songs.findIndex(song => song.id === s.id));
     
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
-                <List onUpdate={this.onSongClick} options={options} />
+                <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
                 <div className="ListControls">
                     <button onClick={this.onSongRemove}>Remove Song</button>
                 </div>

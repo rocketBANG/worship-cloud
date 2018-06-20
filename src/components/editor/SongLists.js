@@ -7,13 +7,13 @@ import SongList from '../SongList';
 import * as API from '../../store/api';
 import { Song } from '../../models/Song';
 import { SongLibraryModel } from '../../models/SongLibraryModel';
-import { observable, IObservableValue } from 'mobx';
+import { observable, IObservableValue, IObservableArray } from 'mobx';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 
 type Props = {
     library: SongLibraryModel,
     currentList: IObservableValue<SongListModel>,
-    currentSong: IObservableValue<Song>
+    selectedSongs: IObservableArray<Song>
 }
 
 type State = {}
@@ -30,8 +30,6 @@ const SongLists = observer(class extends React.Component<Props, State> {
         super(props);
 
         this.songListLibrary.load();
-
-        this.currentSong = observable.box(Song);
     }
 
     songListNameChange = (e) => {
@@ -100,7 +98,7 @@ const SongLists = observer(class extends React.Component<Props, State> {
 
         let mainView = <List onUpdate={this.onListClick} options={options} />;
         if(currentList !== undefined) {
-            mainView = <SongList songList={currentList} currentSong={this.props.currentSong} library={this.props.library}/>;
+            mainView = <SongList songList={currentList} selectedSongs={this.props.selectedSongs} library={this.props.library}/>;
         }
 
         const backButton = currentList !== undefined ? <button onClick={() => this.props.currentList.set(undefined)}>{"<-"}</button> : "";

@@ -3,7 +3,7 @@ import SongLibrary from '../components/SongLibrary';
 import '../style/Display.css'
 import '../style/Presenter.css'
 
-import { observable, autorun, IObservableValue, IReactionDisposer } from 'mobx';
+import { observable, autorun, IObservableValue, IReactionDisposer, IObservableArray } from 'mobx';
 import { observer } from 'mobx-react';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { DisplaySong } from '../models/DisplaySong';
@@ -16,7 +16,7 @@ import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
 
 
-const Presenter = observer(class extends React.Component {
+const Presenter = observer(class extends React.Component<{}, {displaySong: DisplaySong}> {
     public state = {
         displaySong: undefined
     }
@@ -26,9 +26,9 @@ const Presenter = observer(class extends React.Component {
     private displaySongs = [];
 
     private songLibrary: SongLibraryModel;
-    private currentSong: IObservableValue<Song>;
     private currentVerse: IObservableValue<Verse>;
     private currentList: IObservableValue<SongListModel>;
+    private currentSongs: IObservableArray<Song>;
 
     constructor(props) {
         super(props);
@@ -36,12 +36,12 @@ const Presenter = observer(class extends React.Component {
         this.songLibrary = new SongLibraryModel();
         this.songLibrary.getAllSongs();
 
-        this.currentSong = observable.box();
-        this.currentSong.set(undefined);
         this.currentVerse = observable.box();
         this.currentVerse.set(undefined);
         this.currentList = observable.box();
         this.currentList.set(undefined);
+
+        this.currentSongs = observable.array();
     }
 
     public componentWillUnmount() {
@@ -50,19 +50,20 @@ const Presenter = observer(class extends React.Component {
 
     public componentDidMount() {
         this.autorun = autorun(() => {
-            if(this.currentSong.get() === undefined) {
+            const currentSong = this.currentSongs[this.currentSongs.length - 1];
+            if(currentSong === undefined) {
                 this.setState({displaySong: undefined });
                 return;
             }
-            this.currentSong.get().loadSong();
-            this.setState({displaySong: this.getDisplaySong(this.currentSong.get()) });
+            currentSong.loadSong();
+            this.setState({displaySong: this.getDisplaySong(currentSong) });
         });
     }
 
     public render() {
         const tabs = [
-            {component: <SongLibrary library={this.songLibrary} currentSong={this.currentSong}/>, name: "Song Library"},
-            {component: <SongLists currentSong={this.currentSong} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
+            {component: <SongLibrary library={this.songLibrary} selectedSongs={this.currentSongs}/>, name: "Song Library"},
+            {component: <SongLists selectedSongs={this.currentSongs} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
         ];
         return (
             <div className="Presenter">
@@ -76,7 +77,7 @@ const Presenter = observer(class extends React.Component {
     private getDisplaySong = (song: Song) => {
         let displaySong = this.displaySongs.find(d => d.id === song.id);
         if(displaySong === undefined) {
-            displaySong = new DisplaySong(this.currentSong.get());
+            displaySong = new DisplaySong(song);
             this.displaySongs.push(displaySong);
         }
         return displaySong;

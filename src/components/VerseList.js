@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
 import { IObservableValue } from 'mobx';
@@ -7,7 +7,7 @@ import { Song } from '../models/Song';
 
 type Props = {
     currentVerse: IObservableValue<Verse>,
-    currentSong: IObservableValue<Song>
+    currentSong: Song
 }
 
 type State = {
@@ -18,7 +18,7 @@ const VerseList = observer(class extends React.Component<Props, State> {
 
     onVerseClick = (names, indexes) => {
 
-        this.props.currentVerse.set(this.props.currentSong.get().completeVerses[indexes[0]]);
+        this.props.currentVerse.set(this.props.currentSong.completeVerses[indexes[0]]);
         
         this.setState({
             selectedId: names[0],
@@ -27,25 +27,25 @@ const VerseList = observer(class extends React.Component<Props, State> {
     };
 
     onVerseAdd = () => {
-        this.props.currentSong.get().addVerse("");
+        this.props.currentSong.addVerse("");
     };
 
     onVerseRemove = () => {
-        this.props.currentSong.get().removeVerse(this.state.selectedIds);
+        this.props.currentSong.removeVerse(this.state.selectedIds);
     };
 
     onAddToOrder = () => {
-        let song = this.props.currentSong.get();
+        let song = this.props.currentSong;
 
         song.addToOrder(this.state.selectedIds);
     };
 
     onSetChorus = () => {
-        this.props.currentSong.get().setChorus(this.state.selectedId);
+        this.props.currentSong.setChorus(this.state.selectedId);
     };
     
     render() {
-        let currentSong = this.props.currentSong.get() || {};
+        let currentSong = this.props.currentSong || {};
         const options = (currentSong.completeVerses || []).map((verse, index) => ({
             id: verse.id,
             text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
