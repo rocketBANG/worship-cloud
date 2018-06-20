@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { observer } from 'mobx-react'
 import '../style/Display.css'
 import 'any-resize-event'
@@ -152,4 +152,4 @@ const Display = observer(class extends React.Component {
     
 });
 
-export default Display;
+export {Display};

@@ -4,9 +4,9 @@ import { SongListModel } from './SongListModel';
 
 class SongListLibrary {
 
-    lists: SongListModel[] = [];
+    public lists: SongListModel[] = [];
         
-    load = () => {
+    public load = () => {
         API.getSongLists().then(lists => {
             lists.forEach(l => {
                 this.lists.push(new SongListModel(l._id, l.name, l.songIds));
@@ -14,7 +14,7 @@ class SongListLibrary {
         });
     }
 
-    addList = (name) => {
+    public addList = (name) => {
         API.addSongList(name).then(list => {
             this.lists.push(new SongListModel(list._id, list.name));
         });

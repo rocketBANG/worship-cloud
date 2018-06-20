@@ -10,18 +10,19 @@ export class DisplaySong {
     // TODO change this to be a wrapper for a song
     // When a song is selected from the song library, add extra functionality to it using this class
 
-    settingsModel = SettingsModel.settingsModel
+    private settingsModel = SettingsModel.settingsModel
+    private display;
 
-    blanked = 0; // 1 = black, -1 = white,
-    currentVerse = undefined;
-    currentPage = "";
-    pageIndex = 0;
-    verseIndex = -1;
-    currentPages = [];
-    id = '';
+    public blanked = 0; // 1 = black, -1 = white,
+    public currentVerse = undefined;
+    public currentPage = "";
+    public pageIndex = 0;
+    public verseIndex = -1;
+    public currentPages = [];
+    public id = '';
+    public title = '';
 
-    constructor(song: Song) {
-        this.song = song;
+    constructor(private song: Song) {
         this.title = song.title;
         this.id = song.id;
 
@@ -30,11 +31,11 @@ export class DisplaySong {
         autorun(() => {if(song.isLoaded) this.nextVerse()});
     }
 
-    setDisplay = (display) => {
+    public setDisplay = (display) => {
         this.display = display;
     }
 
-    nextVerse = () => {
+    public nextVerse = () => {
         if(this.verseIndex >= this.song.verseOrder.length - 1) {
             return;
         }
@@ -45,7 +46,7 @@ export class DisplaySong {
         this.currentPage = this.currentPages[this.pageIndex];
     };
 
-    prevVerse = () => {
+    public prevVerse = () => {
         if(this.verseIndex <= 0) {
             return;
         }
@@ -56,7 +57,7 @@ export class DisplaySong {
         this.currentPage = this.currentPages[this.pageIndex];
     }
 
-    nextPage = () => {
+    public nextPage = () => {
         if(this.blanked !== 0) {
             this.blanked = 0;
             return;
@@ -73,7 +74,7 @@ export class DisplaySong {
         }
     };
 
-    prevPage = () => {
+    public prevPage = () => {
         if(this.blanked !== 0) {
             this.blanked = 0;
             return;
@@ -90,7 +91,7 @@ export class DisplaySong {
         }
     }
 
-    setVerse = (index) => {
+    public setVerse = (index) => {
         this.verseIndex = index;
         this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
@@ -98,7 +99,7 @@ export class DisplaySong {
         this.currentPage = this.currentPages[this.pageIndex];
     }
 
-    setupPages = () => {
+    public setupPages = () => {
         if(this.display === undefined) {
             return;
         }
@@ -106,13 +107,13 @@ export class DisplaySong {
         allLines = allLines.filter(l => l !== "");
         this.currentPages = [];
 
-        let weightedLines = this.display.measureLines(allLines);
+        const weightedLines = this.display.measureLines(allLines);
         let totalLines = weightedLines.reduce((accumulator, val) => 
             accumulator + val.lines
         , 0);
 
-        let maxLines = this.settingsModel.maximumPageLines;
-        let minLines = this.settingsModel.minimumPageLines;
+        const maxLines = this.settingsModel.maximumPageLines;
+        const minLines = this.settingsModel.minimumPageLines;
 
         // let actualMinimum = weightedLines.reduce((accumulator, val, i) => 
         //     i >= weightedLines.length - minLines - 1 ? accumulator + val.lines : accumulator
@@ -166,7 +167,7 @@ export class DisplaySong {
         }
     }
 
-    setBlack = () => {
+    public setBlack = () => {
         if(this.blanked === BLACKED) {
             this.blanked = 0;
             return;
@@ -174,7 +175,7 @@ export class DisplaySong {
         this.blanked = BLACKED;
     }
 
-    setWhite = () => {
+    public setWhite = () => {
         if(this.blanked === WHITE) {
             this.blanked = 0;
             return;

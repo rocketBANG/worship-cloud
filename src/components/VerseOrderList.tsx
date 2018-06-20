@@ -1,36 +1,40 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
+import { Verse } from '../models/Verse';
+import { IObservableValue } from 'mobx';
+import { Song } from '../models/Song';
 
-type Props = {
+interface IProps {
     currentVerse: IObservableValue<Verse>,
     currentSong: Song
 }
 
-type State = {
-
+interface IState {
+    index: number,
+    indexes: number[],
 }
 
-const VerseList = observer(class extends React.Component<Props, State> {
+const VerseList = observer(class extends React.Component<IProps, IState> {
 
-    state = {
+    public state = {
         index: -1,
         indexes: []
     };
 
-    onVerseClick = (names, indexes) => {
+    private onVerseClick = (names, indexes) => {
         this.props.currentVerse.set(this.props.currentSong.verseOrder[indexes[0]]);
         this.setState({
             index: indexes[0],
-            indexes: indexes
+            indexes
         })
     };
 
-    onOrderRemove = () => {
+    private onOrderRemove = () => {
         this.props.currentSong.removeFromOrder(this.state.indexes)
     };
 
-    onOrderUp = () => {
+    private onOrderUp = () => {
         if(this.state.indexes[0] < 1) {
             return;
         }
@@ -38,7 +42,7 @@ const VerseList = observer(class extends React.Component<Props, State> {
         this.setState({indexes: this.state.indexes.map(i => i - 1)});
     };
 
-    onOrderDown = () => {
+    private onOrderDown = () => {
         if(this.state.indexes[this.state.indexes.length - 1] > this.props.currentSong.verseOrder.length - 2) {
             return;
         }
@@ -46,9 +50,9 @@ const VerseList = observer(class extends React.Component<Props, State> {
         this.setState({indexes: this.state.indexes.map(i => i + 1)});
     };
     
-    render() {
-        let currentSong = this.props.currentSong || {};
-        const options = (currentSong.verseOrder || []).map((verse, index) => ({
+    public render() {
+        const currentSong = this.props.currentSong || {verseOrder: []};
+        const options = currentSong.verseOrder.map((verse, index) => ({
             id: verse.id,
             text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
             altText: "NEW VERSE"

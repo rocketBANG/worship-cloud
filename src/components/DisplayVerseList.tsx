@@ -1,18 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import { List } from './List';
 import { observer } from 'mobx-react';
 import { DisplaySong } from '../models/DisplaySong';
 
-type Props = {
+interface IProps {
     currentSong: DisplaySong,
 };
 
-type State = {
-}
+const DisplayVerseList = observer(class extends React.Component<IProps> {
 
-const DisplayVerseList = observer(class extends React.Component<Props, State> {
-
-    onVerseClick = (names, indexes) => {
+    private onVerseClick = (names, indexes) => {
         if(indexes.length < 1) {
             return;
         }
@@ -20,9 +17,9 @@ const DisplayVerseList = observer(class extends React.Component<Props, State> {
         this.props.currentSong.setVerse(indexes[0]);
     };
 
-    render() {
-        let song = this.props.currentSong || {};
-        const options = (song.verseOrder || []).map((verse, index) => {
+    public render() {
+        const song = this.props.currentSong || {verseOrder: [], verseIndex: undefined};
+        const options = song.verseOrder.map((verse, index) => {
             let verseText = verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title;
             if(verse.numPages > 1) {
                 verseText += " (" + verse.numPages + ")";

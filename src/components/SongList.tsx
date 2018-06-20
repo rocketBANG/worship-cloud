@@ -4,25 +4,26 @@ import { List } from './List'
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import { IObservableArray } from 'mobx';
+import { Song } from '../models/Song';
 
-type Props = {
+interface IProps {
     library: SongLibraryModel,
     selectedSongs: IObservableArray<Song>,
     songList: SongListModel
 };
 
-type State = {
+interface IState {
     songText: string,
     selectedSongIds: string[]
 }
 
-const SongList = observer(class extends React.Component<Props, State> {
-    state: State = {
+const SongList = observer(class extends React.Component<IProps, IState> {
+    public state = {
         songText: '',
         selectedSongIds: []
     };
 
-    onSongClick = (names, indexes) => {
+    private onSongClick = (names, indexes) => {
         this.props.selectedSongs.clear();
 
         if(names.length < 1) {
@@ -32,13 +33,13 @@ const SongList = observer(class extends React.Component<Props, State> {
         this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
     };
 
-    onSongRemove = () => {
+    private onSongRemove = () => {
         this.props.selectedSongs.forEach(song => {
             this.props.songList.removeSong(song.id);
         })
     }
     
-    render() {
+    public render() {
         let songs = this.props.library.songs;
         songs = songs.filter(s => this.props.songList.songIds.indexOf(s.id) !== -1);
 
@@ -57,7 +58,6 @@ const SongList = observer(class extends React.Component<Props, State> {
                 <div className="ListControls">
                     <button onClick={this.onSongRemove}>Remove Song</button>
                 </div>
-                {this.props.songList.state === "pending" ? "Saving" : ""}
             </div>
         )    
     }

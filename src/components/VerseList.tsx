@@ -5,18 +5,19 @@ import { IObservableValue } from 'mobx';
 import { Verse } from '../models/Verse';
 import { Song } from '../models/Song';
 
-type Props = {
+interface IProps {
     currentVerse: IObservableValue<Verse>,
     currentSong: Song
 }
 
-type State = {
-
+interface IState {
+    selectedId: string,
+    selectedIds: string[],
 }
 
-const VerseList = observer(class extends React.Component<Props, State> {
+const VerseList = observer(class extends React.Component<IProps, IState> {
 
-    onVerseClick = (names, indexes) => {
+    private onVerseClick = (names, indexes) => {
 
         this.props.currentVerse.set(this.props.currentSong.completeVerses[indexes[0]]);
         
@@ -26,27 +27,27 @@ const VerseList = observer(class extends React.Component<Props, State> {
         })
     };
 
-    onVerseAdd = () => {
+    private onVerseAdd = () => {
         this.props.currentSong.addVerse("");
     };
 
-    onVerseRemove = () => {
+    private onVerseRemove = () => {
         this.props.currentSong.removeVerse(this.state.selectedIds);
     };
 
-    onAddToOrder = () => {
-        let song = this.props.currentSong;
+    private onAddToOrder = () => {
+        const song = this.props.currentSong;
 
         song.addToOrder(this.state.selectedIds);
     };
 
-    onSetChorus = () => {
+    private onSetChorus = () => {
         this.props.currentSong.setChorus(this.state.selectedId);
     };
     
-    render() {
-        let currentSong = this.props.currentSong || {};
-        const options = (currentSong.completeVerses || []).map((verse, index) => ({
+    public render() {
+        const currentSong = this.props.currentSong || {completeVerses: []};
+        const options = currentSong.completeVerses.map((verse, index) => ({
             id: verse.id,
             text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
             altText: "NEW VERSE"

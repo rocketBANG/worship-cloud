@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Display from '../components/Display';
+import {Display} from '../components/Display';
 import '../style/viewer.css'
 import '../style/Display.css'
 

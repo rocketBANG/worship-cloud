@@ -16,7 +16,6 @@ import { SongLibraryControls } from '../components/SongLibraryControls';
 export default class Editor extends React.Component<{}, {currentSong: Song}> {
 
     private songLibrary: SongLibraryModel;
-    private currentSong: Song;
     private currentVerse: IObservableValue<Verse>;
     private currentList: IObservableValue<SongListModel>;
     private selectedSongs: IObservableArray<Song>;
@@ -39,7 +38,6 @@ export default class Editor extends React.Component<{}, {currentSong: Song}> {
         this.currentList.set(undefined);
 
         this.selectedSongs = observable.array();
-        this.currentSong = undefined;
     }
 
     public componentWillUnmount() {

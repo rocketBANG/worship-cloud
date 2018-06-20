@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import './SongLists.css';
 import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
@@ -10,35 +10,39 @@ import { SongLibraryModel } from '../../models/SongLibraryModel';
 import { observable, IObservableValue, IObservableArray } from 'mobx';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 
-type Props = {
+interface IProps {
     library: SongLibraryModel,
     currentList: IObservableValue<SongListModel>,
-    selectedSongs: IObservableArray<Song>
+    selectedSongs: IObservableArray<Song>,
+    hideControls?: boolean
 }
 
-type State = {}
+interface IState {
+    songListName: string,
+    selectedIndexes: number[]
+}
 
-const SongLists = observer(class extends React.Component<Props, State> {
-    state = {
+const SongLists = observer(class extends React.Component<IProps, IState> {
+    public state = {
         songListName: "",
         selectedIndexes: [],
     }
 
-    songListLibrary = new SongListLibrary();
+    private songListLibrary = new SongListLibrary();
 
-    constructor(props: Props) {
+    constructor(props) {
         super(props);
 
         this.songListLibrary.load();
     }
 
-    songListNameChange = (e) => {
+    private songListNameChange = (e) => {
         
         this.setState({songListName: e.target.value});
     }
 
-    onAddSongList = () => {
-        let {songListName} = this.state;
+    private onAddSongList = () => {
+        const {songListName} = this.state;
 
         if(songListName === "") {
             return;
@@ -47,50 +51,39 @@ const SongLists = observer(class extends React.Component<Props, State> {
         this.songListLibrary.addList(songListName);
     }
 
-    onListClick = (names, indexes) => {
+    private onListClick = (names, indexes) => {
         if(indexes.length < 1) {
             return;
         }
-        let selectedList = this.songListLibrary.lists[indexes[0]];
+        const selectedList = this.songListLibrary.lists[indexes[0]];
         this.props.currentList.set(selectedList);
     }
 
-    onSongClick = (names, indexes) => {
-        this.setState({selectedIndexes: indexes});
-        if(indexes.length < 1) {
-            this.props.editorState.currentList = undefined;
-            return;
-        }
-        let newSong = this.props.editorState.currentList.library.songs[indexes[0]];
-        this.props.editorState.currentSong = newSong;
-        newSong.loadSong();
-    }
-
-    deleteSongList = () => {
-        let {currentList} = this.props;
+    private deleteSongList = () => {
+        const {currentList} = this.props;
         currentList.get().delete();
     }
 
-    removeSongFromList = () => {
-        this.props.library.removeSongs(this.state.selectedIndexes);
-    }
-
-    downloadSongList = () => {
-        let songIds = this.props.currentList.get().songIds;
+    private downloadSongList = () => {
+        const songIds = this.props.currentList.get().songIds;
         API.downloadSongs(songIds).then(blob => {
-            var a = document.createElement("a");
+            const a = document.createElement("a");
             document.body.appendChild(a);
-            let url = window.URL.createObjectURL(blob);
+            const url = window.URL.createObjectURL(blob);
             a.href = url;
-            a.download = this.props.editorState.currentList.model.name + ".pptx";
+            a.download = this.props.currentList.get().name + ".pptx";
             a.click();
             window.URL.revokeObjectURL(url);
         });
     }
 
-    render() {
-        let currentList = this.props.currentList.get();
-        let options = this.songListLibrary.lists.map(list => ({
+    private onBackClick = () => {
+        this.props.currentList.set(undefined);
+    }
+
+    public render() {
+        const currentList = this.props.currentList.get();
+        const options = this.songListLibrary.lists.map(list => ({
             id: list.id,
             text: list.name,
             altText: list.name
@@ -101,7 +94,7 @@ const SongLists = observer(class extends React.Component<Props, State> {
             mainView = <SongList songList={currentList} selectedSongs={this.props.selectedSongs} library={this.props.library}/>;
         }
 
-        const backButton = currentList !== undefined ? <button onClick={() => this.props.currentList.set(undefined)}>{"<-"}</button> : "";
+        const backButton = currentList !== undefined ? <button onClick={this.onBackClick}>{"<-"}</button> : "";
 
         let controls;
         if(currentList === undefined && !this.props.hideControls) {

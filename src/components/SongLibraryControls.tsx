@@ -5,49 +5,49 @@ import { Song } from "../models/Song";
 import * as React from 'react';
 import { observer } from "mobx-react";
 
-type Props = {
+interface IProps {
     library: SongLibraryModel,
     currentList: IObservableValue<SongListModel>,
     selectedSongs: IObservableArray<Song>
 };
 
-type State = {
+interface IState {
     songText: string,
     selectedSongIds: string[]
 }
 
-const SongLibraryControls = observer(class extends React.Component<Props, State> {
-    state: State = {
+const SongLibraryControls = observer(class extends React.Component<IProps, IState> {
+    public state = {
         songText: '',
         selectedSongIds: []
     };
 
-    onSongAdd = async () => {
+    private onSongAdd = async () => {
         const newSong = await this.props.library.addSong(this.state.songText);
         this.props.selectedSongs.clear();
         this.props.selectedSongs.push(newSong);
         newSong.loadSong();
     };
 
-    onSongRemove = () => {
+    private onSongRemove = () => {
         this.props.selectedSongs.forEach(song => {
             this.props.library.removeSong(song.id);
         })
     };
 
-    handleChange = (event) => {
+    private handleChange = (event) => {
         this.setState({
             songText: event.target.value
         })
     };
     
-    onSongListAdd = () => {
+    private onSongListAdd = () => {
         this.props.selectedSongs.forEach(s => {
             this.props.currentList.get().addSong(s.id);
         });
     };
 
-    render() {
+    public render() {
         return (
             <div className="ListControls">
                 <input value={this.state.songText} onChange={this.handleChange} />

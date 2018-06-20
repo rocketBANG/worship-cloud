@@ -4,25 +4,23 @@ import { Verse } from './Verse'
 
 export class Song {
 
-    state = "unloaded"
-    chorus = undefined
-    order = []
-    verses = observable(new Map())
-    isLoaded = false
-    id = "";
-    title = "";
+    public state = "unloaded"
+    public chorus = undefined
+    public order = []
+    public verses = observable(new Map())
+    public isLoaded = false
+    public title = "";
 
-    constructor(songTitle: String, id: String) {
-        this.id = id;
+    constructor(songTitle: string, public id: string) {
         this.title = songTitle;
     }
 
-    loadSong = () => {
+    public loadSong = () => {
         if(!this.isLoaded) {
             this.state = "loading";
             return API.fetchVerses(this.id).then((json) => {
                 json.verses.forEach(verse => {
-                    var newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
+                    const newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
                     this.verses.set(verse._id, newVerse);
                 });
 
@@ -34,7 +32,7 @@ export class Song {
         return Promise.resolve();
     };
 
-    addToOrder = (verseId) => {
+    public addToOrder = (verseId) => {
         this.state = "uploading";
         this.order = this.order.concat(verseId);
         API.updateOrder(this.order, this.id).then(() => {
@@ -42,7 +40,7 @@ export class Song {
         });
     };
 
-    reorder = (from, to) => {
+    public reorder = (from, to) => {
         this.state = "uploading";
         if(from.constructor === Array) {
             // If going down, for loop in reverse order
@@ -57,7 +55,7 @@ export class Song {
         });
     };
 
-    removeFromOrder = (index) => {
+    public removeFromOrder = (index) => {
         this.state = "uploading";
         if(index.constructor === Array) {
             this.order = this.order.filter((o, i) => index.indexOf(i) === -1);
@@ -71,12 +69,12 @@ export class Song {
     };
 
     get completeVerses() {
-        let verses = Array.from(this.verses.values());
+        const verses = Array.from(this.verses.values());
         return verses;
     };
 
     get verseOrder() {
-        let verseOrder = [];
+        const verseOrder = [];
 
         if(this.state !== "loading" && this.state !== "unloaded") {
             this.order.forEach((verseId) => {
@@ -87,7 +85,7 @@ export class Song {
         return verseOrder;
     };
  
-    addVerse = (text) => {
+    public addVerse = (text) => {
         this.state = "uploading";
         API.addVerse(text, this.id).then((verse) => {
             this.verses.set(verse._id, new Verse(verse._id, this.id, verse.text));
@@ -95,12 +93,12 @@ export class Song {
         });
     };
 
-    removeVerse = (verseIds) => {
+    public removeVerse = (verseIds) => {
         this.state = "uploading";
         this.order = this.order.filter((orderId, index) => {
             return verseIds.indexOf(orderId) === -1;
         });
-        let promises = [];
+        const promises = [];
         verseIds.forEach(v => { 
             this.verses.delete(v);
             promises.push(API.removeVerse(v, this.id));
@@ -111,9 +109,9 @@ export class Song {
         });    
     };
 
-    setChorus = (verseId) => {
+    public setChorus = (verseId) => {
         this.state = "uploading";
-        let selectedVerse = this.verses.get(verseId);
+        const selectedVerse = this.verses.get(verseId);
         selectedVerse.setChorus().then(() => this.state = "loaded");
 
     }

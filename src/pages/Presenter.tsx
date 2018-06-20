@@ -68,7 +68,7 @@ const Presenter = observer(class extends React.Component<{}, {displaySong: Displ
         return (
             <div className="Presenter">
                 <TabFrame tabs={tabs} />
-                <DisplayVerseList id='displayVerseList' currentSong={this.state.displaySong} />
+                <DisplayVerseList currentSong={this.state.displaySong} />
                 <PresenterDisplay currentSong={this.state.displaySong} />
             </div>
         );
