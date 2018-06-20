@@ -1,11 +1,11 @@
 Doing: 
+    [ ] 27 Add context/right click menus
+    [ ] 47 Allow changing song names
 
 Backlog:
-    [ ] 47 Allow changing song names
     [ ] 48 Allow deleting song lists
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
-    [ ] 27 Add context/right click menus
     [ ] 32 Add checking for pending changes on tab close
     [ ] 43 Add preview on settings page of how display will look with the current settings
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
