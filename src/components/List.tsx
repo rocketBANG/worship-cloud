@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FloatingMenu, IFloatingMenuItem } from './FloatingMenu';
 
 export interface IOptions {
     altText: string,
@@ -6,10 +7,16 @@ export interface IOptions {
     id: string | number
 }
 
+export interface IListContextMenu {
+    text: string,
+    onSelect: (index: number) => void
+}
+
 interface IProps {
     selectedIndex?: number[],
     onUpdate: (a: string[], b: string[]) => any,
     options: IOptions[],
+    contextMenu?: IListContextMenu[],
     onClick?: (event: React.MouseEvent<any>) => void,
     onDoubleClick?: (event: React.MouseEvent<any>) => void,
     onContextMenu?: (event: React.MouseEvent<any>) => void
@@ -20,7 +27,10 @@ class List extends React.Component<IProps> {
     private keySeperator = "_-";
 
     public state = {
-        selected: []
+        selected: [],
+        menuHidden: false,
+        menuLeft: 0,
+        menuTop: 0
     }
 
     private select: HTMLSelectElement = undefined;
@@ -49,6 +59,22 @@ class List extends React.Component<IProps> {
         this.props.onUpdate(selectedValues, selectedIndexes)
     }
 
+    private onContextMenu = (event: React.MouseEvent, id: string | number, index: number) => {
+        if(!this.props.contextMenu) {
+            return;
+        }
+
+        event.preventDefault();
+        this.props.onUpdate(['' + id], [index + '']);
+        
+        this.setState({menuLeft: event.pageX, menuTop: event.pageY, menuHidden: false});
+    }
+
+    private onListClick = (event: React.MouseEvent) => {
+        this.setState({menuHidden: true});
+        if(this.props.onClick) this.props.onClick(event);
+    }
+
     public render() {
         const keyCount = {};
 
@@ -59,7 +85,7 @@ class List extends React.Component<IProps> {
         });
         
         const options = this.props.options.map((element, index) => (
-            <option key={optionsKeys[index]} value={optionsKeys[index]}>{
+            <option key={optionsKeys[index]} value={optionsKeys[index]} onContextMenu={(event) => this.onContextMenu(event, element.id, index)}>{
                 element.text || element.altText
             }</option>)
         );
@@ -72,17 +98,33 @@ class List extends React.Component<IProps> {
                 selected = [optionsKeys[this.props.selectedIndex]];
             }
         }
+
+        let menuItems: IFloatingMenuItem[] = [];
+
+        if(this.props.contextMenu) {
+            menuItems = this.props.contextMenu.map(menuItem => {
+                const floatingMenuItem: IFloatingMenuItem = {
+                    onClick: (index) => menuItem.onSelect(index),
+                    text: menuItem.text
+                };
+                return floatingMenuItem;
+            });
+        }
     
         return (
-            <select value={selected} className="List" multiple ref={(node) => this.select = node} 
-            onChange={this.returnSelected}
-            onClick={this.props.onClick}
-            onDoubleClick={this.props.onDoubleClick}
-            onContextMenu={this.props.onContextMenu}
-            // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
-            >
-                {options}
-            </select>
+            <React.Fragment>
+                <FloatingMenu hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
+                    <select value={selected} className="List" multiple ref={(node) => this.select = node} 
+                    onChange={this.returnSelected}
+                    onClick={this.onListClick}
+                    onDoubleClick={this.props.onDoubleClick}
+                    onContextMenu={this.props.onContextMenu}
+                    // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
+                    >
+                    {options}
+                </select>
+                </FloatingMenu>
+            </React.Fragment>
         )
     }
 }

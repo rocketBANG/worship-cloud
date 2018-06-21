@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 export interface IFloatingMenuItem {
-    text: string
+    text: string,
+    onClick: (index: number) => void
 }
 
 interface IProps {
@@ -23,7 +24,7 @@ export class FloatingMenu extends React.Component<IProps> {
         return this.props.items.map((item, i) => {
             
             return (
-                <p key={i}>{item.text}</p>
+                <p key={i} onClick={() => item.onClick(i)}>{item.text}</p>
             );
         });
     }
@@ -32,9 +33,11 @@ export class FloatingMenu extends React.Component<IProps> {
         
         return (
             <React.Fragment>
-                {this.props.hidden ? undefined : <div className='floatingMenu' style={{...floatingMenuStyle, left: this.props.left, top: this.props.top}}>
-                    {this.createSubMenu()}
-                </div>}
+                {this.props.hidden ? undefined : 
+                    <div className='floatingMenu' style={{...floatingMenuStyle, left: this.props.left, top: this.props.top}}>
+                        {this.createSubMenu()}
+                    </div>
+                }
                 {this.props.children}
             </React.Fragment>
         )

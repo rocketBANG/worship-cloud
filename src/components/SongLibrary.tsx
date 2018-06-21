@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { List } from './List';
+import { List, IListContextMenu } from './List';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { IObservableValue, IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
-import { FloatingMenu } from './FloatingMenu';
 import { ContextMenu } from './ContextMenu';
 
 interface IProps {
@@ -55,6 +54,10 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         return songs;
     }
 
+    private contextMenuSelect = () => {
+        console.log('selected');
+    }
+
     public render() {
         const songs = this.getFilteredSongs();
         const options = songs.map(song => ({
@@ -63,15 +66,17 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             altText: ""
         }));
 
+        const contextMenu: IListContextMenu[] = [
+            { text: 'delete', onSelect: this.contextMenuSelect }
+        ]
+
         const selectedSongs = this.props.selectedSongs.map(s => songs.findIndex(song => song.id === s.id));
 
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <ContextMenu items={[{text: "hello"}, {text: "goodbye"}]}>
-                    <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
-                </ContextMenu>
+                <List contextMenu={contextMenu} onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
         )    
