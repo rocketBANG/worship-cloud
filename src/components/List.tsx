@@ -28,7 +28,7 @@ class List extends React.Component<IProps> {
 
     public state = {
         selected: [],
-        menuHidden: false,
+        menuHidden: true,
         menuLeft: 0,
         menuTop: 0
     }
@@ -75,6 +75,10 @@ class List extends React.Component<IProps> {
         if(this.props.onClick) this.props.onClick(event);
     }
 
+    private onMenuClick = (event: React.MouseEvent) => {
+        this.setState({menuHidden: true});
+    }
+
     public render() {
         const keyCount = {};
 
@@ -104,7 +108,7 @@ class List extends React.Component<IProps> {
         if(this.props.contextMenu) {
             menuItems = this.props.contextMenu.map(menuItem => {
                 const floatingMenuItem: IFloatingMenuItem = {
-                    onClick: (index) => menuItem.onSelect(index),
+                    onClick: menuItem.onSelect,
                     text: menuItem.text
                 };
                 return floatingMenuItem;
@@ -113,7 +117,7 @@ class List extends React.Component<IProps> {
     
         return (
             <React.Fragment>
-                <FloatingMenu hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
+                <FloatingMenu onClick={this.onMenuClick} hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
                     <select value={selected} className="List" multiple ref={(node) => this.select = node} 
                     onChange={this.returnSelected}
                     onClick={this.onListClick}

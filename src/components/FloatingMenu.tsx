@@ -9,13 +9,8 @@ interface IProps {
     items: IFloatingMenuItem[],
     hidden?: boolean,
     left: number,
-    top: number
-}
-
-const floatingMenuStyle: React.CSSProperties = {
-    position: 'absolute',
-    backgroundColor: '#fff',
-    padding: '5px'
+    top: number,
+    onClick?: (event: React.MouseEvent) => void
 }
 
 export class FloatingMenu extends React.Component<IProps> {
@@ -24,7 +19,9 @@ export class FloatingMenu extends React.Component<IProps> {
         return this.props.items.map((item, i) => {
             
             return (
-                <p key={i} onClick={() => item.onClick(i)}>{item.text}</p>
+                <div key={i} onClick={() => item.onClick(i)}>
+                    <p>{item.text}</p>
+                </div>
             );
         });
     }
@@ -34,7 +31,7 @@ export class FloatingMenu extends React.Component<IProps> {
         return (
             <React.Fragment>
                 {this.props.hidden ? undefined : 
-                    <div className='floatingMenu' style={{...floatingMenuStyle, left: this.props.left, top: this.props.top}}>
+                    <div className='floatingMenu' onClick={this.props.onClick} style={{left: this.props.left, top: this.props.top}}>
                         {this.createSubMenu()}
                     </div>
                 }

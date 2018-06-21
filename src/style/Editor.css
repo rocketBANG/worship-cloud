@@ -77,3 +77,29 @@
     grid-column-end: 4;
     grid-row-start: 2;
 }
+
+.floatingMenu {
+    position: absolute;
+    background-color: #fff;
+    min-width: 200px;
+    min-height: 100px;
+    border: 1px solid #666;
+    box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.2);
+}
+
+.floatingMenu div {
+    padding: 5px 6px;
+    margin: 0;
+}
+
+.floatingMenu div:hover {
+    background-color: #357fe0;
+    cursor: default;
+    color: #eee;
+}
+
+.floatingMenu p {
+    margin: 0;
+    margin-left: 10px;
+    text-align: left;
+}
