@@ -9,6 +9,7 @@ import { ContextMenu } from './ContextMenu';
 interface IProps {
     selectedSongs: IObservableArray<Song>,
     library: SongLibraryModel,
+    contextMenu?: IListContextMenu[],
 };
 
 interface IState {
@@ -54,10 +55,6 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         return songs;
     }
 
-    private contextMenuSelect = () => {
-        console.log('selected');
-    }
-
     public render() {
         const songs = this.getFilteredSongs();
         const options = songs.map(song => ({
@@ -66,17 +63,13 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             altText: ""
         }));
 
-        const contextMenu: IListContextMenu[] = [
-            { text: 'delete', onSelect: this.contextMenuSelect }
-        ]
-
         const selectedSongs = this.props.selectedSongs.map(s => songs.findIndex(song => song.id === s.id));
 
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <List contextMenu={contextMenu} onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
+                <List contextMenu={this.props.contextMenu} onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
         )    

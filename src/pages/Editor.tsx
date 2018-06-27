@@ -53,10 +53,7 @@ export default class Editor extends React.Component<{}, {currentSong: Song}> {
     public render() {
         const tabs = [
             {component: 
-                <React.Fragment>
-                    <SongLibrary library={this.songLibrary} selectedSongs={this.selectedSongs}/>
-                    <SongLibraryControls library={this.songLibrary} currentList={this.currentList} selectedSongs={this.selectedSongs} />
-                </React.Fragment>, name: "Song Library"},
+                <SongLibraryControls library={this.songLibrary} currentList={this.currentList} selectedSongs={this.selectedSongs} />, name: "Song Library"},
             {component: <SongLists selectedSongs={this.selectedSongs} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
         ];
         return (

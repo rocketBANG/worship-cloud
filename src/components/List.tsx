@@ -9,7 +9,8 @@ export interface IOptions {
 
 export interface IListContextMenu {
     text: string,
-    onSelect: (index: number) => void
+    onSelect: (index: number) => void,
+    show?: () => boolean
 }
 
 interface IProps {
@@ -106,7 +107,10 @@ class List extends React.Component<IProps> {
         let menuItems: IFloatingMenuItem[] = [];
 
         if(this.props.contextMenu) {
-            menuItems = this.props.contextMenu.map(menuItem => {
+            menuItems = this.props.contextMenu.filter(m => 
+                m.show === undefined || m.show()
+            )
+            .map(menuItem => {
                 const floatingMenuItem: IFloatingMenuItem = {
                     onClick: menuItem.onSelect,
                     text: menuItem.text

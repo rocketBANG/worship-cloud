@@ -4,6 +4,8 @@ import { SongListModel } from "../models/song-lists/SongListModel";
 import { Song } from "../models/Song";
 import * as React from 'react';
 import { observer } from "mobx-react";
+import SongLibrary from "./SongLibrary";
+import { IListContextMenu } from "./List";
 
 interface IProps {
     library: SongLibraryModel,
@@ -21,7 +23,7 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
         songText: '',
         selectedSongIds: []
     };
-
+    
     private onSongAdd = async () => {
         const newSong = await this.props.library.addSong(this.state.songText);
         this.props.selectedSongs.clear();
@@ -47,14 +49,22 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
         });
     };
 
+    private contextMenu: IListContextMenu[] = [
+        { text: 'Delete', onSelect: this.onSongRemove },
+        { text: 'Add to song list', onSelect: this.onSongListAdd, show: () => this.props.currentList.get() !== undefined }
+    ]
+
     public render() {
         return (
-            <div className="ListControls">
-                <input value={this.state.songText} onChange={this.handleChange} />
-                <button onClick={this.onSongAdd} >Add Song</button>
-                <button onClick={this.onSongRemove}>Remove Song</button>
-                <button onClick={this.onSongListAdd} disabled={this.props.currentList.get() === undefined}>Add to Song List</button>
-            </div>
+            <React.Fragment>
+                <SongLibrary contextMenu={this.contextMenu} library={this.props.library} selectedSongs={this.props.selectedSongs}/>
+                <div className="ListControls">
+                    <input value={this.state.songText} onChange={this.handleChange} />
+                    <button onClick={this.onSongAdd} >Add Song</button>
+                    <button onClick={this.onSongRemove}>Remove Song</button>
+                    <button onClick={this.onSongListAdd} disabled={this.props.currentList.get() === undefined}>Add to Song List</button>
+                </div>
+            </React.Fragment>
         )    
 
     }
