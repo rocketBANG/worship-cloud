@@ -6,6 +6,7 @@ import * as React from 'react';
 import { observer } from "mobx-react";
 import SongLibrary from "./SongLibrary";
 import { IListContextMenu } from "./List";
+import { Popup } from "./general/Popup";
 
 interface IProps {
     library: SongLibraryModel,
@@ -49,9 +50,20 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
         });
     };
 
+    private onRenameFinish = (newTitle: string) => {
+        if(newTitle === this.props.selectedSongs[0].title) return;
+         
+        this.props.selectedSongs[0].setTitle(newTitle);
+    }
+
+    private onRenameSong = () => {
+        Popup.showPopup("Rename song", this.props.selectedSongs[0].title, this.onRenameFinish);
+    }
+
     private contextMenu: IListContextMenu[] = [
         { text: 'Delete', onSelect: this.onSongRemove },
-        { text: 'Add to song list', onSelect: this.onSongListAdd, show: () => this.props.currentList.get() !== undefined }
+        { text: 'Rename song', onSelect: this.onRenameSong },
+        { text: 'Add to song list', onSelect: this.onSongListAdd, show: () => this.props.currentList.get() !== undefined },
     ]
 
     public render() {

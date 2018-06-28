@@ -13,7 +13,8 @@
     "ordered-imports": false,
     "member-ordering": false,
     "jsx-boolean-value": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "max-classes-per-file": false
   },
   "jsRules":{
     "object-literal-sort-keys": false,

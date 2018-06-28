@@ -11,12 +11,14 @@ import SermonEditor from './pages/SermonEditor';
 
 import Presenter from './pages/Presenter';
 import { SettingsPage } from './pages/SettingsPage';
+import { Popup } from './components/general/Popup';
 
 class App extends React.Component {
   public render() {
     return (
       <BrowserRouter>
         <div className="App">
+          <Popup />
           <Route path="/viewer" component={Viewer} />
 
           <Route exact={true} path='/editor' component={Toolbar} />

@@ -176,6 +176,26 @@ export const updateOrder = (order, songId) => {
 
 };
 
+export const updateSongTitle = (title, songId) => {
+    let headers = new Headers();
+    // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
+    headers.append('Content-Type', 'application/json');
+
+    let updateData = {
+        title: title
+    };
+
+    return fetch(databaseURL + `/songs/` + songId, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(updateData)
+    }).then(
+        response => response.json(),
+        error => console.log('An error occured.', error)
+    )
+
+};
+
 export const getSettings = (username) => {
     return fetch(databaseURL + `/settings/` + username, {
         method: 'GET',

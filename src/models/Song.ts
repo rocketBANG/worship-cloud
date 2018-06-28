@@ -109,6 +109,14 @@ export class Song {
         });    
     };
 
+    public setTitle = (newTitle: string) => {
+        this.state = "uploading";
+        API.updateSongTitle(newTitle, this.id).then(() => {
+            this.state = "loaded";
+            this.title = newTitle;
+        });
+    }
+
     public setChorus = (verseId) => {
         this.state = "uploading";
         const selectedVerse = this.verses.get(verseId);
