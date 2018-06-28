@@ -23,6 +23,7 @@ export class DisplaySong {
     public title = '';
 
     constructor(private song: Song) {
+        if(song === undefined) return;
         this.title = song.title;
         this.id = song.id;
 
@@ -35,29 +36,31 @@ export class DisplaySong {
         this.display = display;
     }
 
-    public nextVerse = () => {
+    public nextVerse = (): boolean => {
         if(this.verseIndex >= this.song.verseOrder.length - 1) {
-            return;
+            return false;
         }
         this.verseIndex++;
         this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = 0;
         this.currentPage = this.currentPages[this.pageIndex];
+        return true;
     };
 
-    public prevVerse = () => {
+    public prevVerse = (): boolean => {
         if(this.verseIndex <= 0) {
-            return;
+            return false;
         }
         this.verseIndex--;
         this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = this.currentPages.length - 1;
         this.currentPage = this.currentPages[this.pageIndex];
+        return true;
     }
 
-    public nextPage = () => {
+    public nextPage = (): boolean => {
         if(this.blanked !== 0) {
             this.blanked = 0;
             return;
@@ -67,14 +70,15 @@ export class DisplaySong {
             this.setupPages();
         }
         if(this.pageIndex >= this.currentPages.length - 1) {
-            this.nextVerse();
+            return this.nextVerse();
         } else {
             this.pageIndex++;
             this.currentPage = this.currentPages[this.pageIndex];
         }
+        return true;
     };
 
-    public prevPage = () => {
+    public prevPage = (): boolean => {
         if(this.blanked !== 0) {
             this.blanked = 0;
             return;
@@ -84,11 +88,12 @@ export class DisplaySong {
             this.setupPages();
         }
         if(this.pageIndex <= 0) {
-            this.prevVerse();
+            return this.prevVerse();
         } else {
             this.pageIndex--;
             this.currentPage = this.currentPages[this.pageIndex];
         }
+        return true;
     }
 
     public setVerse = (index) => {

@@ -7,14 +7,15 @@ import DisplayControls from './DisplayControls';
 import DisplayOverlay from './DisplayOverlay';
 import { SettingsModel } from '../models/settings/SettingsModel';
 import { DisplaySong } from '../models/DisplaySong';
+import { SongListModel } from '../models/song-lists/SongListModel';
+import { IObservableValue } from 'mobx';
 
 interface IProps {
     currentSong: DisplaySong,
+    currentList: IObservableValue<SongListModel>
 };
 
 class PresenterDisplay extends React.Component<IProps> {
-    private fontIncrement = 3;
-
     private settingsModel = SettingsModel.settingsModel;
 
     private display;
@@ -24,16 +25,6 @@ class PresenterDisplay extends React.Component<IProps> {
         this.settingsModel.loadSettings();
     }
 
-    // true if the font size should increase
-    // false if the font size should decrease
-    private onFontChange = (fontChange) => {
-        if(fontChange) {
-            this.settingsModel.changeWordFont(this.fontIncrement);
-        } else {
-            this.settingsModel.changeWordFont(-this.fontIncrement);
-        }
-    };
-
     public componentWillReceiveProps(nextProps) {
         if(nextProps.currentSong) {
             nextProps.currentSong.setDisplay(this.display);
@@ -42,8 +33,7 @@ class PresenterDisplay extends React.Component<IProps> {
 
     public render() {
         const currentSong = this.props.currentSong || 
-        {currentVerse: {}, currentPage: "", verseIndex: -1, pageIndex: -1, title: undefined, backgroundColor: undefined
-            ,isBlanked: false, currentNumPages: -1};
+        new DisplaySong(undefined);
         const currentVerse = currentSong.currentVerse || {type: ''};
         const currentPage = currentSong.currentPage;
 
@@ -78,9 +68,7 @@ class PresenterDisplay extends React.Component<IProps> {
                     isItallic={currentVerse.type === 'chorus'} 
                     words={words}
                     {...props}
-                >
-                    <DisplayControls song={currentSong} fontChange={this.onFontChange}/>
-                </Display>
+                />
                 <DisplayOverlay currentPage={currentSong && (currentSong.pageIndex+1)}
                     totalPages={currentSong && currentSong.currentNumPages}
                     blankIndicator={currentSong.isBlanked ? "Blanked" : ""} />

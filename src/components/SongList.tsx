@@ -40,10 +40,10 @@ const SongList = observer(class extends React.Component<IProps, IState> {
     }
     
     public render() {
-        let songs = this.props.library.songs;
-        songs = songs.filter(s => this.props.songList.songIds.indexOf(s.id) !== -1);
+        let songs = this.props.songList.songIds.map(songId => this.props.library.songs.find(s => s.id === songId));
+        songs = songs.filter(s => s !== undefined); // Remove missing songs
 
-        const options = songs.map((song, index) => ({
+        const options = songs.map(song => ({
             id: song.id,
             text: song.title,
             altText: ""

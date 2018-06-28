@@ -68,7 +68,7 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
 
     public render() {
         return (
-            <React.Fragment>
+            <div style={{flexDirection: 'column', display: 'flex'}}>
                 <SongLibrary contextMenu={this.contextMenu} library={this.props.library} selectedSongs={this.props.selectedSongs}/>
                 <div className="ListControls">
                     <input value={this.state.songText} onChange={this.handleChange} />
@@ -76,7 +76,7 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
                     <button onClick={this.onSongRemove}>Remove Song</button>
                     <button onClick={this.onSongListAdd} disabled={this.props.currentList.get() === undefined}>Add to Song List</button>
                 </div>
-            </React.Fragment>
+            </div>
         )    
 
     }

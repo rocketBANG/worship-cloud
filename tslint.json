@@ -14,7 +14,8 @@
     "member-ordering": false,
     "jsx-boolean-value": false,
     "jsx-no-lambda": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "prefer-const": false
   },
   "jsRules":{
     "object-literal-sort-keys": false,

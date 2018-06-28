@@ -14,10 +14,14 @@ import { SongLists } from '../components/editor/SongLists';
 import { Song } from '../models/Song';
 import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
+import DisplayControls from '../components/DisplayControls';
 
+interface IState {
+    displaySong: DisplaySong
+}
 
-const Presenter = observer(class extends React.Component<{}, {displaySong: DisplaySong}> {
-    public state = {
+const Presenter = observer(class extends React.Component<{}, IState> {
+    public state: IState = {
         displaySong: undefined
     }
 
@@ -42,6 +46,32 @@ const Presenter = observer(class extends React.Component<{}, {displaySong: Displ
         this.currentList.set(undefined);
 
         this.currentSongs = observable.array();
+    }
+
+    private getNextSongInList = (offset: number = 1): Song => {
+        const currentList = this.currentList.get();
+        if(currentList === undefined) return;
+
+        const currentSongIndex = currentList.songIds.findIndex(s => s === this.state.displaySong.id);
+        if(currentSongIndex + offset >= currentList.songIds.length || currentSongIndex + offset < 0) return;
+
+        return this.songLibrary.songs.find(s => s.id === currentList.songIds[currentSongIndex + offset]);
+    }
+
+    private onNextSong = () => {
+        let newSong = this.getNextSongInList();
+        if(newSong === undefined) return;
+
+        this.currentSongs.clear();
+        this.currentSongs.push(newSong);
+    }
+
+    private onPrevSong = () => {
+        let newSong = this.getNextSongInList(-1);
+        if(newSong === undefined) return;
+
+        this.currentSongs.clear();
+        this.currentSongs.push(newSong);
     }
 
     public componentWillUnmount() {
@@ -69,7 +99,8 @@ const Presenter = observer(class extends React.Component<{}, {displaySong: Displ
             <div className="Presenter">
                 <TabFrame tabs={tabs} />
                 <DisplayVerseList currentSong={this.state.displaySong} />
-                <PresenterDisplay currentSong={this.state.displaySong} />
+                <PresenterDisplay currentList={this.currentList} currentSong={this.state.displaySong} />
+                <DisplayControls list={this.currentList.get()} song={this.state.displaySong} onNext={this.onNextSong} onPrev={this.onPrevSong}/>
             </div>
         );
     }
