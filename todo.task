@@ -1,6 +1,4 @@
 Doing: 
-    [ ] 27 Add context/right click menus
-    [ ] 47 Allow changing song names
 
 Backlog:
     [ ] 48 Allow deleting song lists
@@ -12,6 +10,8 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     
 Done: 
+    [x] 27 Add context/right click menus
+    [x] 47 Allow changing song names
     [x] 49 Replace currentSong with selected songs and show only the last added to the list in the editor
     [x] 40 Add search bar to song library
     [x] 46 Only show title on first page of first verse
