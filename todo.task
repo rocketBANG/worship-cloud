@@ -1,5 +1,4 @@
 Doing: 
-    [ ] 50 Allow a single screen display/controls combo
 Backlog:
     [ ] 48 Allow deleting song lists
     [ ] 33 Authorization
@@ -10,6 +9,7 @@ Backlog:
     [ ] 5 Select the newly added verse in the verse select when added
     
 Done: 
+    [x] 50 Allow a single screen display/controls combo
     [x] 27 Add context/right click menus
     [x] 47 Allow changing song names
     [x] 49 Replace currentSong with selected songs and show only the last added to the list in the editor

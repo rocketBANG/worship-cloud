@@ -17,12 +17,20 @@ import { SongListModel } from '../models/song-lists/SongListModel';
 import DisplayControls from '../components/DisplayControls';
 
 interface IState {
-    displaySong: DisplaySong
+    displaySong: DisplaySong,
+    isFullscreen: boolean,
 }
 
 const Presenter = observer(class extends React.Component<{}, IState> {
     public state: IState = {
-        displaySong: undefined
+        displaySong: undefined,
+        isFullscreen: false
+    }
+
+    private fullscreenStyle: React.CSSProperties = {
+        width: '100%',
+        display: 'block',
+        backgroundColor: '#000'
     }
 
     private autorun: IReactionDisposer = undefined;
@@ -33,6 +41,8 @@ const Presenter = observer(class extends React.Component<{}, IState> {
     private currentVerse: IObservableValue<Verse>;
     private currentList: IObservableValue<SongListModel>;
     private currentSongs: IObservableArray<Song>;
+
+    private presenterDiv: HTMLElement;
 
     constructor(props) {
         super(props);
@@ -74,8 +84,37 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         this.currentSongs.push(newSong);
     }
 
+    private onFullscreen = () => {
+        if (this.presenterDiv.requestFullscreen) {
+            this.presenterDiv.requestFullscreen();
+        // @ts-ignore
+        } else if (this.presenterDiv.mozRequestFullScreen) {
+        // @ts-ignore
+            this.presenterDiv.mozRequestFullScreen();
+        } else if (this.presenterDiv.webkitRequestFullScreen) {
+            this.presenterDiv.webkitRequestFullScreen();
+        }
+        this.setState({isFullscreen: true});
+    }
+
+    private exitFullscreen = () => {
+        // @ts-ignore
+        if(document.mozFullScreen === false) {
+            this.setState({isFullscreen: false});
+        }
+        if(document.webkitIsFullScreen === false) {
+            this.setState({isFullscreen: false});
+        }
+        if(document.webkitIsFullScreen === false) {
+            this.setState({isFullscreen: false});
+        }
+    }
+
     public componentWillUnmount() {
         this.autorun();
+        document.removeEventListener("mozfullscreenchange", this.exitFullscreen);
+        document.removeEventListener("webkitfullscreenchange", this.exitFullscreen);
+        document.removeEventListener("fullscreenchange", this.exitFullscreen);
     }
 
     public componentDidMount() {
@@ -88,6 +127,9 @@ const Presenter = observer(class extends React.Component<{}, IState> {
             currentSong.loadSong();
             this.setState({displaySong: this.getDisplaySong(currentSong) });
         });
+        document.addEventListener("mozfullscreenchange", this.exitFullscreen);
+        document.addEventListener("webkitfullscreenchange", this.exitFullscreen);
+        document.addEventListener("fullscreenchange", this.exitFullscreen);
     }
 
     public render() {
@@ -95,12 +137,26 @@ const Presenter = observer(class extends React.Component<{}, IState> {
             {component: <SongLibrary library={this.songLibrary} selectedSongs={this.currentSongs}/>, name: "Song Library"},
             {component: <SongLists selectedSongs={this.currentSongs} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
         ];
-        return (
-            <div className="Presenter">
+        const fullscreenDependant = (
+            <React.Fragment>
                 <TabFrame tabs={tabs} />
                 <DisplayVerseList currentSong={this.state.displaySong} />
+            </React.Fragment>
+        )
+        return (
+            <div 
+                className="Presenter"
+                ref={(el) => this.presenterDiv = el}
+                style={this.state.isFullscreen ? this.fullscreenStyle : {}}>
+                {!this.state.isFullscreen && fullscreenDependant}
                 <PresenterDisplay currentList={this.currentList} currentSong={this.state.displaySong} />
-                <DisplayControls list={this.currentList.get()} song={this.state.displaySong} onNext={this.onNextSong} onPrev={this.onPrevSong}/>
+                <DisplayControls 
+                    list={this.currentList.get()} 
+                    song={this.state.displaySong} 
+                    onNext={this.onNextSong} 
+                    onPrev={this.onPrevSong}
+                    onFullscreen={this.onFullscreen}
+                    showButtons={!this.state.isFullscreen}/>
             </div>
         );
     }

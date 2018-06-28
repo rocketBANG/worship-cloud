@@ -8,7 +8,9 @@ interface IProps {
     song: DisplaySong,
     list: SongListModel,
     onNext?: () => void,
-    onPrev?: () => void
+    onPrev?: () => void,
+    onFullscreen?: () => void,
+    showButtons?: boolean
 }
 
 class DisplayControls extends React.Component<IProps> {
@@ -61,13 +63,25 @@ class DisplayControls extends React.Component<IProps> {
         if(this.props.onNext) this.props.onPrev();
     };
 
+    private onFullscreen = () => {
+        if(this.props.onFullscreen) this.props.onFullscreen();
+    }
+
     public render() {
-        return (
-            <div className="DisplayControls">
+
+        const buttons = (
+            <React.Fragment>
                 <button onClick={this.onPrev} disabled={this.props.song === undefined}>Previous</button>
                 <button onClick={this.onNext} disabled={this.props.song === undefined}>Next</button>
                 <button onClick={() => this.onFontChange(false)}>Font-</button>
                 <button onClick={() => this.onFontChange(true)}>Font+</button>
+                <button onClick={this.onFullscreen}>Fullscreen</button>
+            </React.Fragment>
+        )
+
+        return (
+            <div className="DisplayControls">
+                {this.props.showButtons !== undefined ? this.props.showButtons && buttons : buttons}
             </div>
         );
     }
