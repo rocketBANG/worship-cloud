@@ -237,6 +237,20 @@ export const addSongList = (listName, songIds) => {
     )
 };
 
+export const removeSongList = (listId) => {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return fetch(databaseURL + `/songlists/` + listId, {
+        method: 'DELETE',
+        headers: headers
+    }).then(
+        response => response.json(),
+
+        error => console.log('An error occured.', error)
+    )
+};
+
 export const updateSongList = (listId, songIds) => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');

@@ -25,6 +25,10 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         selectedSongIds: []
     };
 
+    private onSongContext = (id: string, index: string) => {
+        this.onSongClick([id], [name]);
+    }
+
     private onSongClick = (names, indexes: string[]) => {
         this.props.selectedSongs.clear();
         if(names.length < 1) {
@@ -69,7 +73,12 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <List contextMenu={this.props.contextMenu} onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
+                <List 
+                    onItemContextMenu={this.onSongContext} 
+                    contextMenu={this.props.contextMenu} 
+                    onUpdate={this.onSongClick} 
+                    options={options} 
+                    selectedIndex={selectedSongs} />
                 {this.props.library.state === "pending" ? "Saving" : ""}
             </div>
         )    

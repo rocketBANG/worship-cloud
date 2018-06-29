@@ -1,6 +1,7 @@
 Doing: 
-Backlog:
     [ ] 48 Allow deleting song lists
+
+Backlog:
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 32 Add checking for pending changes on tab close

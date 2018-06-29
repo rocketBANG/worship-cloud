@@ -19,6 +19,12 @@ class SongListLibrary {
             this.lists.push(new SongListModel(list._id, list.name));
         });
     }
+
+    public removeList = async (id) => {
+        return await API.removeSongList(id).then(() => {
+            this.lists = this.lists.filter(l => l.id !== id);
+        });
+    }
 }
 
 decorate(SongListLibrary, {

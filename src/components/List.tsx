@@ -15,12 +15,13 @@ export interface IListContextMenu {
 
 interface IProps {
     selectedIndex?: number[],
-    onUpdate: (a: string[], b: string[]) => any,
+    onUpdate: (id: string[], index: string[]) => any,
     options: IOptions[],
     contextMenu?: IListContextMenu[],
     onClick?: (event: React.MouseEvent<any>) => void,
     onDoubleClick?: (event: React.MouseEvent<any>) => void,
     onContextMenu?: (event: React.MouseEvent<any>) => void
+    onItemContextMenu?: (id: string, index: string) => void
 }
 
 class List extends React.Component<IProps> {
@@ -66,7 +67,7 @@ class List extends React.Component<IProps> {
         }
 
         event.preventDefault();
-        this.props.onUpdate(['' + id], [index + '']);
+        if(this.props.onItemContextMenu) this.props.onItemContextMenu(id + '', index + '');
         
         this.setState({menuLeft: event.pageX, menuTop: event.pageY, menuHidden: false});
     }

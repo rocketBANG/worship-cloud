@@ -2,7 +2,7 @@ import * as React from 'react';
 import './SongLists.css';
 import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
-import { List } from '../List';
+import { List, IListContextMenu } from '../List';
 import SongList from '../SongList';
 import * as API from '../../store/api';
 import { Song } from '../../models/Song';
@@ -14,7 +14,7 @@ interface IProps {
     library: SongLibraryModel,
     currentList: IObservableValue<SongListModel>,
     selectedSongs: IObservableArray<Song>,
-    hideControls?: boolean
+    hideControls?: boolean,
 }
 
 interface IState {
@@ -59,9 +59,14 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
         this.props.currentList.set(selectedList);
     }
 
-    private deleteSongList = () => {
+    private deleteSongList = (index : number) => {
+        this.songListLibrary.removeList(this.songListLibrary.lists[index].id);
+    }
+
+    private deleteCurrentSongList = () => {
         const {currentList} = this.props;
-        currentList.get().delete();
+        this.songListLibrary.removeList(currentList.get().id);
+        this.onBackClick();
     }
 
     private downloadSongList = () => {
@@ -81,6 +86,10 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
         this.props.currentList.set(undefined);
     }
 
+    private contextMenu: IListContextMenu[] = [
+        { text: 'Delete', onSelect: this.deleteSongList },
+    ]
+
     public render() {
         const currentList = this.props.currentList.get();
         const options = this.songListLibrary.lists.map(list => ({
@@ -89,7 +98,7 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
             altText: list.name
         }));
 
-        let mainView = <List onUpdate={this.onListClick} options={options} />;
+        let mainView = <List contextMenu={this.contextMenu} onUpdate={this.onListClick} options={options} />;
         if(currentList !== undefined) {
             mainView = <SongList songList={currentList} selectedSongs={this.props.selectedSongs} library={this.props.library}/>;
         }
@@ -104,7 +113,7 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
                 </React.Fragment>);
         } else if(!this.props.hideControls){
             controls = (<React.Fragment>
-                <button onClick={this.deleteSongList} disabled={true}>Delete this song list</button>
+                <button onClick={this.deleteCurrentSongList}>Delete this song list</button>
                 <button onClick={this.downloadSongList}>Download songs as powerpoint</button>
                 </React.Fragment>);
         }
