@@ -3,6 +3,7 @@ import { Song } from './Song';
 import { SongLibraryApi } from '../store/SongLibraryApi';
 import { Verse } from './Verse';
 import { SongListModel } from './song-lists/SongListModel';
+import { ModelState } from './ModelState';
 
 export interface ISongLibraryState {
     currentSong: Song,
@@ -12,7 +13,7 @@ export interface ISongLibraryState {
 
 export class SongLibraryModel {
 
-    public state = "done"; // "pending" / "done" / "error",
+    public state: ModelState = ModelState.LOADED; // "pending" / "done" / "error",
 
     public songs: Song[] = [];
 
@@ -34,29 +35,29 @@ export class SongLibraryModel {
     };
         
     public addSong = async (songTitle): Promise<Song> => {
-        this.state = 'pending';
+        this.state = ModelState.LOADING;
         this.addingSong = true;
         return this.apiManager.addSong(songTitle).then(
             song => {
-                this.state = 'done';
+                this.state = ModelState.LOADED;
                 const newSong = new Song(song.title, song._id);
                 this.songs.push(newSong);   
                 return newSong;     
             },
             error => {
                 console.log(error);
-                this.state = 'done';
+                this.state = ModelState.LOADED;
                 return undefined;
             },
         );
     };
     
     public removeSong = (songId: string) => {
-        this.state = 'pending';
+        this.state = ModelState.LOADING;
         this.songs = this.songs.filter((song) => {
             return song.id !== songId;
         });
-        this.apiManager.removeSong(songId).then(() => this.state = 'done');
+        this.apiManager.removeSong(songId).then(() => this.state = ModelState.LOADED);
     };
 }
 

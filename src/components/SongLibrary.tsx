@@ -2,9 +2,9 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List, IListContextMenu } from './List';
 import { SongLibraryModel } from '../models/SongLibraryModel';
-import { IObservableValue, IObservableArray } from 'mobx';
+import { IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
-import { ContextMenu } from './ContextMenu';
+import { ModelState } from '../models/ModelState';
 
 interface IProps {
     selectedSongs: IObservableArray<Song>,
@@ -79,7 +79,7 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
                     onUpdate={this.onSongClick} 
                     options={options} 
                     selectedIndex={selectedSongs} />
-                {this.props.library.state === "pending" ? "Saving" : ""}
+                {this.props.library.state === ModelState.LOADING ? "Saving" : ""}
             </div>
         )    
     }

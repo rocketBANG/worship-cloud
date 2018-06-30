@@ -1,9 +1,15 @@
 import { action, computed, decorate, observable } from 'mobx';
 import * as API from '../store/api'
+import { ModelState } from './ModelState';
 
 export class Verse {
-    state = "loaded" // "loading" / "loaded" / "error" / "unloaded",
-    numPages = -1
+    public state: ModelState = ModelState.LOADED // "loading" / "loaded" / "error" / "unloaded",
+    public numPages = -1
+
+    public id;
+    public songId;
+    public text;
+    public type;
 
     constructor(verseId, songId, text = "", type = "verse") {
         this.id = verseId
@@ -12,12 +18,12 @@ export class Verse {
         this.type = type
     }
 
-    updateText = (text) => {
-        this.state = "uploading";
+    public updateText = (text) => {
+        this.state = ModelState.SAVING;
         this.text = text;
 
         API.updateVerse(text, this.songId, this.id).then((verse) => {
-            this.state = "loaded";
+            this.state = ModelState.LOADED;
         });
     };
 
@@ -25,14 +31,14 @@ export class Verse {
         return this.text.split("\n")[0];
     };
 
-    setChorus = () => {
-        this.state = "uploading";
+    public setChorus = () => {
+        this.state = ModelState.SAVING;
         let type = this.type === "verse" ? "chorus" : "verse";
         this.type = type;
-        return API.updateVerseType(this.id, this.songId, type).then(() => this.state = "loaded");
+        return API.updateVerseType(this.id, this.songId, type).then(() => this.state = ModelState.LOADED);
     }
 
-    setNumberOfPages = (num) => {
+    public setNumberOfPages = (num) => {
         this.numPages = num;
     }
 }
