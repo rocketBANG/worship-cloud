@@ -2,11 +2,11 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
 import { Verse } from '../models/Verse';
-import { IObservableValue } from 'mobx';
+import { IObservableValue, IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
 
 interface IProps {
-    currentVerse: IObservableValue<Verse>,
+    selectedVerses: IObservableArray<Verse>
     currentSong: Song
 }
 
@@ -22,8 +22,16 @@ const VerseList = observer(class extends React.Component<IProps, IState> {
         indexes: []
     };
 
+    public componentWillReceiveProps(props: IProps) {
+        if(props.currentSong !== this.props.currentSong) {
+            this.setState({index: -1, indexes: []});
+        }
+    }
+
     private onVerseClick = (names, indexes) => {
-        this.props.currentVerse.set(this.props.currentSong.verseOrder[indexes[0]]);
+        this.props.selectedVerses.clear();
+        this.props.selectedVerses.push(...this.props.currentSong.completeVerses.filter(v => names.indexOf(v.id) !== -1));
+
         this.setState({
             index: indexes[0],
             indexes

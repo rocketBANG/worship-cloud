@@ -13,17 +13,18 @@ import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import { SongLibraryControls } from '../components/SongLibraryControls';
 
-export default class Editor extends React.Component<{}, {currentSong: Song}> {
+export default class Editor extends React.Component<{}, {currentSong: Song, currentVerse: Verse}> {
 
     private songLibrary: SongLibraryModel;
-    private currentVerse: IObservableValue<Verse>;
     private currentList: IObservableValue<SongListModel>;
     private selectedSongs: IObservableArray<Song>;
+    private selectedVerses: IObservableArray<Verse>;
 
-    private autorun: IReactionDisposer;
+    private autorun: IReactionDisposer[] = [];
 
     public state = {
-        currentSong: undefined
+        currentSong: undefined,
+        currentVerse: undefined
     }
     
     constructor(props) {
@@ -32,26 +33,28 @@ export default class Editor extends React.Component<{}, {currentSong: Song}> {
         this.songLibrary = new SongLibraryModel();
         this.songLibrary.getAllSongs();
         
-        this.currentVerse = observable.box();
-        this.currentVerse.set(undefined);
         this.currentList = observable.box();
         this.currentList.set(undefined);
 
         this.selectedSongs = observable.array();
+        this.selectedVerses = observable.array();
     }
 
     public componentWillUnmount() {
-        this.autorun();
+        this.autorun.forEach(a => a());
     }
 
     public componentDidMount() {
-        this.autorun = autorun(() => {
+        this.autorun.push(autorun(() => {
             let newCurrentSong = this.selectedSongs[this.selectedSongs.length - 1];
             this.setState({currentSong: newCurrentSong});
             if(newCurrentSong === undefined) {
-                this.currentVerse.set(undefined);
+                this.selectedVerses.clear();
             }
-        });
+        }))
+        this.autorun.push(autorun(() => {
+            this.setState({currentVerse: this.selectedVerses[this.selectedVerses.length - 1]});
+        }));
     }
 
     public render() {
@@ -64,9 +67,9 @@ export default class Editor extends React.Component<{}, {currentSong: Song}> {
             <div className='editorPage'>
                 <div className='editor'>
                     <TabFrame tabs={tabs} multiple={true} keepOrder={true}/>
-                    <VerseList currentSong={this.state.currentSong} currentVerse={this.currentVerse}/>
-                    <VerseOrderList currentSong={this.state.currentSong} currentVerse={this.currentVerse}/>
-                    <SongEditor currentSong={this.state.currentSong} currentVerse={this.currentVerse}/>
+                    <VerseList currentSong={this.state.currentSong} selectedVerses={this.selectedVerses}/>
+                    <VerseOrderList currentSong={this.state.currentSong} selectedVerses={this.selectedVerses}/>
+                    <SongEditor currentSong={this.state.currentSong} currentVerse={this.state.currentVerse}/>
                 </div>
             </div>
         );
