@@ -10,40 +10,34 @@ interface IProps {
     currentSong: Song
 }
 
-interface IState {
-    selectedId: string,
-    selectedIds: string[],
-}
-
-const VerseList = observer(class extends React.Component<IProps, IState> {
+const VerseList = observer(class extends React.Component<IProps> {
 
     private onVerseClick = (names, indexes) => {
 
         this.props.selectedVerses.clear();
         this.props.selectedVerses.push(...this.props.currentSong.completeVerses.filter(v => names.indexOf(v.id) !== -1));
         
-        this.setState({
-            selectedId: names[0],
-            selectedIds: names
-        })
     };
 
-    private onVerseAdd = () => {
-        this.props.currentSong.addVerse("");
+    private onVerseAdd = async () => {
+        let newVerse = await this.props.currentSong.addVerse("");
+        this.props.selectedVerses.clear();
+        this.props.selectedVerses.push(newVerse);
     };
 
     private onVerseRemove = () => {
-        this.props.currentSong.removeVerse(this.state.selectedIds);
+        this.props.currentSong.removeVerse(this.props.selectedVerses.map(v => v.id));
     };
 
     private onAddToOrder = () => {
         const song = this.props.currentSong;
 
-        song.addToOrder(this.state.selectedIds);
+        song.addToOrder(this.props.selectedVerses.map(v => v.id));
     };
 
     private onSetChorus = () => {
-        this.props.currentSong.setChorus(this.state.selectedId);
+        let lastVerse = this.props.selectedVerses[this.props.selectedVerses.length - 1];
+        this.props.currentSong.setChorus(lastVerse);
     };
     
     public render() {

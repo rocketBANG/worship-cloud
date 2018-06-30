@@ -86,11 +86,13 @@ export class Song {
         return verseOrder;
     };
  
-    public addVerse = (text) => {
+    public addVerse = async (text): Promise<Verse> => {
         this.state = ModelState.SAVING;
-        API.addVerse(text, this.id).then((verse) => {
-            this.verses.set(verse._id, new Verse(verse._id, this.id, verse.text));
+        return API.addVerse(text, this.id).then((verse) => {
+            let newVerse = new Verse(verse._id, this.id, verse.text);
+            this.verses.set(verse._id, newVerse);
             this.state = ModelState.LOADED;
+            return newVerse;
         });
     };
 
