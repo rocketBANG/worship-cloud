@@ -1,23 +1,23 @@
 Doing: 
+    [ ] 52 Change uploading/uploaded to saving/saved
+    [ ] 54 Say empty on presenter if nothing is in the song order
+    [ ] 5 Select the newly added verse in the verse select when added
+    [ ] 32 Add checking for pending changes on tab close
 
 Backlog:
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
-    [ ] 32 Add checking for pending changes on tab close
     [ ] 43 Add preview on settings page of how display will look with the current settings
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
-    [ ] 5 Select the newly added verse in the verse select when added
     [ ] 51 Add shortcut to make display full screen
-    [ ] 52 Change uploading/uploaded to saving/saved
-    [ ] 53 Remove old text from editor when changing song
-    [ ] 54 Say empty on presenter if nothing is in the song order
     [ ] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
     [ ] 56 Change text to be italic when editing a chorus
     [ ] 57 Add ability to have multiple titles
     [ ] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
     
-Done: 
+Done:
+    [x] 53 Remove old text from editor when changing song
     [x] 48 Allow deleting song lists
     [x] 50 Allow a single screen display/controls combo
     [x] 27 Add context/right click menus

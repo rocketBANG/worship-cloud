@@ -46,7 +46,11 @@ export default class Editor extends React.Component<{}, {currentSong: Song}> {
 
     public componentDidMount() {
         this.autorun = autorun(() => {
-            this.setState({currentSong: this.selectedSongs[this.selectedSongs.length - 1]});
+            let newCurrentSong = this.selectedSongs[this.selectedSongs.length - 1];
+            this.setState({currentSong: newCurrentSong});
+            if(newCurrentSong === undefined) {
+                this.currentVerse.set(undefined);
+            }
         });
     }
 
