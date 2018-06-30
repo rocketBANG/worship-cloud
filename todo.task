@@ -1,5 +1,4 @@
 Doing: 
-    [ ] 54 Say empty on presenter if nothing is in the song order
     [ ] 5 Select the newly added verse in the verse select when added
     [ ] 32 Add checking for pending changes on tab close
 
@@ -16,6 +15,7 @@ Backlog:
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
     
 Done:
+    [x] 54 Say empty on presenter if nothing is in the song order
     [x] 52 Change uploading/uploaded to saving/saved
     [x] 60 Select previously selected verse in VerseList when returning to song
     [x] 53 Remove old text from editor when changing song

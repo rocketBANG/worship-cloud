@@ -19,22 +19,30 @@ const DisplayVerseList = observer(class extends React.Component<IProps> {
 
     public render() {
         const song = this.props.currentSong || {verseOrder: [], verseIndex: undefined};
-        const options = song.verseOrder.map((verse, index) => {
-            let verseText = verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title;
-            if(verse.numPages > 1) {
-                verseText += " (" + verse.numPages + ")";
-            }
-            return {
-                altText: "",
-                id: verse.id,
-                text: verseText,
-            }
-        });
+
+        let list;
+
+        if(song.verseOrder.length === 0) {
+            list = <p>No verses in order</p>;
+        } else {
+            let options = song.verseOrder.map((verse, index) => {
+                let verseText = verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title;
+                if(verse.numPages > 1) {
+                    verseText += " (" + verse.numPages + ")";
+                }
+                return {
+                    altText: "",
+                    id: verse.id,
+                    text: verseText,
+                }
+            });    
+            list = <List onUpdate={this.onVerseClick} options={options} selectedIndex={song.verseIndex}/>;
+        }
     
         return ( 
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Verses:</div>
-                <List onUpdate={this.onVerseClick} options={options} selectedIndex={song.verseIndex}/>
+                {list}
             </div>
         )
     }
