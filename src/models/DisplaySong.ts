@@ -63,7 +63,7 @@ export class DisplaySong {
     public nextPage = (): boolean => {
         if(this.blanked !== 0) {
             this.blanked = 0;
-            return;
+            return true;
         }
 
         if(this.currentPages === undefined) {
@@ -81,7 +81,7 @@ export class DisplaySong {
     public prevPage = (): boolean => {
         if(this.blanked !== 0) {
             this.blanked = 0;
-            return;
+            return true;
         }
 
         if(this.currentPages === undefined) {

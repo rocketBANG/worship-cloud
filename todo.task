@@ -1,5 +1,12 @@
 Doing: 
-
+    Does not respond to font size changes when button clicked
+    Reordering song lists
+    Stop 'B' or 'W' from changing the song when songList is selected
+    Up and down arrow keys should go to next/previous verse (instead of page)
+    pressed next when blanked went to the next song
+    Number of slides disappears on first verse
+    Jesus Messiah to check slide splitting (not only 2 lines on a page)
+    
 Backlog:
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
