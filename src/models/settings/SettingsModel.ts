@@ -4,9 +4,15 @@ import { ModelState } from "../ModelState";
 
 export class SettingsModel {
 
-    static settingsModel = new SettingsModel();
+    private static settingsModelObject;
+    public static get settingsModel() {
+        if(this.settingsModelObject === undefined) {
+            this.settingsModelObject = new SettingsModel();
+        }
+        return this.settingsModelObject;
+    }
 
-    static settingsList = [
+    public static settingsList = [
         "wordFontSize", 
         "titleFontSize", 
         "lineHeight", 
@@ -19,23 +25,23 @@ export class SettingsModel {
         "indentAmount",
     ];
 
-    savedSettingsObj = {};
-    uploadTimer = {};
+    private savedSettingsObj = {};
+    private uploadTimer: NodeJS.Timer;
 
-    wordFontSize = 50
-    titleFontSize = 25
-    lineHeight = 1.3
-    minimumPageLines = 2
-    maximumPageLines = 6
-    topMargin = 3
-    leftMargin = 3
-    rightMargin = 0
-    titleMargin = 0
-    indentAmount = 1.0
-    state = ModelState.UNLOADED
+    public wordFontSize = 50
+    public titleFontSize = 25
+    public lineHeight = 1.3
+    public minimumPageLines = 2
+    public maximumPageLines = 6
+    public topMargin = 3
+    public leftMargin = 3
+    public rightMargin = 0
+    public titleMargin = 0
+    public indentAmount = 1.0
+    public state = ModelState.UNLOADED
 
 
-    loadSettings = () => {
+    public loadSettings = () => {
         if(this.state !== ModelState.UNLOADED) {
             return;
         }
@@ -53,7 +59,7 @@ export class SettingsModel {
         );
     }
 
-    changeSetting = (key, value) => {
+    public changeSetting = (key, value) => {
         this.state = ModelState.DIRTY;
         this[key] = value;
         this.savedSettingsObj[key] = value;
@@ -61,7 +67,7 @@ export class SettingsModel {
         this.uploadTimer = setTimeout(this.uploadSettings, 1000);
     }
 
-    uploadSettings = () => {
+    public uploadSettings = () => {
         const settingsToUpload = Object.assign({}, this.savedSettingsObj);
         this.savedSettingsObj = {};
         API.updateSettings("rocketbang", settingsToUpload).then(() => {
@@ -71,7 +77,7 @@ export class SettingsModel {
         });
     }
 
-    changeWordFont = (amount) => {
+    public changeWordFont = (amount) => {
         this.changeSetting("wordFontSize", this.wordFontSize + amount);
     }
 }
@@ -88,8 +94,8 @@ decorate(SettingsModel, {
     titleMargin: observable,
     indentAmount: observable,
     state: observable,
-    loadSettings: observable,
-    changeWordFont: observable,
+    loadSettings: action,
+    changeWordFont: action,
     changeSetting: action
-
+    
 })

@@ -8,7 +8,7 @@ import { observer } from 'mobx-react';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { DisplaySong } from '../models/DisplaySong';
 import { DisplayVerseList } from '../components/DisplayVerseList';
-import PresenterDisplay from '../components/PresenterDisplay';
+import { PresenterDisplay } from '../components/PresenterDisplay';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
 import { Song } from '../models/Song';
