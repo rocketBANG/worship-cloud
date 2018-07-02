@@ -26,16 +26,20 @@ class DisplayControls extends React.Component<IProps> {
         window.removeEventListener('keydown', this.processKeyDown)
     }
 
-    private processKeyDown = (keyEvent) => {
+    private processKeyDown = (keyEvent: KeyboardEvent) => {
         const keyName = keyEvent.key;
 
         if(keyName === 'ArrowRight') {
+            keyEvent.preventDefault();
             this.onNext();
         } else if(keyName === 'ArrowLeft') {
+            keyEvent.preventDefault();
             this.onPrev();
         } else if(keyName === 'b') {
+            keyEvent.preventDefault();
             this.props.song.setBlack();
         } else if(keyName === 'w') {
+            keyEvent.preventDefault();
             this.props.song.setWhite();
         }
     }
