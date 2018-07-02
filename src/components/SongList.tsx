@@ -12,25 +12,16 @@ interface IProps {
     songList: SongListModel
 };
 
-interface IState {
-    selectedIndexes: number[]
-}
-
-const SongList = observer(class extends React.Component<IProps, IState> {
-    public state = {
-        selectedIndexes: []
-    };
+const SongList = observer(class extends React.Component<IProps> {
 
     private onSongClick = (names, indexes) => {
         this.props.selectedSongs.clear();
 
         if(names.length < 1) {
-            this.setState({selectedIndexes: []});
             return;
         }
         this.props.selectedSongs.push(...this.props.library.songs.filter(s => names.indexOf(s.id) > -1));
         this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
-        this.setState({selectedIndexes: indexes});
     };
 
     private onSongRemove = () => {
@@ -39,22 +30,28 @@ const SongList = observer(class extends React.Component<IProps, IState> {
         })
     }
 
+    private getSelectedIndexes = (): number[] => {
+        return this.props.selectedSongs
+            .map(s => this.props.songList.songIds.indexOf(s.id))
+            .filter(index => index !== -1);
+    }
+
     private onSongUp = () => {
-        if(this.state.selectedIndexes[0] < 1) {
+        let selectedIndexes = this.getSelectedIndexes();
+        if(selectedIndexes[0] < 1) {
             return;
         }
-        this.props.songList.reorder(this.state.selectedIndexes, -1);
-        this.setState({selectedIndexes: this.state.selectedIndexes.map(i => i - 1)});
+        this.props.songList.reorder(selectedIndexes, -1);
 
     }
 
     private onSongDown = () => {
-        let lastIndex = this.state.selectedIndexes[this.state.selectedIndexes.length - 1];
+        let selectedIndexes = this.getSelectedIndexes();
+        let lastIndex = selectedIndexes[selectedIndexes.length - 1];
         if(lastIndex >= this.props.songList.songIds.length - 1) {
             return;
         }
-        this.props.songList.reorder(this.state.selectedIndexes, +1);
-        this.setState({selectedIndexes: this.state.selectedIndexes.map(i => i + 1)});
+        this.props.songList.reorder(selectedIndexes, +1);
     }
     
     public render() {
