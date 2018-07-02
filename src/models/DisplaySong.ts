@@ -90,9 +90,9 @@ export class DisplaySong {
             this.setupPages();
         }
         if(this.pageIndex <= 0) {
-            let reachedStart = this.prevVerse();
-            this.pageIndex = this.currentPages.length - 1;
-            return reachedStart;
+            let changedVerse = this.prevVerse();
+            if(changedVerse) this.pageIndex = this.currentPages.length - 1;
+            return changedVerse;
         } else {
             this.pageIndex--;
             this.currentPage = this.currentPages[this.pageIndex];
