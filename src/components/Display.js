@@ -123,7 +123,7 @@ const Display = observer(class extends React.Component {
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
                 <div className="Display" style={{
-                                        backgroundColor: this.props.backgroundColor,
+                    backgroundColor: this.props.backgroundColor,
                     height: this.state.height, 
                     width: this.state.width, 
                 }}>

@@ -26,18 +26,40 @@ class DisplayControls extends React.Component<IProps> {
         window.removeEventListener('keydown', this.processKeyDown)
     }
 
-    private processKeyDown = (keyEvent) => {
+    private processKeyDown = (keyEvent: KeyboardEvent) => {
         const keyName = keyEvent.key;
 
         if(keyName === 'ArrowRight') {
+            keyEvent.preventDefault();
             this.onNext();
         } else if(keyName === 'ArrowLeft') {
+            keyEvent.preventDefault();
             this.onPrev();
         } else if(keyName === 'b') {
+            keyEvent.preventDefault();
             this.props.song.setBlack();
         } else if(keyName === 'w') {
+            keyEvent.preventDefault();
             this.props.song.setWhite();
+        } else if (keyName === 'ArrowUp') {
+            keyEvent.preventDefault();
+            this.onPrevVerse();
+        } else if (keyName === 'ArrowDown') {
+            keyEvent.preventDefault();
+            this.onNextVerse();
         }
+    }
+
+    private onNextVerse = () => {
+        const goNext = this.props.song.nextVerse();
+        if(goNext) return;
+        if(this.props.onNext) this.props.onNext();
+    }
+
+    private onPrevVerse = () => {
+        const goPrev = this.props.song.prevVerse();
+        if(goPrev) return;
+        if(this.props.onPrev) this.props.onPrev();
     }
 
     // true if the font size should increase
@@ -60,7 +82,7 @@ class DisplayControls extends React.Component<IProps> {
     private onPrev = () => {
         const goPrev = this.props.song.prevPage();
         if(goPrev) return;
-        if(this.props.onNext) this.props.onPrev();
+        if(this.props.onPrev) this.props.onPrev();
     };
 
     private onFullscreen = () => {

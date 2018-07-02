@@ -8,7 +8,7 @@ import DisplayOverlay from './DisplayOverlay';
 import { SettingsModel } from '../models/settings/SettingsModel';
 import { DisplaySong } from '../models/DisplaySong';
 import { SongListModel } from '../models/song-lists/SongListModel';
-import { IObservableValue } from 'mobx';
+import { IObservableValue, trace, decorate, observable, extendObservable } from 'mobx';
 
 interface IProps {
     currentSong: DisplaySong,
@@ -16,7 +16,7 @@ interface IProps {
 };
 
 class PresenterDisplay extends React.Component<IProps> {
-    private settingsModel = SettingsModel.settingsModel;
+    public settingsModel = SettingsModel.settingsModel;
 
     private display;
 
@@ -50,14 +50,13 @@ class PresenterDisplay extends React.Component<IProps> {
             lineHeight: this.settingsModel.lineHeight,
             indentAmount: this.settingsModel.indentAmount,
             backgroundColor,
-            fontSize: this.settingsModel.wordFontSize || 0
         }
 
         // Broadcast to viewer
         localStorage.setItem('display-setTitle', title);
         localStorage.setItem('display-setWords', words);
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' ?  'true' : 'false');
-        localStorage.setItem('display-setStyle', JSON.stringify(props));
+        localStorage.setItem('display-setStyle', JSON.stringify({...props, fontSize: this.settingsModel.wordFontSize}));
 
         return (
             <div className="PresenterDisplay">
@@ -67,6 +66,7 @@ class PresenterDisplay extends React.Component<IProps> {
                     title={title} 
                     isItallic={currentVerse.type === 'chorus'} 
                     words={words}
+                    fontSize={this.settingsModel.wordFontSize}
                     {...props}
                 />
                 <DisplayOverlay currentPage={currentSong && (currentSong.pageIndex+1)}
@@ -76,6 +76,7 @@ class PresenterDisplay extends React.Component<IProps> {
         );
     }    
     
-}
+};
+const test = observer(PresenterDisplay);
 
-export default observer(PresenterDisplay);
+export { test as PresenterDisplay };

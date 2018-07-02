@@ -4,6 +4,7 @@ Doing:
     [ ] 32 Add checking for pending changes on tab close
 
 Backlog:
+    [ ] Add Reordering song lists
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 43 Add preview on settings page of how display will look with the current settings
