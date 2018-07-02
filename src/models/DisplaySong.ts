@@ -120,45 +120,51 @@ export class DisplaySong {
         , 0);
 
         const maxLines = this.settingsModel.maximumPageLines;
-        const minLines = this.settingsModel.minimumPageLines;
 
-        // let actualMinimum = weightedLines.reduce((accumulator, val, i) => 
-        //     i >= weightedLines.length - minLines - 1 ? accumulator + val.lines : accumulator
-        // , 0);
+        let numMinPages = Math.ceil(totalLines / maxLines);
+        let baseLinesPerPage = Math.floor(totalLines / numMinPages);
+        let extraLines = totalLines % numMinPages;
+        let extraLinesPerPage = Math.ceil(extraLines / numMinPages);
 
-        let currentLine = 0;
+        let pageNumbers = [];
+        // Set up ideal split
+        for(let i = 0; i < numMinPages; i++) {
+            let extraNumber = Math.min(extraLinesPerPage, extraLines);
+            pageNumbers.push(baseLinesPerPage + extraNumber);
+            extraLines -= extraNumber;
+        }
+
+        let actualPageNumbers = [];
+        let index = 0;
         let pageI = 0;
 
-        while(totalLines > 0) {
+        // Find realistic split
+        while(pageI < weightedLines.length) {
+            actualPageNumbers.push(0);
+            while(actualPageNumbers[index] < pageNumbers[index]) {
+                if(pageI > weightedLines.length - 1) break;
+                actualPageNumbers[index] += weightedLines[pageI].lines;
+                pageI++;
+            }
+            // Push overflow lines to the end
+            if(actualPageNumbers[index] > pageNumbers[index] && index < pageNumbers.length - 1) {
+                pageI--;
+                actualPageNumbers[index] -= weightedLines[pageI].lines;
+                pageNumbers[index + 1] += weightedLines[pageI].lines;
+            }
+            index++;
+        }
+
+        let lineI = 0;
+        let seperator = '\n';
+        // Create actual pages
+        for(let pageLines of actualPageNumbers) {
             this.currentPages.push("");
-
-            let selectedLines = totalLines < maxLines ? totalLines : maxLines;
-
-            // Check if there is enough lines left over for the next page
-            if(totalLines - maxLines < minLines && totalLines - maxLines > 0) {
-                selectedLines = totalLines - minLines;
+            while(pageLines > 0) {
+                this.currentPages[this.currentPages.length - 1] += seperator + weightedLines[lineI].text;
+                pageLines -= weightedLines[lineI].lines;
+                lineI++;
             }
-            let i = currentLine;
-            let usedLines = 0;
-
-            for(i; i < selectedLines + currentLine; i++) {
-                let seperator = '\n';
-                if(this.currentPages.length === 0) {
-                    seperator = "";
-                }
-
-                // check there is space for the new lines on this page
-                if(i + 1 <= selectedLines + currentLine - weightedLines[i].lines + 1) {
-                    this.currentPages[pageI] += seperator + allLines[i];
-                    // adjust index for 'lines' that are actually 2 in length
-                    currentLine -= weightedLines[i].lines-1;
-                    usedLines += weightedLines[i].lines;
-                }
-            }
-            
-            currentLine += usedLines;
-            totalLines -= usedLines;
-            pageI++;
         }
 
         this.currentVerse.setNumberOfPages(this.currentPages.length);
