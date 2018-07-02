@@ -13,30 +13,48 @@ interface IProps {
 };
 
 interface IState {
-    songText: string,
-    selectedSongIds: string[]
+    selectedIndexes: number[]
 }
 
 const SongList = observer(class extends React.Component<IProps, IState> {
     public state = {
-        songText: '',
-        selectedSongIds: []
+        selectedIndexes: []
     };
 
     private onSongClick = (names, indexes) => {
         this.props.selectedSongs.clear();
 
         if(names.length < 1) {
+            this.setState({selectedIndexes: []});
             return;
         }
         this.props.selectedSongs.push(...this.props.library.songs.filter(s => names.indexOf(s.id) > -1));
         this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
+        this.setState({selectedIndexes: indexes});
     };
 
     private onSongRemove = () => {
         this.props.selectedSongs.forEach(song => {
             this.props.songList.removeSong(song.id);
         })
+    }
+
+    private onSongUp = () => {
+        if(this.state.selectedIndexes[0] < 1) {
+            return;
+        }
+        this.props.songList.reorder(this.state.selectedIndexes, -1);
+        this.setState({selectedIndexes: this.state.selectedIndexes.map(i => i - 1)});
+
+    }
+
+    private onSongDown = () => {
+        let lastIndex = this.state.selectedIndexes[this.state.selectedIndexes.length - 1];
+        if(lastIndex >= this.props.songList.songIds.length - 1) {
+            return;
+        }
+        this.props.songList.reorder(this.state.selectedIndexes, +1);
+        this.setState({selectedIndexes: this.state.selectedIndexes.map(i => i + 1)});
     }
     
     public render() {
@@ -57,6 +75,8 @@ const SongList = observer(class extends React.Component<IProps, IState> {
                 <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
                 <div className="ListControls">
                     <button onClick={this.onSongRemove}>Remove Song</button>
+                    <button onClick={this.onSongUp}>up</button>
+                    <button onClick={this.onSongDown}>down</button>
                 </div>
             </div>
         )    

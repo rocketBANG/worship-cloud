@@ -20,6 +20,15 @@ export class SongListModel {
         this.songIds = tmpIds;
     }
 
+    public reorder = async (from: number[], to: number) => {
+        // If going down, for loop in reverse order
+        from = to > 0 ? from.slice().reverse() : from;
+
+        from.forEach(i => this.songIds.splice(i + to, 0, this.songIds.splice(i, 1)[0]));
+
+        return await this.api.updateSongList(this.songIds);
+    };
+
     public async delete() {
         console.log('not implemented delete');
     }
