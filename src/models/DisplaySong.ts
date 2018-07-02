@@ -1,4 +1,4 @@
-import { observable, action, computed, autorun, decorate } from 'mobx';
+import { observable, action, computed, autorun, decorate, trace } from 'mobx';
 import { Song } from './Song'
 import { SettingsModel } from './settings/SettingsModel';
 
@@ -27,9 +27,11 @@ export class DisplaySong {
         this.title = song.title;
         this.id = song.id;
 
-        this.settingsModel.loadSettings();
+        if(!song.isLoaded) song.loadSong();
 
-        autorun(() => {if(song.isLoaded) this.nextVerse()});
+        this.settingsModel.loadSettings();
+        let auto;
+        auto = autorun(() => {if(song.isLoaded)  { this.nextVerse(); auto() }});
     }
 
     public setDisplay = (display) => {

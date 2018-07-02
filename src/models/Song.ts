@@ -1,4 +1,4 @@
-import { action, computed, decorate, observable } from 'mobx';
+import { action, computed, decorate, observable, trace } from 'mobx';
 import * as API from '../store/api'
 import { Verse } from './Verse'
 
@@ -10,26 +10,28 @@ export class Song {
     public verses = observable(new Map())
     public isLoaded = false
     public title = "";
+    private isLoading = false;
 
     constructor(songTitle: string, public id: string) {
         this.title = songTitle;
     }
 
-    public loadSong = () => {
-        if(!this.isLoaded) {
+    public loadSong = async () => {
+        if(!this.isLoading) {
+            this.isLoading = true;
+
             this.state = "loading";
-            return API.fetchVerses(this.id).then((json) => {
+            return await API.fetchVerses(this.id).then((json) => {
                 json.verses.forEach(verse => {
                     const newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
                     this.verses.set(verse._id, newVerse);
                 });
-
                 this.order = json.order;
                 this.state = "loaded";
                 this.isLoaded = true;
             })
         }
-        return Promise.resolve();
+        return await Promise.resolve();
     };
 
     public addToOrder = (verseId) => {
@@ -74,13 +76,16 @@ export class Song {
     };
 
     get verseOrder() {
+
+        if(this.state === "loading" || this.state === "unloaded") {
+            return [];
+        }
+
         const verseOrder = [];
 
-        if(this.state !== "loading" && this.state !== "unloaded") {
-            this.order.forEach((verseId) => {
-                verseOrder.push(this.verses.get(verseId));
-            });
-        }
+        this.order.forEach((verseId) => {
+            verseOrder.push(this.verses.get(verseId));
+        });
 
         return verseOrder;
     };

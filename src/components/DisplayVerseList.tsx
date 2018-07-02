@@ -2,6 +2,7 @@ import * as React from 'react';
 import { List } from './List';
 import { observer } from 'mobx-react';
 import { DisplaySong } from '../models/DisplaySong';
+import { trace } from 'mobx';
 
 interface IProps {
     currentSong: DisplaySong,

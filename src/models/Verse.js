@@ -47,4 +47,5 @@ decorate(Verse, {
     updateText: action,
     title: computed,
     setChorus: action,
+    setNumberOfPages: action
 })

@@ -3,7 +3,7 @@ import SongLibrary from '../components/SongLibrary';
 import '../style/Display.css'
 import '../style/Presenter.css'
 
-import { observable, autorun, IObservableValue, IReactionDisposer, IObservableArray } from 'mobx';
+import { observable, autorun, IObservableValue, IReactionDisposer, IObservableArray, trace } from 'mobx';
 import { observer } from 'mobx-react';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { DisplaySong } from '../models/DisplaySong';
@@ -124,7 +124,6 @@ const Presenter = observer(class extends React.Component<{}, IState> {
                 this.setState({displaySong: undefined });
                 return;
             }
-            currentSong.loadSong();
             this.setState({displaySong: this.getDisplaySong(currentSong) });
         });
         document.addEventListener("mozfullscreenchange", this.exitFullscreen);
