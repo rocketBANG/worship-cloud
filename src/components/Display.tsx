@@ -7,23 +7,38 @@ import PropTypes from 'prop-types'
 const wordFontSize = 0.0011;
 const titleFontSize = 0.0012;
 
-const Display = observer(class extends React.Component {
-    ratio = 4.0/3.0;
-    wrapper = undefined;
+interface IState {
+    height: number | string,
+    width: number | string,
+    titleFontSize: string,
+    verseFontSize: string,
+}
 
-    constructor(props) {
-        super(props);
-        this.state= {
-            height: 300,
-            titleFontSize: "40px",
-            verseFontSize: "20px",
-            width: 400,
-        };
+interface IProps {
+    isFullscreen?: boolean,
+    fontSize: number,
+    lineHeight: number,
+    indentAmount: number,
+    words: string,
+    isItallic: boolean,
+    backgroundColor: string,
+    title: string,
+}
 
-        this.updateSize = this.updateSize.bind(this);
+const Display = observer(class extends React.Component<IProps, IState> {
+    private ratio = 4.0/3.0;
+    private wrapper = undefined;
+
+    private verseText: HTMLDivElement;
+
+    public state = {
+        height: 300,
+        titleFontSize: "40px",
+        verseFontSize: "20px",
+        width: 400,
     }
 
-    splitLines(text) {
+    private splitLines(text) {
         if(text) {
             return text.split("\n").map((line, index) => {
                 return (<p key={index}>{line}</p>)
@@ -33,7 +48,7 @@ const Display = observer(class extends React.Component {
         }
     }
 
-    updateSize(fontSize) {
+    private updateSize = (fontSize?: number) => {
         fontSize = fontSize || this.props.fontSize || 50;
 
         if(this.props.isFullscreen) {    
@@ -68,19 +83,23 @@ const Display = observer(class extends React.Component {
         }
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.updateSize();
         this.wrapper.addEventListener('onresize', () => this.updateSize())
     }
 
-    componentWillReceiveProps(nextProps) {
+    public componentWillUnmount() {
+        this.wrapper.removeEventListener('onresize', () => this.updateSize())
+    }
+
+    public componentWillReceiveProps(nextProps) {
         if(nextProps.fontSize === this.props.fontSize) {
             return;
         }
         this.updateSize(nextProps.fontSize);
     }
 
-    getStyles = () => {
+    private getStyles = () => {
         return  {
             fontSize: this.state.verseFontSize,
             lineHeight: this.props.lineHeight,
@@ -89,7 +108,7 @@ const Display = observer(class extends React.Component {
         };
     }
 
-    measureLines = (textArray) => {
+    private measureLines = (textArray) => {
         let div = document.createElement("div");
         document.body.appendChild(div);
 
@@ -115,8 +134,8 @@ const Display = observer(class extends React.Component {
         return weightedLines;
     }
 
-    render() {
-        let wordsToUse = this.words || this.props.words;
+    public render() {
+        let wordsToUse = this.props.words;
         const words = this.props.isItallic ? <i>{this.splitLines(wordsToUse)}</i> : this.splitLines(wordsToUse);
 
         return (
@@ -141,14 +160,7 @@ const Display = observer(class extends React.Component {
                 </div>
             </div>
         );
-    }
-    
-    static propTypes = {
-        isItallic: PropTypes.bool,
-        title: PropTypes.string,
-        words: PropTypes.string
-    };
-    
+    }    
     
 });
 

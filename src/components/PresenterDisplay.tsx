@@ -15,7 +15,14 @@ interface IProps {
     currentList: IObservableValue<SongListModel>
 };
 
-class PresenterDisplay extends React.Component<IProps> {
+export interface IExtraDisplayProps {
+    lineHeight: number,
+    indentAmount: number,
+    backgroundColor: string,
+    fontSize: number
+}
+
+export const PresenterDisplay = observer(class extends React.Component<IProps> {
     public settingsModel = SettingsModel.settingsModel;
 
     private display;
@@ -46,27 +53,26 @@ class PresenterDisplay extends React.Component<IProps> {
             words = '';
         }
 
-        const props = {
+        const props: IExtraDisplayProps = {
             lineHeight: this.settingsModel.lineHeight,
             indentAmount: this.settingsModel.indentAmount,
             backgroundColor,
+            fontSize: this.settingsModel.wordFontSize
         }
 
         // Broadcast to viewer
         localStorage.setItem('display-setTitle', title);
         localStorage.setItem('display-setWords', words);
         localStorage.setItem('display-setIsItallic', currentVerse.type === 'chorus' ?  'true' : 'false');
-        localStorage.setItem('display-setStyle', JSON.stringify({...props, fontSize: this.settingsModel.wordFontSize}));
+        localStorage.setItem('display-setStyle', JSON.stringify({...props}));
 
         return (
             <div className="PresenterDisplay">
                 <Display 
                     ref={r => this.display = r}
-                    id='PresenterDisplay' 
                     title={title} 
                     isItallic={currentVerse.type === 'chorus'} 
                     words={words}
-                    fontSize={this.settingsModel.wordFontSize}
                     {...props}
                 />
                 <DisplayOverlay currentPage={currentSong && (currentSong.pageIndex+1)}
@@ -76,7 +82,4 @@ class PresenterDisplay extends React.Component<IProps> {
         );
     }    
     
-};
-const test = observer(PresenterDisplay);
-
-export { test as PresenterDisplay };
+});

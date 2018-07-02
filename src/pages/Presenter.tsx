@@ -110,11 +110,19 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         }
     }
 
+    private onKeyDown = (event: KeyboardEvent) => {
+        if(event.key === 'F5') {
+            event.preventDefault();
+            this.onFullscreen();
+        }
+    }
+
     public componentWillUnmount() {
         this.autorun();
         document.removeEventListener("mozfullscreenchange", this.exitFullscreen);
         document.removeEventListener("webkitfullscreenchange", this.exitFullscreen);
         document.removeEventListener("fullscreenchange", this.exitFullscreen);
+        document.removeEventListener('keydown', this.onKeyDown);
     }
 
     public componentDidMount() {
@@ -129,6 +137,7 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         document.addEventListener("mozfullscreenchange", this.exitFullscreen);
         document.addEventListener("webkitfullscreenchange", this.exitFullscreen);
         document.addEventListener("fullscreenchange", this.exitFullscreen);
+        document.addEventListener('keydown', this.onKeyDown);
     }
 
     public render() {
