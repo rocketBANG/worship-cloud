@@ -7,7 +7,6 @@ import { SongLibraryModel } from '../models/SongLibraryModel'
 import { observable, IObservableValue, IObservableArray, autorun, IReactionDisposer } from 'mobx';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
-import SongLibrary from '../components/SongLibrary';
 import { Song } from '../models/Song';
 import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
@@ -60,7 +59,7 @@ export default class Editor extends React.Component<{}, {currentSong: Song, curr
     public render() {
         const tabs = [
             {component: 
-                <SongLibraryControls library={this.songLibrary} currentList={this.currentList} selectedSongs={this.selectedSongs} />, name: "Song Library"},
+                <SongLibraryControls library={this.songLibrary} currentList={this.currentList} selectedSongs={this.selectedSongs}/>, name: "Song Library"},
             {component: <SongLists selectedSongs={this.selectedSongs} library={this.songLibrary} currentList={this.currentList}/>, name: "Song Lists"},
         ];
         return (

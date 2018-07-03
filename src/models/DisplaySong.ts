@@ -91,7 +91,10 @@ export class DisplaySong {
         }
         if(this.pageIndex <= 0) {
             let changedVerse = this.prevVerse();
-            if(changedVerse) this.pageIndex = this.currentPages.length - 1;
+            if(changedVerse) {
+                this.pageIndex = this.currentPages.length - 1;
+                this.currentPage = this.currentPages[this.pageIndex];
+            }
             return changedVerse;
         } else {
             this.pageIndex--;

@@ -1,10 +1,10 @@
 import { SongLibraryModel } from "../models/SongLibraryModel";
-import { IObservableValue, IObservableArray, observable } from "mobx";
+import { IObservableValue, IObservableArray } from "mobx";
 import { SongListModel } from "../models/song-lists/SongListModel";
 import { Song } from "../models/Song";
 import * as React from 'react';
 import { observer } from "mobx-react";
-import SongLibrary from "./SongLibrary";
+import { SongLibrary } from "./SongLibrary";
 import { IListContextMenu } from "./List";
 import { Popup } from "./general/Popup";
 
@@ -16,13 +16,11 @@ interface IProps {
 
 interface IState {
     songText: string,
-    selectedSongIds: string[]
 }
 
 const SongLibraryControls = observer(class extends React.Component<IProps, IState> {
     public state = {
         songText: '',
-        selectedSongIds: []
     };
     
     private onSongAdd = async () => {

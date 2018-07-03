@@ -1,11 +1,8 @@
 Doing: 
-    [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     [ ] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
-    [ ] 61 Combine DisplayVerseList and VerseList
-    [ ] 62 Combine Option mapping for verses to list
-    [ ] 32 Add checking for pending changes on tab close
 
 Backlog:
+    [ ] 32 Add checking for pending changes on tab close
     [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 43 Add preview on settings page of how display will look with the current settings
@@ -13,6 +10,7 @@ Backlog:
     [ ] 57 Add ability to have multiple titles
     [ ] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
+    [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     
 Done:
     [x] 51 Add shortcut to make display full screen

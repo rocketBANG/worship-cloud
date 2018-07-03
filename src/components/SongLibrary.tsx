@@ -85,4 +85,4 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
     }
 });
 
-export default SongLibrary;
+export { SongLibrary };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SongLibrary from '../components/SongLibrary';
+import { SongLibrary } from '../components/SongLibrary';
 import '../style/Display.css'
 import '../style/Presenter.css'
 
