@@ -1,5 +1,4 @@
 Doing: 
-    [ ] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
 
 Backlog:
     [ ] 32 Add checking for pending changes on tab close
@@ -13,6 +12,7 @@ Backlog:
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     
 Done:
+    [x] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
     [x] 51 Add shortcut to make display full screen
     [x] Add Reordering song lists
     [x] 5 Select the newly added verse in the verse select when added

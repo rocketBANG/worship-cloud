@@ -8,7 +8,7 @@ export class Song {
     public state: ModelState = ModelState.UNLOADED
     public chorus = undefined
     public order = []
-    public verses = observable(new Map())
+    public verses = observable(new Map<string, Verse>())
     public isLoaded = false
     public title = "";
     private isLoading = false;
@@ -76,13 +76,13 @@ export class Song {
         return verses;
     };
 
-    get verseOrder() {
+    get verseOrder(): Verse[] {
 
         if(this.state === ModelState.LOADING || this.state === ModelState.UNLOADED) {
             return [];
         }
 
-        let verseOrder = [];
+        let verseOrder: Verse[] = [];
 
         this.order.forEach((verseId) => {
             verseOrder.push(this.verses.get(verseId));
@@ -90,6 +90,37 @@ export class Song {
 
         return verseOrder;
     };
+
+    get getUniqueVerseTitles(): Array<{verseId: string, title: string}> {
+        if(this.state === ModelState.LOADING || this.state === ModelState.UNLOADED) {
+            return [];
+        }
+
+        let verseOrder: Verse[] = [];
+        let verses = Array.from(this.verses.values());
+
+        let verseAndTitle = verses.map(v => ({verse: v, title: v.title}));
+        verseAndTitle.sort((a, b) => {
+            if(a.title.toLowerCase() < b.title.toLowerCase()) return -1;
+            if(a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+            return 0;
+        });
+        for(let i = 0; i < verseAndTitle.length - 1; i++) {
+            let matching = [];
+            let first = verseAndTitle[i];
+            while(i < verseAndTitle.length - 1 && verseAndTitle[i].title === verseAndTitle[i + 1].title) {
+                matching.push(verseAndTitle[i + 1]);
+                i++;
+            }
+            first.title = Verse.findUniqueTitle(first.verse, matching.map(m => m.verse));
+            matching.forEach(m => 
+                m.title = Verse.findUniqueTitle(
+                    m.verse, 
+                    [first.verse, ...matching.filter(match => match !== m).map(match => match.verse)]
+                ));
+        }
+        return verseAndTitle.map(o => ({verseId: o.verse.id, title: o.title}));
+    }
  
     public addVerse = async (text): Promise<Verse> => {
         this.state = ModelState.SAVING;
@@ -125,7 +156,7 @@ export class Song {
         });
     }
 
-    public setChorus = (verseId) => {
+    public setChorus = (verseId: string) => {
         this.state = ModelState.SAVING;
         const selectedVerse = this.verses.get(verseId);
         selectedVerse.setChorus().then(() => this.state = ModelState.LOADED);
@@ -148,4 +179,5 @@ decorate(Song, {
     removeFromOrder: action,
     reorder: action,
     setChorus: action,
+    getUniqueVerseTitles: computed
 })

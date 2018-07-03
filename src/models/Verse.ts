@@ -3,12 +3,29 @@ import * as API from '../store/api'
 import { ModelState } from './ModelState';
 
 export class Verse {
-    public state: ModelState = ModelState.LOADED // "loading" / "loaded" / "error" / "unloaded",
-    public numPages = -1
+    public static findUniqueTitle(verse: Verse, otherVerses: Verse[]): string {
+        if(otherVerses.length === 0) return verse.title;
+        let otherLines: string[][] = otherVerses.map(v => v.text.split('\n'));
+        let verseLines: string[] = verse.text.split('\n');
 
-    public id;
-    public songId;
-    public text;
+        for(let i = 0; i < verseLines.length; i++) {
+            let found = true;
+            for(let otherLine of otherLines) {
+                if(otherLine[i] === verseLines[i]) found = false;
+            }
+            if(found) {
+                return verse.title + ' (' + verseLines[i] + ')';
+            }
+        }
+        return verse.title;
+    }
+
+    public state: ModelState = ModelState.LOADED // "loading" / "loaded" / "error" / "unloaded",
+    public numPages = 1
+
+    public id: string;
+    public songId: string;
+    public text: string;
     public type;
 
     constructor(verseId, songId, text = "", type = "verse") {

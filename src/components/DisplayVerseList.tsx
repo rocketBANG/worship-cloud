@@ -1,14 +1,17 @@
 import * as React from 'react';
-import { List } from './List';
+import { List, IOptions } from './List';
 import { observer } from 'mobx-react';
 import { DisplaySong } from '../models/DisplaySong';
-import { trace } from 'mobx';
+import { trace, computed } from 'mobx';
+import { Song } from '../models/Song';
+import { Verse } from '../models/Verse';
+import VerseList from './VerseList';
 
 interface IProps {
     currentSong: DisplaySong,
 };
 
-const DisplayVerseList = observer(class extends React.Component<IProps> {
+@observer class DisplayVerseList extends React.Component<IProps> {
 
     private onVerseClick = (names, indexes) => {
         if(indexes.length < 1) {
@@ -18,26 +21,35 @@ const DisplayVerseList = observer(class extends React.Component<IProps> {
         this.props.currentSong.setVerse(indexes[0]);
     };
 
+    private getOptions = computed((): IOptions[] => {
+        let versesWithTitles = this.props.currentSong.getUniqueVerseTitles;
+        return this.props.currentSong.verseOrder.map(verse => {
+            let title = versesWithTitles.find(v => v.verseId === verse.id).title;
+            let verseText = verse.type === "chorus" ? "CHORUS: " + title : title;
+            if(verse.numPages > 1) {
+                verseText += " (" + verse.numPages + ")";
+            }
+            return {
+                altText: "",
+                id: verse.id,
+                text: verseText,
+            }
+        });    
+
+    })
+
+    @computed private get options() {
+        return VerseList.MapVerseToIOptions(this.props.currentSong);
+    }
+
     public render() {
-        const song = this.props.currentSong || {verseOrder: [], verseIndex: undefined};
+        const song = this.props.currentSong;
 
         let list;
-
-        if(song.verseOrder.length === 0) {
+        if(!song || song.verseOrder.length === 0) {
             list = <p>No verses in order</p>;
         } else {
-            let options = song.verseOrder.map((verse, index) => {
-                let verseText = verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title;
-                if(verse.numPages > 1) {
-                    verseText += " (" + verse.numPages + ")";
-                }
-                return {
-                    altText: "",
-                    id: verse.id,
-                    text: verseText,
-                }
-            });    
-            list = <List onUpdate={this.onVerseClick} options={options} selectedIndex={song.verseIndex}/>;
+            list = <List onUpdate={this.onVerseClick} options={this.options} selectedIndex={[song.verseIndex]}/>;
         }
     
         return ( 
@@ -47,6 +59,6 @@ const DisplayVerseList = observer(class extends React.Component<IProps> {
             </div>
         )
     }
-});
+};
 
 export { DisplayVerseList };

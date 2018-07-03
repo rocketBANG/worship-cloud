@@ -2,8 +2,9 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { List } from './List'
 import { Verse } from '../models/Verse';
-import { IObservableValue, IObservableArray } from 'mobx';
+import { IObservableValue, IObservableArray, computed } from 'mobx';
 import { Song } from '../models/Song';
+import VerseList from './VerseList';
 
 interface IProps {
     selectedVerses: IObservableArray<Verse>
@@ -15,7 +16,7 @@ interface IState {
     indexes: number[],
 }
 
-const VerseList = observer(class extends React.Component<IProps, IState> {
+@observer class VerseOrderList extends React.Component<IProps, IState> {
 
     public state = {
         index: -1,
@@ -57,19 +58,17 @@ const VerseList = observer(class extends React.Component<IProps, IState> {
         this.props.currentSong.reorder(this.state.indexes, +1);
         this.setState({indexes: this.state.indexes.map(i => i + 1)});
     };
+
+    @computed private get options() {
+        return VerseList.MapVerseToIOptions(this.props.currentSong);
+    }
     
     public render() {
-        const currentSong = this.props.currentSong || {verseOrder: []};
-        const options = currentSong.verseOrder.map((verse, index) => ({
-            id: verse.id,
-            text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
-            altText: "NEW VERSE"
-        }));
-    
+        
         return (
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Order:</div>
-                <List selectedIndex={this.state.indexes} onUpdate={this.onVerseClick} options={options} />
+                <List selectedIndex={this.state.indexes} onUpdate={this.onVerseClick} options={this.options} />
                 <div className="ListControls">
                 <button onClick={this.onOrderUp} >up</button>
                 <button onClick={this.onOrderDown}>down</button>
@@ -78,6 +77,6 @@ const VerseList = observer(class extends React.Component<IProps, IState> {
             </div>
         )    
     }
-});
+};
 
-export default VerseList;
+export default VerseOrderList;

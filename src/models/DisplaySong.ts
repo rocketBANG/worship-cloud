@@ -1,6 +1,7 @@
 import { observable, action, computed, autorun, decorate, trace } from 'mobx';
 import { Song } from './Song'
 import { SettingsModel } from './settings/SettingsModel';
+import { Verse } from './Verse';
 
 export const BLACKED = 1;
 export const WHITE = -1;
@@ -209,8 +210,16 @@ export class DisplaySong {
         return this.currentPages.length;
     }
 
-    get verseOrder() {
+    get verseOrder(): Verse[] {
         return this.song.verseOrder;
+    }
+
+    get getUniqueVerseTitles() {
+        return this.song.getUniqueVerseTitles;
+    }
+
+    get completeVerses() {
+        return this.song.completeVerses;
     }
 
 }
@@ -235,5 +244,7 @@ decorate(DisplaySong, {
     backgroundColor: computed,
     currentNumPages: computed,
     verseOrder: computed,
-    setDisplay: action
+    setDisplay: action,
+    getUniqueVerseTitles: computed,
+    completeVerses: computed
 })

@@ -1,16 +1,32 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { List } from './List'
-import { IObservableValue, IObservableArray } from 'mobx';
+import { List, IOptions } from './List'
+import { IObservableValue, IObservableArray, trace, computed } from 'mobx';
 import { Verse } from '../models/Verse';
 import { Song } from '../models/Song';
+import { DisplaySong } from '../models/DisplaySong';
 
 interface IProps {
     selectedVerses: IObservableArray<Verse>
     currentSong: Song
 }
 
-const VerseList = observer(class extends React.Component<IProps> {
+@observer class VerseList extends React.Component<IProps> {
+
+    public static MapVerseToIOptions = (song: Song | DisplaySong): IOptions[] => {
+        if(song === undefined) return [];
+
+        let versesWithTitles = song.getUniqueVerseTitles;
+        let options = song.completeVerses.map((verse): IOptions => {
+            let title = (versesWithTitles.find(v => v.verseId === verse.id) || {title: verse.title}).title;
+
+            return {
+            id: verse.id,
+            text: verse.type === "chorus" ? "CHORUS: " + title : title,
+            altText: "NEW VERSE"
+        }});
+        return options;
+    }
 
     private onVerseClick = (names, indexes) => {
 
@@ -37,20 +53,18 @@ const VerseList = observer(class extends React.Component<IProps> {
 
     private onSetChorus = () => {
         let lastVerse = this.props.selectedVerses[this.props.selectedVerses.length - 1];
-        this.props.currentSong.setChorus(lastVerse);
+        this.props.currentSong.setChorus(lastVerse.id);
     };
+
+    @computed private get options() {
+        return VerseList.MapVerseToIOptions(this.props.currentSong);
+    }
     
     public render() {
-        const currentSong = this.props.currentSong || {completeVerses: []};
-        let selectedIndexes = [];
-        const options = currentSong.completeVerses.map((verse, index) => {
-            if(this.props.selectedVerses.find(v => v.id === verse.id) !== undefined) selectedIndexes.push(index);
-            return {
-            id: verse.id,
-            text: verse.type === "chorus" ? "CHORUS: " + verse.title : verse.title,
-            altText: "NEW VERSE"
-        }});
-    
+        trace();
+        let options = this.options;
+        let selectedIndexes = this.props.selectedVerses.map(v => options.findIndex(o => o.id === v.id));
+
         return (
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Verses:</div>
@@ -64,6 +78,6 @@ const VerseList = observer(class extends React.Component<IProps> {
             </div>
         )    
     }
-});
+};
 
 export default VerseList;
