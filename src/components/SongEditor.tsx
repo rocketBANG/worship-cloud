@@ -17,16 +17,21 @@ const SongEditor = observer(class extends React.Component<IProps> {
         const target = event.target as HTMLTextAreaElement;
         const currentCarret = target.selectionStart;
         const verse = this.props.currentVerse;
+        const textDiff = nextText.length - currentText.length;
+        const currentSong = this.props.currentSong;
 
         HistoryManager.addHistory({
             name: 'updateText',
             object: this,
-            redo: () => { verse.updateText(nextText); 
+            redo: () => { 
+                verse.updateText(nextText); 
                 target.selectionStart = currentCarret; 
                 target.selectionEnd = currentCarret},
-            undo: () => { verse.updateText(currentText); 
-                target.selectionStart = currentCarret - 1; 
-                target.selectionEnd = currentCarret - 1 }
+            undo: () => { 
+                verse.updateText(currentText); 
+                target.selectionStart = currentCarret - textDiff; 
+                target.selectionEnd = currentCarret - textDiff },
+            shouldChange: () => this.props.currentSong === currentSong
         });
 
         this.props.currentVerse.updateText(nextText);

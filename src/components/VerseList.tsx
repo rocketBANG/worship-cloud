@@ -54,13 +54,16 @@ interface IProps {
     private onSetChorus = () => {
         const song = this.props.currentSong;
         let lastVerse = this.props.selectedVerses[this.props.selectedVerses.length - 1];
+        if(lastVerse === undefined) return;
+        
         const verseId = lastVerse.id;
 
         HistoryManager.addHistory({
             name: 'setChorus',
             object: this,
             redo: () => {song.setChorus(verseId)},
-            undo: () => {song.setChorus(verseId)}
+            undo: () => {song.setChorus(verseId)},
+            shouldChange: () => this.props.currentSong === song,
         });
 
         this.props.currentSong.setChorus(lastVerse.id);
