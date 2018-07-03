@@ -61,7 +61,6 @@ interface IProps {
     }
     
     public render() {
-        trace();
         let options = this.options;
         let selectedIndexes = this.props.selectedVerses.map(v => options.findIndex(o => o.id === v.id));
 
