@@ -11,6 +11,7 @@ import { Song } from '../models/Song';
 import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import { SongLibraryControls } from '../components/SongLibraryControls';
+import { HistoryManager } from '../models/History';
 
 export default class Editor extends React.Component<{}, {currentSong: Song, currentVerse: Verse}> {
 
@@ -39,8 +40,19 @@ export default class Editor extends React.Component<{}, {currentSong: Song, curr
         this.selectedVerses = observable.array();
     }
 
+    private onKeyDown = (event: KeyboardEvent) => {
+        if(event.key === 'z' && event.ctrlKey && !event.shiftKey) {
+            event.preventDefault();
+            HistoryManager.undo();
+        } else if(event.key === 'Z' && event.ctrlKey && event.shiftKey) {
+            event.preventDefault();
+            HistoryManager.redo();
+        }
+    }
+
     public componentWillUnmount() {
         this.autorun.forEach(a => a());
+        document.removeEventListener('keydown', this.onKeyDown);
     }
 
     public componentDidMount() {
@@ -54,6 +66,8 @@ export default class Editor extends React.Component<{}, {currentSong: Song, curr
         this.autorun.push(autorun(() => {
             this.setState({currentVerse: this.selectedVerses[this.selectedVerses.length - 1]});
         }));
+
+        document.addEventListener('keydown', this.onKeyDown);
     }
 
     public render() {

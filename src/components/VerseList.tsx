@@ -5,6 +5,7 @@ import { IObservableValue, IObservableArray, trace, computed } from 'mobx';
 import { Verse } from '../models/Verse';
 import { Song } from '../models/Song';
 import { DisplaySong } from '../models/DisplaySong';
+import { HistoryManager } from '../models/History';
 
 interface IProps {
     selectedVerses: IObservableArray<Verse>
@@ -28,8 +29,7 @@ interface IProps {
         return options;
     }
 
-    private onVerseClick = (names, indexes) => {
-
+    private onVerseClick = (names) => {
         this.props.selectedVerses.clear();
         this.props.selectedVerses.push(...this.props.currentSong.completeVerses.filter(v => names.indexOf(v.id) !== -1));
         
@@ -52,7 +52,17 @@ interface IProps {
     };
 
     private onSetChorus = () => {
+        const song = this.props.currentSong;
         let lastVerse = this.props.selectedVerses[this.props.selectedVerses.length - 1];
+        const verseId = lastVerse.id;
+
+        HistoryManager.addHistory({
+            name: 'setChorus',
+            object: this,
+            redo: () => {song.setChorus(verseId)},
+            undo: () => {song.setChorus(verseId)}
+        });
+
         this.props.currentSong.setChorus(lastVerse.id);
     };
 
