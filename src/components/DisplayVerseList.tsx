@@ -39,7 +39,7 @@ interface IProps {
     })
 
     @computed private get options() {
-        return VerseList.MapVerseToIOptions(this.props.currentSong, this.props.currentSong.verseOrder);
+        return VerseList.MapVerseToIOptions(this.props.currentSong, this.props.currentSong && this.props.currentSong.verseOrder);
     }
 
     public render() {
