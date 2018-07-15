@@ -44,8 +44,6 @@ class Viewer extends React.Component<{}, IState> {
                 this.setState({isFullscreen: false});
             }
         });
-
-        window.addEventListener('storage', this.onUpdateLocalStorage);
     }
 
     private onKeyDown = (event: KeyboardEvent) => {
@@ -57,10 +55,12 @@ class Viewer extends React.Component<{}, IState> {
 
     public componentDidMount() {
         document.addEventListener('keydown', this.onKeyDown);
+        window.addEventListener('storage', this.onUpdateLocalStorage);
     }
 
     public componentWillUnmount() {
         document.removeEventListener('keydown', this.onKeyDown);
+        window.removeEventListener('storage', this.onUpdateLocalStorage);
     }
 
 
@@ -80,19 +80,19 @@ class Viewer extends React.Component<{}, IState> {
     };
 
     private onUpdateLocalStorage = (event) => {
-        if (event.key === 'display-setWords') {
+        if (localStorage.getItem('display-setWords') !== null) {
             this.setState({words: localStorage.getItem('display-setWords')});
         }
 
-        if (event.key === 'display-setTitle') {
+        if (localStorage.getItem('display-setTitle') !== null) {
             this.setState({title: localStorage.getItem('display-setTitle')});
         }
 
-        if (event.key === 'display-setIsItallic') {
+        if (localStorage.getItem('display-setIsItallic') !== null) {
             this.setState({isItallic: localStorage.getItem('display-setIsItallic')});
         }
 
-        if (event.key === 'display-setStyle') {
+        if (localStorage.getItem('display-setStyle') !== null) {
             this.setState({props: JSON.parse(localStorage.getItem('display-setStyle'))});
         }
 
