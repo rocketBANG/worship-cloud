@@ -13,12 +13,15 @@ interface IProps {
 
 @observer class VerseList extends React.Component<IProps> {
 
-    public static MapVerseToIOptions = (song: Song | DisplaySong, verses: Verse[] = song && song.completeVerses): IOptions[] => {
+    public static MapVerseToIOptions = (song: Song | DisplaySong, verses: Verse[] = song && song.completeVerses, append?: string[]): IOptions[] => {
         if(song === undefined) return [];
 
         let versesWithTitles = song.getUniqueVerseTitles;
-        let options = verses.map((verse): IOptions => {
+        let options = verses.map((verse, i): IOptions => {            
             let title = (versesWithTitles.find(v => v.verseId === verse.id) || {title: verse.title}).title;
+
+            let appendText = append && append.length > i && append[i];
+            if(appendText) title = title + appendText
 
             return {
             id: verse.id,

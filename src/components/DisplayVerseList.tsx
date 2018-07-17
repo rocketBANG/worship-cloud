@@ -39,7 +39,13 @@ interface IProps {
     })
 
     @computed private get options() {
-        return VerseList.MapVerseToIOptions(this.props.currentSong, this.props.currentSong && this.props.currentSong.verseOrder);
+        if(this.props.currentSong === undefined) {
+            return []
+        }
+        let song = this.props.currentSong;
+        let appendText = song.verseOrder.map(v => v.numPages > 1 ? ' (' + v.numPages + ')' : '');
+
+        return VerseList.MapVerseToIOptions(song, song.verseOrder, appendText);
     }
 
     public render() {
