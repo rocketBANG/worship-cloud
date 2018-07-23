@@ -12,32 +12,48 @@ import SermonEditor from './pages/SermonEditor';
 import Presenter from './pages/Presenter';
 import { SettingsPage } from './pages/SettingsPage';
 import { Popup } from './components/general/Popup';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { LoginPage } from './pages/LoginPage';
+import { LoginService } from './services/LoginService';
 
 class App extends React.Component {
-  public render() {
-    return (
-      <BrowserRouter>
-        <div className="App">
-          <Popup />
-          <Route path="/viewer" component={Viewer} />
 
-          <Route exact={true} path='/editor' component={Toolbar} />
-          <Route exact={true} path='/presenter' component={Toolbar} />
-          <Route exact={true} path='/settings' component={Toolbar} />
-          <Route exact={true} path='/sermoneditor' component={Toolbar} />
-          <Route exact={true} path='/' component={Toolbar} />
+    private loginService;
 
-          <Route exact={true} path="/" component={Editor} />
-          <Route path="/editor" component={Editor} />
-          <Route path="/sermoneditor" component={SermonEditor} />
+    constructor(props) {
+        super(props);
 
-          <Route path="/presenter" component={Presenter} />
+        this.loginService = new LoginService();        
+    }
 
-          <Route path="/settings" component={SettingsPage} />
-        </div>
-      </BrowserRouter>
-    );
-  }
+    public render() {
+        return (
+            <BrowserRouter>
+                <div className="App">
+                    <Popup />
+                    <Route path="/viewer" component={Viewer} />
+
+                    <Route exact={true} path='/editor' component={Toolbar} />
+                    <Route exact={true} path='/presenter' component={Toolbar} />
+                    <Route exact={true} path='/settings' component={Toolbar} />
+                    <Route exact={true} path='/sermoneditor' component={Toolbar} />
+                    <Route exact={true} path='/' component={Toolbar} />
+
+                    <ProtectedRoute exact path="/" component={Editor} loginService={this.loginService} />
+                    <ProtectedRoute path="/editor" component={Editor} loginService={this.loginService} />
+                    <Route path="/sermoneditor" component={SermonEditor} />
+
+                    <Route path="/presenter" component={Presenter} />
+
+                    <Route path="/settings" component={SettingsPage} />
+
+                    <Route path="/login" render={props => 
+                        <LoginPage loginService={this.loginService} {...props}/>
+                    }/>
+                </div>
+            </BrowserRouter>
+        );
+    }
 }
 
 export default App;

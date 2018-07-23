@@ -1,8 +1,8 @@
 import openSocket from 'socket.io-client';
 
 export const databaseURL = process.env.REACT_APP_API_URL;
-const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
-socket.emit('subscribeEvent', 1000);
+// const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
+// socket.emit('subscribeEvent', 1000);
 
 export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     let song = {
