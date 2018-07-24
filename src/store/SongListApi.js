@@ -15,6 +15,7 @@ class SongListApi {
             return Promise.resolve();
         }
         let promise = fetch(databaseURL + `/songlists/` + this.listId, {
+		credentials: 'include', 
             method: 'GET',
             headers: headers,
         })
@@ -31,6 +32,7 @@ class SongListApi {
         let headers = new Headers();
         
         return fetch(databaseURL + `/songlists/` + this.listId, {
+		credentials: 'include', 
             method: 'GET',
             headers: headers,
         })
@@ -59,6 +61,7 @@ class SongListApi {
         }
     
         return fetch(databaseURL + `/songlists/` + this.listId, {
+		credentials: 'include', 
             method: 'PATCH',
             headers: headers,
             body: JSON.stringify(list)

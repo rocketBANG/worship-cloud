@@ -12,9 +12,9 @@ export const loginCookie = async (cookie: string): Promise<ILoginResponse> => {
     headers.append('auth-token', cookie);
 
     return await fetch(API.databaseURL + `/logincookie/`, {
+		credentials: 'include', 
         method: 'POST',
         headers,
-        credentials: 'include'
     }).then(
         response => response.json(),
 
@@ -29,10 +29,10 @@ export const login = async (username: string, password: string): Promise<ILoginR
     let body = {password};
 
     return await fetch(API.databaseURL + `/login/` + username, {
+		credentials: 'include', 
         method: 'POST',
         headers,
         body: JSON.stringify(body),
-        credentials: 'include'
     }).then(
         response => response.json(),
 
