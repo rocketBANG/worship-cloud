@@ -28,8 +28,17 @@ export class LoginService {
     }
 
     @action 
-    public tryLogin(username: string, password: string) {
-        console.log('not implemented');
+    public async tryLogin(username: string, password: string) {
+        const response = await LoginApi.login(username, password);
+        if(response.success === true) {
+            this.authToken = response.key;
+            this.username = response.username;
+            this.loggedIn = true;
+            return true;
+        } else {
+            this.loggedIn = false;
+            return false;
+        }
     }
 
     @action 
