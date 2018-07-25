@@ -41,6 +41,14 @@ export class LoginService {
         }
     }
 
+    @action
+    public async logout() {
+        await LoginApi.logout();
+        this.loggedIn = false;
+        this.username = undefined;
+        this.authToken = undefined;
+    }
+
     @action 
     public async setup() {
         return await this.loginCookie(Cookies.get('worship_login'));

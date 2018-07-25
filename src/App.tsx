@@ -33,11 +33,11 @@ class App extends React.Component {
                     <Popup />
                     <Route path="/viewer" component={Viewer} />
 
-                    <Route exact={true} path='/editor' component={Toolbar} />
-                    <Route exact={true} path='/presenter' component={Toolbar} />
-                    <Route exact={true} path='/settings' component={Toolbar} />
-                    <Route exact={true} path='/sermoneditor' component={Toolbar} />
-                    <Route exact={true} path='/' component={Toolbar} />
+                    <Route exact={true} path='/editor' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
+                    <Route exact={true} path='/presenter' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
+                    <Route exact={true} path='/settings' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
+                    <Route exact={true} path='/sermoneditor' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
+                    <Route exact={true} path='/' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
 
                     <ProtectedRoute exact path="/" component={Editor} loginService={this.loginService} />
                     <ProtectedRoute path="/editor" component={Editor} loginService={this.loginService} />
