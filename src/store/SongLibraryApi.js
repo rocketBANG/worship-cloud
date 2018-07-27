@@ -5,6 +5,7 @@ class SongLibraryApi {
         let headers = new Headers();
         
         return fetch(databaseURL + `/songs`, {
+		credentials: 'include', 
             method: 'GET',
             headers: headers,
         })
@@ -26,6 +27,7 @@ class SongLibraryApi {
         headers.append('Content-Type', 'application/json');
     
         return fetch(databaseURL + `/songs`, {
+		credentials: 'include', 
             method: 'POST',
             headers: headers,
             body: JSON.stringify(song)
@@ -46,6 +48,7 @@ class SongLibraryApi {
         let headers = new Headers();
     
         return fetch(databaseURL + `/songs/` + songId, {
+		credentials: 'include', 
             method: 'DELETE',
             headers: headers
         });

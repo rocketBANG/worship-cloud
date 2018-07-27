@@ -1,8 +1,8 @@
 import openSocket from 'socket.io-client';
 
 export const databaseURL = process.env.REACT_APP_API_URL;
-const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
-socket.emit('subscribeEvent', 1000);
+// const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
+// socket.emit('subscribeEvent', 1000);
 
 export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     let song = {
@@ -16,6 +16,7 @@ export const uploadSong = (songName, songVerses = [], songOrder = []) => {
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/songs`, {
+		credentials: 'include', 
         method: 'POST',
         headers: headers,
         body: JSON.stringify(song)
@@ -40,6 +41,7 @@ export const updateSong = (songName, updateData) => {
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/songs/` + songName, {
+		credentials: 'include', 
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -53,6 +55,7 @@ export const removeSong = (songName) => {
     let headers = new Headers();
 
     return fetch(databaseURL + `/songs/` + songName, {
+		credentials: 'include', 
         method: 'DELETE',
         headers: headers
     });
@@ -62,6 +65,7 @@ export const fetchSongs = () => {
     let headers = new Headers();
     
     return fetch(databaseURL + `/songs`, {
+		credentials: 'include', 
         method: 'GET',
         headers: headers,
     })
@@ -75,6 +79,7 @@ export const fetchVerses = (songId) => {
     let headers = new Headers();
 
     return fetch(databaseURL + `/songs/` + songId + `/verses`, {
+		credentials: 'include', 
         method: 'GET',
         headers: headers,
     })
@@ -94,6 +99,7 @@ export const addVerse = (text, songId) => {
     };
 
     return fetch(databaseURL + `/songs/` + songId + `/verses`, {
+		credentials: 'include', 
         method: 'POST',
         headers: headers,
         body: JSON.stringify(verse)
@@ -109,6 +115,7 @@ export const removeVerse = (verseId, songId) => {
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
+		credentials: 'include', 
         method: 'DELETE',
         headers: headers
     }).then(
@@ -128,6 +135,7 @@ export const updateVerse = (text, songId, verseId) => {
     };
 
     return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
+		credentials: 'include', 
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -147,6 +155,7 @@ export const updateVerseType = (verseId, songId, type) => {
     };
 
     return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
+		credentials: 'include', 
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -166,6 +175,7 @@ export const updateOrder = (order, songId) => {
     };
 
     return fetch(databaseURL + `/songs/` + songId, {
+		credentials: 'include', 
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -186,6 +196,7 @@ export const updateSongTitle = (title, songId) => {
     };
 
     return fetch(databaseURL + `/songs/` + songId, {
+		credentials: 'include', 
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(updateData)
@@ -198,6 +209,7 @@ export const updateSongTitle = (title, songId) => {
 
 export const getSettings = (username) => {
     return fetch(databaseURL + `/settings/` + username, {
+		credentials: 'include', 
         method: 'GET',
     }).then(
         response => response.json().then(json => json[0].settings || {})
@@ -209,6 +221,7 @@ export const updateSettings = (username, settings) => {
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/settings/` + username, {
+		credentials: 'include', 
         method: 'PATCH',
         headers,
         body: JSON.stringify(settings)
@@ -227,6 +240,7 @@ export const addSongList = (listName, songIds) => {
     }
 
     return fetch(databaseURL + `/songlists/`, {
+		credentials: 'include', 
         method: 'POST',
         headers: headers,
         body: JSON.stringify(list)
@@ -242,6 +256,7 @@ export const removeSongList = (listId) => {
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/songlists/` + listId, {
+		credentials: 'include', 
         method: 'DELETE',
         headers: headers
     }).then(
@@ -260,6 +275,7 @@ export const updateSongList = (listId, songIds) => {
     }
 
     return fetch(databaseURL + `/songlists/` + listId, {
+		credentials: 'include', 
         method: 'PATCH',
         headers: headers,
         body: JSON.stringify(list)
@@ -272,6 +288,7 @@ export const updateSongList = (listId, songIds) => {
 
 export const getSongLists = () => {
     return fetch(databaseURL + `/songlists/`, {
+		credentials: 'include', 
         method: 'GET'
     }).then(
         response => response.json(),
@@ -285,6 +302,7 @@ export const downloadSongs = (songIds) => {
     headers.append('Content-Type', 'application/json');
 
     return fetch(databaseURL + `/songpptx/`, {
+		credentials: 'include', 
         method: 'POST',
         headers,
         body: JSON.stringify(songIds)
