@@ -2,6 +2,7 @@ import * as React from 'react'
 import { LoginService } from '../services/LoginService';
 import { Redirect } from 'react-router-dom';
 import { observer } from '../../node_modules/mobx-react';
+import '../style/Login.css'
 
 interface IState {
     username: string,

@@ -41,11 +41,11 @@ class App extends React.Component {
 
                     <ProtectedRoute exact path="/" component={Editor} loginService={this.loginService} />
                     <ProtectedRoute path="/editor" component={Editor} loginService={this.loginService} />
-                    <Route path="/sermoneditor" component={SermonEditor} />
+                    <ProtectedRoute path="/sermoneditor" component={SermonEditor} loginService={this.loginService} />
 
-                    <Route path="/presenter" component={Presenter} />
+                    <ProtectedRoute path="/presenter" component={Presenter} loginService={this.loginService} />
 
-                    <Route path="/settings" component={SettingsPage} />
+                    <ProtectedRoute path="/settings" component={SettingsPage} loginService={this.loginService} />
 
                     <Route path="/login" render={props => 
                         <LoginPage loginService={this.loginService} {...props}/>
