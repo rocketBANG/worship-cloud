@@ -1,8 +1,8 @@
 Doing: 
 
 Backlog:
+    [ ] 61 Add the ability to undo certian actions (i.e delete songs) (Gmail style)
     [ ] 32 Add checking for pending changes on tab close
-    [ ] 33 Authorization
     [ ] 35 Load all songs on presenter view on load
     [ ] 43 Add preview on settings page of how display will look with the current settings
     [ ] 56 Change text to be italic when editing a chorus
@@ -12,6 +12,7 @@ Backlog:
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     
 Done:
+    [x] 33 Authorization
     [x] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
     [x] 51 Add shortcut to make display full screen
     [x] Add Reordering song lists
