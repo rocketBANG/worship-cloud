@@ -1,6 +1,6 @@
 import { action, computed, decorate, observable } from 'mobx';
-import * as API from '../store/api'
 import { ModelState } from './ModelState';
+import { SongApi } from '../store/api';
 
 export class Verse {
     public static findUniqueTitle(verse: Verse, otherVerses: Verse[]): string {
@@ -28,18 +28,21 @@ export class Verse {
     public text: string;
     public type;
 
+    private songApi: SongApi;
+
     constructor(verseId, songId, text = "", type = "verse") {
         this.id = verseId
         this.songId = songId
         this.text = text
         this.type = type
+        this.songApi = new SongApi();
     }
 
     public updateText = (text) => {
         this.state = ModelState.SAVING;
         this.text = text;
 
-        return API.updateVerse(text, this.songId, this.id).then((verse) => {
+        return this.songApi.updateVerse(text, this.songId, this.id).then((verse) => {
             this.state = ModelState.LOADED;
         });
     };
@@ -52,7 +55,7 @@ export class Verse {
         this.state = ModelState.SAVING;
         let type = this.type === "verse" ? "chorus" : "verse";
         this.type = type;
-        return API.updateVerseType(this.id, this.songId, type).then(() => this.state = ModelState.LOADED);
+        return this.songApi.updateVerseType(this.id, this.songId, type).then(() => this.state = ModelState.LOADED);
     }
 
     public setNumberOfPages = (num) => {

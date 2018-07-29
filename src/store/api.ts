@@ -254,7 +254,7 @@ export class SongApi implements ISongApi {
         )
     }
 
-    public addSongList = (listName, songIds) => {
+    public addSongList = (listName, songIds?) => {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 

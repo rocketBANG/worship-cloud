@@ -1,8 +1,10 @@
 import { action, decorate, observable } from "mobx";
-import * as API from '../../store/api'
+import { SongApi } from '../../store/api';
 import { ModelState } from "../ModelState";
 
 export class SettingsModel {
+
+    private songApi: SongApi;
 
     private static settingsModelObject;
     public static get settingsModel() {
@@ -46,7 +48,7 @@ export class SettingsModel {
             return;
         }
         this.state = ModelState.LOADING;
-        API.getSettings("rocketbang").then(
+        this.songApi.getSettings("rocketbang").then(
             json => {
                 SettingsModel.settingsList.forEach((settingName) => {
                     this[settingName] = json[settingName] || this[settingName];
@@ -70,7 +72,7 @@ export class SettingsModel {
     public uploadSettings = () => {
         const settingsToUpload = Object.assign({}, this.savedSettingsObj);
         this.savedSettingsObj = {};
-        API.updateSettings("rocketbang", settingsToUpload).then(() => {
+        this.songApi.updateSettings("rocketbang", settingsToUpload).then(() => {
             if(Object.keys(this.savedSettingsObj).length === 0) {
                 this.state = ModelState.LOADED;
             }
