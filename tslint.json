@@ -15,7 +15,8 @@
     "jsx-boolean-value": false,
     "jsx-no-lambda": false,
     "max-classes-per-file": false,
-    "prefer-const": false
+    "prefer-const": false,
+    "object-literal-shorthand": false
   },
   "jsRules":{
     "object-literal-sort-keys": false,

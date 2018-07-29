@@ -1,5 +1,5 @@
 import { action, computed, decorate, observable, trace } from 'mobx';
-import * as API from '../store/api'
+import { SongApi } from '../store/api'
 import { Verse } from './Verse'
 import { ModelState } from './ModelState';
 
@@ -11,18 +11,23 @@ export class Song {
     public verses = observable(new Map<string, Verse>())
     public isLoaded = false
     public title = "";
-    private isLoading = false;
+    private api: SongApi;
+
+    private loadingPromise: Promise<any>;
 
     constructor(songTitle: string, public id: string) {
         this.title = songTitle;
+        this.api = new SongApi();
     }
 
     public loadSong = async () => {
-        if(!this.isLoading) {
-            this.isLoading = true;
+        if(!this.isLoaded) {
+            if(this.loadingPromise !== undefined) {
+                return await this.loadingPromise;
+            }
 
             this.state = ModelState.LOADING;
-            return await API.fetchVerses(this.id).then((json) => {
+            this.loadingPromise = this.api.fetchVerses(this.id).then((json) => {
                 json.verses.forEach(verse => {
                     const newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
                     this.verses.set(verse._id, newVerse);
@@ -30,7 +35,12 @@ export class Song {
                 this.order = json.order;
                 this.state = ModelState.LOADED;
                 this.isLoaded = true;
+            }).catch(err => {
+                this.isLoaded = false;
+                this.state = ModelState.UNLOADED;
+                this.loadingPromise = undefined;
             })
+            return await this.loadingPromise;
         }
         return await Promise.resolve();
     };
@@ -38,7 +48,7 @@ export class Song {
     public addToOrder = (verseId) => {
         this.state = ModelState.SAVING;
         this.order = this.order.concat(verseId);
-        API.updateOrder(this.order, this.id).then(() => {
+        this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
         });
     };
@@ -53,7 +63,7 @@ export class Song {
             this.order.splice(from + to, 0, this.order.splice(from, 1)[0]);
         }
 
-        API.updateOrder(this.order, this.id).then(() => {
+        this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
         });
     };
@@ -66,7 +76,7 @@ export class Song {
         } else {
             this.order.splice(index, 1);
         }
-        API.updateOrder(this.order, this.id).then(() => {
+        this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
         });
     };
@@ -124,7 +134,7 @@ export class Song {
  
     public addVerse = async (text): Promise<Verse> => {
         this.state = ModelState.SAVING;
-        return API.addVerse(text, this.id).then((verse) => {
+        return this.api.addVerse(text, this.id).then((verse) => {
             let newVerse = new Verse(verse._id, this.id, verse.text);
             this.verses.set(verse._id, newVerse);
             this.state = ModelState.LOADED;
@@ -140,9 +150,9 @@ export class Song {
         const promises = [];
         verseIds.forEach(v => { 
             this.verses.delete(v);
-            promises.push(API.removeVerse(v, this.id));
+            promises.push(this.api.removeVerse(v, this.id));
         });
-        promises.push(API.updateOrder(this.order, this.id));
+        promises.push(this.api.updateOrder(this.order, this.id));
         Promise.all(promises).then((json) => {
             this.state = ModelState.LOADED;
         });    
@@ -150,7 +160,7 @@ export class Song {
 
     public setTitle = (newTitle: string) => {
         this.state = ModelState.SAVING;
-        API.updateSongTitle(newTitle, this.id).then(() => {
+        this.api.updateSongTitle(newTitle, this.id).then(() => {
             this.state = ModelState.LOADED;
             this.title = newTitle;
         });

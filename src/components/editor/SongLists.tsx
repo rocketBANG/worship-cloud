@@ -4,11 +4,11 @@ import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
 import { List, IListContextMenu } from '../List';
 import SongList from '../SongList';
-import * as API from '../../store/api';
 import { Song } from '../../models/Song';
 import { SongLibraryModel } from '../../models/SongLibraryModel';
 import { observable, IObservableValue, IObservableArray } from 'mobx';
 import { SongListModel } from '../../models/song-lists/SongListModel';
+import { SongApi } from '../../store/api';
 
 interface IProps {
     library: SongLibraryModel,
@@ -29,11 +29,13 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
     }
 
     private songListLibrary = new SongListLibrary();
+    private songApi: SongApi;
 
     constructor(props) {
         super(props);
 
         this.songListLibrary.load();
+        this.songApi = new SongApi();
     }
 
     private songListNameChange = (e) => {
@@ -71,7 +73,7 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
 
     private downloadSongList = () => {
         const songIds = this.props.currentList.get().songIds;
-        API.downloadSongs(songIds).then(blob => {
+        this.songApi.downloadSongs(songIds).then(blob => {
             const a = document.createElement("a");
             document.body.appendChild(a);
             const url = window.URL.createObjectURL(blob);
