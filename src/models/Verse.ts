@@ -39,7 +39,7 @@ export class Verse {
         this.state = ModelState.SAVING;
         this.text = text;
 
-        API.updateVerse(text, this.songId, this.id).then((verse) => {
+        return API.updateVerse(text, this.songId, this.id).then((verse) => {
             this.state = ModelState.LOADED;
         });
     };
