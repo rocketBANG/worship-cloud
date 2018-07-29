@@ -1,4 +1,4 @@
-import * as API from './api'
+import { databaseURL } from "./api";
 
 export interface ILoginResponse {
     success: boolean;
@@ -11,7 +11,7 @@ export const loginCookie = async (cookie: string): Promise<ILoginResponse> => {
     headers.append('Content-Type', 'application/json');
     headers.append('auth-token', cookie);
 
-    return await fetch(API.databaseURL + `/logincookie/`, {
+    return await fetch(databaseURL + `/logincookie/`, {
 		credentials: 'include', 
         method: 'POST',
         headers,
@@ -26,7 +26,7 @@ export const logout = async () => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return await fetch(API.databaseURL + `/logout/`, {
+    return await fetch(databaseURL + `/logout/`, {
 		credentials: 'include', 
         method: 'POST',
         headers,
@@ -44,7 +44,7 @@ export const login = async (username: string, password: string): Promise<ILoginR
 
     let body = {password};
 
-    return await fetch(API.databaseURL + `/login/` + username, {
+    return await fetch(databaseURL + `/login/` + username, {
 		credentials: 'include', 
         method: 'POST',
         headers,

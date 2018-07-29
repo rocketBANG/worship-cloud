@@ -1,30 +1,10 @@
 import openSocket from 'socket.io-client';
 import { Verse } from '../models/Verse';
 
-export interface ISongApi {
-    uploadSong: (songId: string, songVerses: Verse[], songOrder: string[]) => Promise<any>
-    updateSong: (songId: string, updateData) => Promise<any>
-    removeSong: (songId: string) => Promise<any>
-    fetchSongs: () => Promise<any>
-    fetchVerses: (songId: string) => Promise<any>
-    addVerse: (text, songId: string) => Promise<any>
-    removeVerse: (verseId, songId: string) => Promise<any>
-    updateVerse: (text, songId: string, verseId) => Promise<any>
-    updateVerseType: (verseId, songId: string, type) => Promise<any>
-    updateOrder: (order, songId: string) => Promise<any>
-    updateSongTitle: (title, songId: string) => Promise<any>
-    getSettings: (username) => Promise<any>
-    updateSettings: (username, settings) => Promise<any>
-    addSongList: (listName, songIds: string[]) => Promise<any>
-    removeSongList: (listId) => Promise<any>
-    updateSongList: (listId, songIds: string[]) => Promise<any>
-    getSongLists: () => Promise<any>
-    downloadSongs: (songIds: string[]) => Promise<any>
-}
+export const databaseURL = process.env.REACT_APP_API_URL;
 
-export class SongApi implements ISongApi {
+export class SongApi {
 
-    private dbUrl = process.env.REACT_APP_API_URL;
     // const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
     // socket.emit('subscribeEvent', 1000);
 
@@ -39,7 +19,7 @@ export class SongApi implements ISongApi {
         // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         headers.append('Content-Type', 'application/json');
 
-        return fetch(this.dbUrl + `/songs`, {
+        return fetch(databaseURL + `/songs`, {
             credentials: 'include', 
             method: 'POST',
             headers: headers,
@@ -64,7 +44,7 @@ export class SongApi implements ISongApi {
         // headers.append('Authorization', 'Basic ' + btoa(user + ":" + pass));
         headers.append('Content-Type', 'application/json');
 
-        return fetch(this.dbUrl + `/songs/` + songName, {
+        return fetch(databaseURL + `/songs/` + songName, {
             credentials: 'include', 
             method: 'PATCH',
             headers: headers,
@@ -78,7 +58,7 @@ export class SongApi implements ISongApi {
     public removeSong = (songName) => {
         let headers = new Headers();
 
-        return fetch(this.dbUrl + `/songs/` + songName, {
+        return fetch(databaseURL + `/songs/` + songName, {
             credentials: 'include', 
             method: 'DELETE',
             headers: headers
@@ -88,7 +68,7 @@ export class SongApi implements ISongApi {
     public fetchSongs = () => {
         let headers = new Headers();
         
-        return fetch(this.dbUrl + `/songs`, {
+        return fetch(databaseURL + `/songs`, {
             credentials: 'include', 
             method: 'GET',
             headers: headers,
@@ -102,7 +82,7 @@ export class SongApi implements ISongApi {
     public fetchVerses = (songId) => {
         let headers = new Headers();
 
-        return fetch(this.dbUrl + `/songs/` + songId + `/verses`, {
+        return fetch(databaseURL + `/songs/` + songId + `/verses`, {
             credentials: 'include', 
             method: 'GET',
             headers: headers,
@@ -122,7 +102,7 @@ export class SongApi implements ISongApi {
             type: "verse"
         };
 
-        return fetch(this.dbUrl + `/songs/` + songId + `/verses`, {
+        return fetch(databaseURL + `/songs/` + songId + `/verses`, {
             credentials: 'include', 
             method: 'POST',
             headers: headers,
@@ -138,7 +118,7 @@ export class SongApi implements ISongApi {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        return fetch(this.dbUrl + `/songs/` + songId + `/verses/` + verseId, {
+        return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
             credentials: 'include', 
             method: 'DELETE',
             headers: headers
@@ -158,7 +138,7 @@ export class SongApi implements ISongApi {
             text: text
         };
 
-        return fetch(this.dbUrl + `/songs/` + songId + `/verses/` + verseId, {
+        return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
             credentials: 'include', 
             method: 'PATCH',
             headers: headers,
@@ -178,7 +158,7 @@ export class SongApi implements ISongApi {
             type: type
         };
 
-        return fetch(this.dbUrl + `/songs/` + songId + `/verses/` + verseId, {
+        return fetch(databaseURL + `/songs/` + songId + `/verses/` + verseId, {
             credentials: 'include', 
             method: 'PATCH',
             headers: headers,
@@ -198,7 +178,7 @@ export class SongApi implements ISongApi {
             order: order
         };
 
-        return fetch(this.dbUrl + `/songs/` + songId, {
+        return fetch(databaseURL + `/songs/` + songId, {
             credentials: 'include', 
             method: 'PATCH',
             headers: headers,
@@ -219,7 +199,7 @@ export class SongApi implements ISongApi {
             title: title
         };
 
-        return fetch(this.dbUrl + `/songs/` + songId, {
+        return fetch(databaseURL + `/songs/` + songId, {
             credentials: 'include', 
             method: 'PATCH',
             headers: headers,
@@ -232,7 +212,7 @@ export class SongApi implements ISongApi {
     };
 
     public getSettings = (username) => {
-        return fetch(this.dbUrl + `/settings/` + username, {
+        return fetch(databaseURL + `/settings/` + username, {
             credentials: 'include', 
             method: 'GET',
         }).then(
@@ -244,7 +224,7 @@ export class SongApi implements ISongApi {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        return fetch(this.dbUrl + `/settings/` + username, {
+        return fetch(databaseURL + `/settings/` + username, {
             credentials: 'include', 
             method: 'PATCH',
             headers,
@@ -263,7 +243,7 @@ export class SongApi implements ISongApi {
             songs: songIds
         }
 
-        return fetch(this.dbUrl + `/songlists/`, {
+        return fetch(databaseURL + `/songlists/`, {
             credentials: 'include', 
             method: 'POST',
             headers: headers,
@@ -279,7 +259,7 @@ export class SongApi implements ISongApi {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        return fetch(this.dbUrl + `/songlists/` + listId, {
+        return fetch(databaseURL + `/songlists/` + listId, {
             credentials: 'include', 
             method: 'DELETE',
             headers: headers
@@ -298,7 +278,7 @@ export class SongApi implements ISongApi {
             songs: songIds
         }
 
-        return fetch(this.dbUrl + `/songlists/` + listId, {
+        return fetch(databaseURL + `/songlists/` + listId, {
             credentials: 'include', 
             method: 'PATCH',
             headers: headers,
@@ -311,7 +291,7 @@ export class SongApi implements ISongApi {
     };
 
     public getSongLists = () => {
-        return fetch(this.dbUrl + `/songlists/`, {
+        return fetch(databaseURL + `/songlists/`, {
             credentials: 'include', 
             method: 'GET'
         }).then(
@@ -325,7 +305,7 @@ export class SongApi implements ISongApi {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-        return fetch(this.dbUrl + `/songpptx/`, {
+        return fetch(databaseURL + `/songpptx/`, {
             credentials: 'include', 
             method: 'POST',
             headers,
