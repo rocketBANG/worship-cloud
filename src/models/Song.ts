@@ -11,8 +11,9 @@ export class Song {
     public verses = observable(new Map<string, Verse>())
     public isLoaded = false
     public title = "";
-    private isLoading = false;
     private api: SongApi;
+
+    private loadingPromise: Promise<any>;
 
     constructor(songTitle: string, public id: string) {
         this.title = songTitle;
@@ -20,11 +21,13 @@ export class Song {
     }
 
     public loadSong = async () => {
-        if(!this.isLoading) {
-            this.isLoading = true;
+        if(!this.isLoaded) {
+            if(this.loadingPromise !== undefined) {
+                return await this.loadingPromise;
+            }
 
             this.state = ModelState.LOADING;
-            return await this.api.fetchVerses(this.id).then((json) => {
+            this.loadingPromise = this.api.fetchVerses(this.id).then((json) => {
                 json.verses.forEach(verse => {
                     const newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
                     this.verses.set(verse._id, newVerse);
@@ -34,9 +37,10 @@ export class Song {
                 this.isLoaded = true;
             }).catch(err => {
                 this.isLoaded = false;
-                this.isLoading = false;
                 this.state = ModelState.UNLOADED;
+                this.loadingPromise = undefined;
             })
+            return await this.loadingPromise;
         }
         return await Promise.resolve();
     };

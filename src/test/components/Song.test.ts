@@ -4,6 +4,14 @@ import { ModelState } from "../../models/ModelState";
 
 jest.mock('../../store/api');
 
+async function delay(mills: number): Promise<any> {
+    return await new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, mills)
+    });
+}
+
 describe('Test Song', () => {
     const songApiMock = SongApi as jest.Mock<SongApi>;
 
@@ -73,10 +81,6 @@ describe('Test Song', () => {
             song.loadSong().then(() => {
                 expect(song.state).toBe(ModelState.UNLOADED);
                 expect(song.isLoaded).toBe(false);
-                resolve();
-            }).catch(err => {
-                expect(song.state).toBe(ModelState.UNLOADED);
-                expect(song.isLoaded).toBe(false);
                 expect(song.title).toBe(expectedTitle);
                 expect(song.id).toBe(expectedId);
                 resolve();
@@ -85,6 +89,64 @@ describe('Test Song', () => {
 
         expect(song.state).toBe(ModelState.LOADING);
         await promise;
+    })
+
+    test('loadSong() twice', async () => {
+        let expectedId = 'song_id';
+        let expectedTitle = 'song title';
+
+        fetchVerses.mockImplementation((songId) => {
+            expect(songId).toBe(expectedId);
+            return defaultFetchVerses(songId);
+        });    
+
+        let song = new Song(expectedTitle, expectedId);
+
+        await song.loadSong().then(async () => {
+            expect(song.state).toBe(ModelState.LOADED);
+            expect(song.isLoaded).toBe(true);
+            const promise = song.loadSong().then(() => {
+                expect(song.state).toBe(ModelState.LOADED);
+                expect(song.isLoaded).toBe(true);
+            })    
+
+            expect(song.isLoaded).toBe(true);
+            expect(song.state).toBe(ModelState.LOADED);
+
+            await promise;
+        })
+    })
+
+    test('loadSong() twice immediate', async () => {
+        let expectedId = 'song_id';
+        let expectedTitle = 'song title';
+
+        fetchVerses.mockImplementation(async (songId) => {
+            expect(songId).toBe(expectedId);
+            await delay(200);
+            return defaultFetchVerses(songId);
+        });
+
+        let song = new Song(expectedTitle, expectedId);
+        let promises = [];
+
+        promises.push(song.loadSong().then(() => {
+            expect(song.state).toBe(ModelState.LOADED);
+            expect(song.isLoaded).toBe(true);
+        }));
+        expect(song.state).toBe(ModelState.LOADING);
+        expect(song.isLoaded).toBe(false);
+
+        await delay(50);
+        
+        promises.push(song.loadSong().then(() => {
+            expect(song.state).toBe(ModelState.LOADED);
+            expect(song.isLoaded).toBe(true);
+        }));
+        expect(song.state).toBe(ModelState.LOADING);
+        expect(song.isLoaded).toBe(false);
+
+        await Promise.all(promises);
     })
 
 })
