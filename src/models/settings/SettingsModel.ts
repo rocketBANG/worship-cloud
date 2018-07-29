@@ -4,7 +4,7 @@ import { ModelState } from "../ModelState";
 
 export class SettingsModel {
 
-    private songApi: SongApi;
+    private songApi: SongApi = new SongApi();
 
     private static settingsModelObject;
     public static get settingsModel() {
