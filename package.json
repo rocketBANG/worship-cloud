@@ -5,6 +5,7 @@
   "dependencies": {
     "@types/react-router-dom": "^4.2.7",
     "any-resize-event": "^1.0.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "js-cookie": "^2.2.0",
     "mobx": "^5.0.2",
     "mobx-react": "^5.2.3",
@@ -22,11 +23,13 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.1.12",
     "@types/jest": "^23.0.1",
     "@types/node": "^10.3.2",
     "@types/react": "^16.4.3",
     "@types/react-dom": "^16.0.6",
     "cross-env": "^5.2.0",
+    "enzyme": "^3.3.0",
     "react-test-renderer": "^16.4.1",
     "typescript": "^2.9.1"
   }

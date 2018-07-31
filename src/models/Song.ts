@@ -2,6 +2,7 @@ import { action, computed, decorate, observable, trace } from 'mobx';
 import { SongApi } from '../store/api'
 import { Verse } from './Verse'
 import { ModelState } from './ModelState';
+import { NotLoadedError } from '../errors/NotLoadedError';
 
 export class Song {
 
@@ -133,6 +134,7 @@ export class Song {
     }
  
     public addVerse = async (text): Promise<Verse> => {
+        if(this.state === ModelState.UNLOADED) throw new NotLoadedError("Song wasn't loaded first");
         this.state = ModelState.SAVING;
         return this.api.addVerse(text, this.id).then((verse) => {
             let newVerse = new Verse(verse._id, this.id, verse.text);
