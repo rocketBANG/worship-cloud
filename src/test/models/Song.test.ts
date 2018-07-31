@@ -1,16 +1,9 @@
 import { Song } from "../../models/Song";
 import { SongApi } from '../../store/api';
 import { ModelState } from "../../models/ModelState";
+import { delay } from "../TestUtils";
 
 jest.mock('../../store/api');
-
-async function delay(mills: number): Promise<any> {
-    return await new Promise(resolve => {
-        setTimeout(() => {
-            resolve();
-        }, mills)
-    });
-}
 
 describe('Test Song', () => {
     const songApiMock = SongApi as jest.Mock<SongApi>;
