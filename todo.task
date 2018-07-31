@@ -1,6 +1,7 @@
 Doing: 
 
 Backlog:
+    [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)
     [ ] 61 Add the ability to undo certian actions (i.e delete songs) (Gmail style)
     [ ] 32 Add checking for pending changes on tab close
     [ ] 35 Load all songs on presenter view on load
@@ -12,6 +13,7 @@ Backlog:
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
     
 Done:
+    [x] 63 Fix pasting some unknown newline characters not being parsed correctly
     [x] 33 Authorization
     [x] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
     [x] 51 Add shortcut to make display full screen

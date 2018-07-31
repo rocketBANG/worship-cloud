@@ -14,6 +14,18 @@ const SongEditor = observer(class extends React.Component<IProps> {
         this.props.currentVerse.updateText(event.target.value);
     };
 
+    private onPaste = (event) => {
+        let text: string = event.clipboardData.getData("text/plain");
+        let newText: string = text.replace(//g, "\n");
+
+        if(newText === text || !document.queryCommandSupported('insertText') || !document.queryCommandEnabled('insertText')) {
+            return;
+        }
+
+        event.preventDefault();
+        document.execCommand("insertText", false, newText);
+    }
+
     public render() {
         const disabled = this.props.currentVerse === undefined;
         const verse = this.props.currentVerse || {state: ModelState.UNLOADED, text: ""};
@@ -21,7 +33,7 @@ const SongEditor = observer(class extends React.Component<IProps> {
         
         return (
             <div className="SongEditor EditorContainer">
-                <textarea disabled={disabled} value={verse.text} onChange={this.onEdit} />
+                <textarea disabled={disabled} value={verse.text} onChange={this.onEdit} onPaste={this.onPaste} />
                 <br/>
                 <div className="SaveProgress">
                     {StateToString(song.state)} - {StateToString(verse.state)}
