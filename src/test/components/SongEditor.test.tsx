@@ -23,24 +23,48 @@ describe('Test SongEditor', () => {
     }));
 
 
-    test('Allows paste', async () => {
+    const updateVerse = jest.fn();
+    const defaultUpdateVerse = (text: string, songId: string, verseId: string) => {
+        return Promise.resolve();
+    }
+
+    beforeEach(() => {
+        songApiMock.mockClear();
+
+        updateVerse.mockImplementation(defaultUpdateVerse);
+        songApiMock.mockImplementation(() => ({
+            updateVerse
+        }))
+
+    })
+
+
+    test('Updates with change', async () => {
         let verse = new Verse('0', '0', 'abc');
-        let song = new Song('Hello', 'There');
+        let song = new Song('Hello', '0');
         const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
 
-        let textArea = songEditor.find('textarea');
+        expect(songEditor.find('textarea').html()).toBe('<textarea>abc</textarea>');
 
-        expect(textArea.html()).toBe('<textarea>abc</textarea>');
+        songEditor.find('textarea').simulate('change', {target: {value: "test"}});
 
-        textArea.simulate('paste', {
-            clipboardData: {
-                getData: () => 'testing'
-            },
-            preventDefault: () => {return}
-        })
-        await delay(100);
+        expect(songEditor.find('textarea').html()).toBe('<textarea>test</textarea>');
+        expect(verse.text).toBe('test');
+        expect(updateVerse).toHaveBeenCalledTimes(1);
+    });
+    
+    test('Updates with verse', async () => {
+        let verse = new Verse('0', '0', 'abc');
+        let song = new Song('Hello', '0');
+        const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
 
-        expect(textArea.html()).toBe('<textarea>abc</textarea>');
+        expect(songEditor.find('textarea').html()).toBe('<textarea>abc</textarea>');
+
+        await verse.updateText('test');
+        songEditor.setState({});
+
+        expect(songEditor.find('textarea').html()).toBe('<textarea>test</textarea>');
+        expect(verse.text).toBe('test');
     });
 
-}
+})
