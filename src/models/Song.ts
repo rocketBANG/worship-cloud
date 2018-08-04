@@ -33,7 +33,7 @@ export class Song {
                     const newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
                     this.verses.set(verse._id, newVerse);
                 });
-                this.order = json.order;
+                this.order = json.order || [];
                 this.state = ModelState.LOADED;
                 this.isLoaded = true;
             }).catch(err => {
@@ -46,10 +46,10 @@ export class Song {
         return await Promise.resolve();
     };
 
-    public addToOrder = (verseId) => {
+    public addToOrder = async (verseId) => {
         this.state = ModelState.SAVING;
         this.order = this.order.concat(verseId);
-        this.api.updateOrder(this.order, this.id).then(() => {
+        return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
         });
     };
@@ -69,14 +69,9 @@ export class Song {
         });
     };
 
-    public removeFromOrder = (index) => {
+    public removeFromOrder = (indexes: number[]) => {
         this.state = ModelState.SAVING;
-        if(index.constructor === Array) {
-            this.order = this.order.filter((o, i) => index.indexOf(i) === -1);
-            // this.order.splice(index[0], index.length);
-        } else {
-            this.order.splice(index, 1);
-        }
+        this.order = this.order.filter((o, i) => indexes.indexOf(i) === -1);
         this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
         });
@@ -96,7 +91,7 @@ export class Song {
         let verseOrder: Verse[] = [];
 
         this.order.forEach((verseId) => {
-            verseOrder.push(this.verses.get(verseId));
+                verseOrder.push(this.verses.get(verseId));
         });
 
         return verseOrder;
@@ -136,6 +131,7 @@ export class Song {
     public addVerse = async (text): Promise<Verse> => {
         if(this.state === ModelState.UNLOADED) throw new NotLoadedError("Song wasn't loaded first");
         this.state = ModelState.SAVING;
+
         return this.api.addVerse(text, this.id).then((verse) => {
             let newVerse = new Verse(verse._id, this.id, verse.text);
             this.verses.set(verse._id, newVerse);

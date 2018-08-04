@@ -3,6 +3,7 @@ import { SongApi } from '../../store/api';
 import { ModelState } from "../../models/ModelState";
 import { delay } from "../TestUtils";
 import { NotLoadedError } from "../../errors/NotLoadedError";
+import { NetworkError } from "../../errors/NetworkError";
 
 jest.mock('../../store/api');
 
@@ -19,15 +20,23 @@ describe('Test Song', () => {
         return Promise.resolve({_id: '123', text});
     }
 
+    const updateOrder = jest.fn();
+    const defaultUpdateOrder = (order: string[], verseId: string) => {
+        return Promise.resolve();
+    }
+
     beforeEach(() => {
         // Clear all instances and calls to constructor and all methods:
         songApiMock.mockClear();
 
         fetchVerses.mockImplementation(defaultFetchVerses);
         addVerse.mockImplementation(defaultAddVerse);
+        updateOrder.mockImplementation(defaultUpdateOrder);
+        
         songApiMock.mockImplementation(() => ({
             fetchVerses,
-            addVerse
+            addVerse,
+            updateOrder
         }))
     });
     
@@ -79,7 +88,11 @@ describe('Test Song', () => {
         let song = new Song(expectedTitle, expectedId);
 
         let promise =  new Promise(resolve => {
-            song.loadSong().then(() => {
+            song.loadSong().then(() => { fail("should throw NetworkError"); resolve() },
+            (e) => {
+                if (e.name !== NetworkError.name) {
+                    throw e;
+                }
                 expect(song.state).toBe(ModelState.UNLOADED);
                 expect(song.isLoaded).toBe(false);
                 expect(song.title).toBe(expectedTitle);
@@ -163,8 +176,10 @@ describe('Test Song', () => {
         await song.loadSong();
         let promise = song.addVerse('test text');
         expect(song.state).toBe(ModelState.SAVING);
+        expect(song.completeVerses.length).toBe(0);
 
         await promise;
+        expect(song.state).toBe(ModelState.LOADED);
 
         expect(song.completeVerses.length).toBe(1);
         expect(song.completeVerses.find(v => v.id === '123')).toBeDefined();
@@ -262,5 +277,424 @@ describe('Test Song', () => {
         }
     })
 
+    test('addVerse() handles reject', async () => {
+        let expectedId = 'song_id';
+        let expectedTitle = 'song title';
+
+        addVerse.mockImplementation((text, songId) => {
+            return Promise.reject();
+        })
+
+        let song = new Song(expectedTitle, expectedId);
+        song.loadSong();
+
+        try {
+            await song.addVerse('test text');
+            fail("rejected promise should throw a network error");
+        } catch(e) {
+            if(e.name === NetworkError.name) return;
+            throw e;
+        }
+    })
+
+    test('addToOrder() works', async () => {
+        addVerse.mockImplementation((text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        let verse = await song.addVerse('test text');
+
+        expect(song.completeVerses.length).toBe(1);
+        expect(song.completeVerses.find(v => v.id === '123')).toBeDefined();
+        expect(song.completeVerses[0].text).toBe('test text');
+
+        song.addToOrder('123');
+        expect(song.verseOrder[0].id).toBe(verse.id)
+        expect(song.verseOrder.length).toBe(1);
+
+    })
+
+    test('addToOrder() twice with the same verse', async () => {
+        addVerse.mockImplementation((text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        let verse = await song.addVerse('test text');
+
+        expect(song.completeVerses.length).toBe(1);
+        expect(song.completeVerses.find(v => v.id === '123')).toBeDefined();
+        expect(song.completeVerses[0].text).toBe('test text');
+
+        song.addToOrder('123');
+        song.addToOrder('123');
+        expect(song.verseOrder[0].id).toBe(verse.id)
+        expect(song.verseOrder[1].id).toBe(verse.id)
+        expect(song.verseOrder.length).toBe(2)
+
+    })
+
+    
+    test('addToOrder() with different verses', async () => {
+        addVerse.mockImplementationOnce((text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+        addVerse.mockImplementationOnce((text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        let verse1 = await song.addVerse('test text');
+        let verse2 = await song.addVerse('verse2');
+
+        expect(song.completeVerses.length).toBe(2);
+
+        song.addToOrder('123');
+        song.addToOrder('456');
+        song.addToOrder('123');
+        expect(song.verseOrder[0].id).toBe(verse1.id)
+        expect(song.verseOrder[1].id).toBe(verse2.id)
+        expect(song.verseOrder[2].id).toBe(verse1.id)
+        expect(song.verseOrder.length).toBe(3)
+
+    })
+
+    test('addToOrder() updates model state', async () => {
+        addVerse.mockImplementation(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+        updateOrder.mockImplementation(async () => {
+            await delay(100);
+            return Promise.resolve();
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+
+        expect(song.verseOrder.length).toBe(0);
+        let promise = song.addToOrder('123');
+        expect(song.state).toBe(ModelState.SAVING);
+        expect(song.verseOrder.length).toBe(1);
+
+        await promise;
+        expect(song.state).toBe(ModelState.LOADED);
+
+    })
+
+    test('addToOrder() fails on incorrect id', async () => {
+        addVerse.mockImplementation(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+        updateOrder.mockImplementation(async () => {
+            await delay(300);
+            return Promise.resolve();
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+
+        try {
+            await song.addToOrder('1234');
+            fail("Should fail on adding incorrect id")
+        } catch(e) {
+            return;
+        }
+
+    })
+
+    test('addToOrder() handles reject', async () => {
+        addVerse.mockImplementation(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+        updateOrder.mockImplementation(async () => {
+            await delay(100);
+            return Promise.reject();
+        })
+
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+
+        let promise = song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(1);
+        expect(song.verseOrder[0].id).toBe('123');
+
+        try {
+            await promise;
+            fail("rejected promise should throw a network error");
+        } catch(e) {
+            if(e.name === NetworkError.name) {
+                expect(song.verseOrder.length).toBe(0);
+                return;
+            };
+            throw e;
+        }
+    })
+
+    test('removeFromOrder() handles reject', async () => {
+        addVerse.mockImplementation(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+        updateOrder.mockImplementationOnce(async () => {
+            return Promise.resolve();
+        })
+        updateOrder.mockImplementationOnce(async () => {
+            await delay(100);
+            return Promise.reject();
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(1);
+        expect(song.verseOrder[0].id).toBe('123');
+
+        let promise = song.removeFromOrder([0]);
+        expect(song.verseOrder.length).toBe(0);
+
+        try {
+            await promise;
+            fail("rejected promise should throw a network error");
+        } catch(e) {
+            if(e.name === NetworkError.name) {
+                expect(song.verseOrder.length).toBe(1);
+                expect(song.verseOrder[0].id).toBe('123');
+                return;
+            };
+            throw e;
+        }
+    })
+
+    test('removeFromOrder() removes verse', async () => {
+        addVerse.mockImplementation(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(1);
+
+        await song.removeFromOrder([0]);
+        expect(song.verseOrder.length).toBe(0);
+
+    })
+
+    test('removeFromOrder() updates verse indexes', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('123');
+
+        await song.removeFromOrder([0]);
+        expect(song.verseOrder.length).toBe(2);
+        expect(song.verseOrder[0].id).toBe('456');
+        expect(song.verseOrder[1].id).toBe('123');
+
+    })
+
+    test('removeFromOrder() works on last verse', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        await song.removeFromOrder([2]);
+        expect(song.verseOrder.length).toBe(2);
+        expect(song.verseOrder[0].id).toBe('123');
+        expect(song.verseOrder[1].id).toBe('456');
+
+    })
+
+    test('removeFromOrder() works on middle verse', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        await song.removeFromOrder([1]);
+        expect(song.verseOrder.length).toBe(2);
+        expect(song.verseOrder[0].id).toBe('123');
+        expect(song.verseOrder[1].id).toBe('123');
+
+    })
+
+    test('removeFromOrder() works with multiple', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        await song.removeFromOrder([0, 1, 2]);
+        expect(song.verseOrder.length).toBe(0);
+
+    })
+
+    test('removeFromOrder() works with multiple at the end', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        await song.removeFromOrder([1, 2]);
+        expect(song.verseOrder.length).toBe(1);
+        expect(song.verseOrder[0].id).toBe('123');
+
+    })
+
+    test('removeFromOrder() works with multiple at the start', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        await song.removeFromOrder([0, 1]);
+        expect(song.verseOrder.length).toBe(1);
+        expect(song.verseOrder[0].id).toBe('123');
+
+    })
+
+    test('removeFromOrder() works with multiple at each end', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        await song.removeFromOrder([0, 2]);
+        expect(song.verseOrder.length).toBe(1);
+        expect(song.verseOrder[0].id).toBe('456');
+
+    })
+
+    test('removeFromOrder() throws error at out of bounds', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('123');
+        expect(song.verseOrder.length).toBe(3);
+
+        try {
+            await song.removeFromOrder([3]);
+            fail("Should throw out of bounds error")
+        } catch(e) {
+            return;
+        }
+
+    })
 
 })
