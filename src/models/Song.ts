@@ -7,7 +7,6 @@ import { NotLoadedError } from '../errors/NotLoadedError';
 export class Song {
 
     public state: ModelState = ModelState.UNLOADED
-    public chorus = undefined
     public order = []
     public verses = observable(new Map<string, Verse>())
     public isLoaded = false
@@ -98,7 +97,6 @@ export class Song {
             return [];
         }
 
-        let verseOrder: Verse[] = [];
         let verses = Array.from(this.verses.values());
 
         let verseAndTitle = verses.map(v => ({verse: v, title: v.title}));
@@ -136,7 +134,7 @@ export class Song {
         });
     };
 
-    public removeVerse = (verseIds) => {
+    public removeVerse = async (verseIds: string[]) => {
         this.state = ModelState.SAVING;
         this.order = this.order.filter((orderId, index) => {
             return verseIds.indexOf(orderId) === -1;
@@ -147,7 +145,7 @@ export class Song {
             promises.push(this.api.removeVerse(v, this.id));
         });
         promises.push(this.api.updateOrder(this.order, this.id));
-        Promise.all(promises).then((json) => {
+        await Promise.all(promises).then((json) => {
             this.state = ModelState.LOADED;
         });    
     };
@@ -160,19 +158,12 @@ export class Song {
         });
     }
 
-    public setChorus = (verseId: string) => {
-        this.state = ModelState.SAVING;
-        const selectedVerse = this.verses.get(verseId);
-        selectedVerse.setChorus().then(() => this.state = ModelState.LOADED);
-
-    }
 }
 
 decorate(Song, {
     title: observable,
     id: observable,
     state : observable,
-    chorus: observable, 
     order: observable,
     isLoaded: observable,
     completeVerses: computed,
@@ -182,6 +173,6 @@ decorate(Song, {
     addToOrder: action,
     removeFromOrder: action,
     reorder: action,
-    setChorus: action,
-    getUniqueVerseTitles: computed
+    getUniqueVerseTitles: computed,
+    removeVerse: action
 })
