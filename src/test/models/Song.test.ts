@@ -697,4 +697,191 @@ describe('Test Song', () => {
 
     })
 
+    test('reorder() works going up', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '789', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+        await song.addVerse('verse3');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('789');
+
+        await song.reorder([0], 1);
+
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('456');
+        expect(song.verseOrder[1].id).toBe('123');
+        expect(song.verseOrder[2].id).toBe('789');
+    })
+
+    test('reorder() works going down', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '789', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+        await song.addVerse('verse3');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('789');
+
+        await song.reorder([2], -1);
+
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('123');
+        expect(song.verseOrder[1].id).toBe('789');
+        expect(song.verseOrder[2].id).toBe('456');
+    })
+
+    test('reorder() works going up with multiple', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '789', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+        await song.addVerse('verse3');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('789');
+
+        await song.reorder([0, 1], 1);
+
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('789');
+        expect(song.verseOrder[1].id).toBe('123');
+        expect(song.verseOrder[2].id).toBe('456');
+    })
+
+    
+    test('reorder() works going down with multiple', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '789', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+        await song.addVerse('verse3');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('789');
+
+        await song.reorder([1, 2], -1);
+
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('456');
+        expect(song.verseOrder[1].id).toBe('789');
+        expect(song.verseOrder[2].id).toBe('123');
+    })
+    
+    test('reorder() squashes going up', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '789', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+        await song.addVerse('verse3');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('789');
+
+        await song.reorder([0, 2], 1);
+
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('456');
+        expect(song.verseOrder[1].id).toBe('123');
+        expect(song.verseOrder[2].id).toBe('789');
+    })
+    
+    test('reorder() squashes going down', async () => {
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '123', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '456', text});
+        })
+
+        addVerse.mockImplementationOnce(async (text, songId) => {
+            return Promise.resolve({_id: '789', text});
+        })
+
+        let song = new Song('title', 'id');
+        await song.loadSong();
+        await song.addVerse('test text');
+        await song.addVerse('verse2');
+        await song.addVerse('verse3');
+
+        await song.addToOrder('123');
+        await song.addToOrder('456');
+        await song.addToOrder('789');
+
+        await song.reorder([0, 2], -1);
+
+        expect(song.verseOrder.length).toBe(3);
+        expect(song.verseOrder[0].id).toBe('123');
+        expect(song.verseOrder[1].id).toBe('789');
+        expect(song.verseOrder[2].id).toBe('456');
+    })
+
 })

@@ -54,17 +54,13 @@ export class Song {
         });
     };
 
-    public reorder = (from, to) => {
+    public reorder = async (from: number[], to) => {
         this.state = ModelState.SAVING;
-        if(from.constructor === Array) {
-            // If going down, for loop in reverse order
-            from = to > 0 ? from.slice().reverse() : from;
-            from.forEach(i => this.order.splice(i + to, 0, this.order.splice(i, 1)[0]));
-        } else {
-            this.order.splice(from + to, 0, this.order.splice(from, 1)[0]);
-        }
+        // If going down, for loop in reverse order
+        from = to > 0 ? from.slice().reverse() : from;
+        from.forEach(i => this.order.splice(i + to, 0, this.order.splice(i, 1)[0]));
 
-        this.api.updateOrder(this.order, this.id).then(() => {
+        return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
         });
     };
