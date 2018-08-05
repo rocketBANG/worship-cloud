@@ -3,7 +3,10 @@ import { SongApi } from '../store/api'
 import { Verse } from './Verse'
 import { ModelState } from './ModelState';
 import { NotLoadedError } from '../errors/NotLoadedError';
+import { NetworkError } from '../errors/NetworkError';
 
+// TODO change Song to use server to update state (to allow cocurrent changes)
+// (Don't update state before request completion) - also means state doesn't need to reset after failed request
 export class Song {
 
     public state: ModelState = ModelState.UNLOADED
@@ -39,36 +42,71 @@ export class Song {
                 this.isLoaded = false;
                 this.state = ModelState.UNLOADED;
                 this.loadingPromise = undefined;
+                throw new NetworkError('Could not load song', 'Unable to load song');
             })
             return await this.loadingPromise;
         }
         return await Promise.resolve();
     };
 
-    public addToOrder = async (verseId) => {
+    public addToOrder = async (verseIds: string[]) => {
         this.state = ModelState.SAVING;
-        this.order = this.order.concat(verseId);
+
+        verseIds.forEach(vId => {
+            if(this.verses.get(vId) === undefined) {
+                throw new Error('Incorrect verse Id: ' + vId);
+            }
+        });
+
+        let startIndex = this.order.length - 1;
+        this.order = this.order.concat(verseIds);
         return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
-        });
+        }).catch(error => {
+            this.order.splice(startIndex, verseIds.length);
+            throw new NetworkError('Could not update order')
+        })
     };
 
     public reorder = async (from: number[], to) => {
         this.state = ModelState.SAVING;
+        
+        from.forEach(i => {
+            if(i >= this.order.length || i < 0) {
+                throw new Error('Index is out of bounds: ' + i);
+            }
+        })
+
         // If going down, for loop in reverse order
+        let previousOrder = this.order.slice();
         from = to > 0 ? from.slice().reverse() : from;
         from.forEach(i => this.order.splice(i + to, 0, this.order.splice(i, 1)[0]));
 
         return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
-        });
+        }).catch(error => {
+            this.order = previousOrder;
+            throw new NetworkError('Could not update order');
+        })
     };
 
-    public removeFromOrder = (indexes: number[]) => {
+    public removeFromOrder = async (indexes: number[]) => {
         this.state = ModelState.SAVING;
+
+        indexes.forEach(i => {
+            if(i >= this.order.length || i < 0) {
+                throw new Error('Index is out of bounds: ' + i);
+            }
+        })
+
+        let deleted = this.order.map((o, i) => ({o: o, i: i})).filter((o, i) => indexes.indexOf(i) !== -1);
         this.order = this.order.filter((o, i) => indexes.indexOf(i) === -1);
-        this.api.updateOrder(this.order, this.id).then(() => {
+
+        return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
+        }).catch(error => {
+            deleted.forEach(d => this.order.splice(d.i, 0, d.o));
+            throw new NetworkError('Could not update order')
         });
     };
 
@@ -131,23 +169,44 @@ export class Song {
             this.verses.set(verse._id, newVerse);
             this.state = ModelState.LOADED;
             return newVerse;
+        }).catch(err => {
+            throw new NetworkError('Could not add verse', 'Could not add verse');
         });
     };
 
     public removeVerse = async (verseIds: string[]) => {
         this.state = ModelState.SAVING;
+        
+        verseIds.forEach(vId => {
+            if(this.verses.get(vId) === undefined) {
+                throw new Error('Incorrect verse Id: ' + vId);
+            }
+        });
+
+        let previousOrder = this.order.slice();
+        let deletedVerses: Verse[] = [];
+
         this.order = this.order.filter((orderId, index) => {
             return verseIds.indexOf(orderId) === -1;
         });
+
         const promises = [];
         verseIds.forEach(v => { 
+            deletedVerses.push(this.verses.get(v));
             this.verses.delete(v);
             promises.push(this.api.removeVerse(v, this.id));
         });
+
         promises.push(this.api.updateOrder(this.order, this.id));
-        await Promise.all(promises).then((json) => {
+
+        return await Promise.all(promises).then((json) => {
             this.state = ModelState.LOADED;
-        });    
+        }).catch(error => {
+            this.state = ModelState.LOADED;
+            this.order = previousOrder;
+            deletedVerses.forEach(v => this.verses.set(v.id, v));
+            throw new NetworkError('Could not remove verse')
+        })
     };
 
     public setTitle = (newTitle: string) => {
