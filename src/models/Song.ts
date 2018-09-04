@@ -23,7 +23,7 @@ export class Song {
         this.api = new SongApi();
     }
 
-    public loadSong = async () => {
+    public async loadSong() {
         if(!this.isLoaded) {
             if(this.loadingPromise !== undefined) {
                 return await this.loadingPromise;

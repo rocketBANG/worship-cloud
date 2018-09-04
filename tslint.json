@@ -16,7 +16,8 @@
     "jsx-no-lambda": false,
     "max-classes-per-file": false,
     "prefer-const": false,
-    "object-literal-shorthand": false
+    "object-literal-shorthand": false,
+    "only-arrow-functions": false
   },
   "jsRules":{
     "object-literal-sort-keys": false,
