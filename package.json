@@ -19,7 +19,7 @@
     "scripts": {
         "start": "react-scripts-ts start",
         "build": "react-scripts-ts build",
-        "test": "cross-env CI=true react-scripts-ts test --env=jsdom",
+        "test": "cross-env CI=true react-scripts-ts test --env=jsdom --coverage",
         "eject": "react-scripts-ts eject"
     },
     "devDependencies": {

@@ -44,11 +44,11 @@ describe('Test SongEditor', () => {
         let song = new Song('Hello', '0');
         const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
 
-        expect(songEditor.find('textarea').html()).toBe('<textarea>abc</textarea>');
+        expect(songEditor.find('textarea').props().value).toBe('abc');
 
         songEditor.find('textarea').simulate('change', {target: {value: "test"}});
 
-        expect(songEditor.find('textarea').html()).toBe('<textarea>test</textarea>');
+        expect(songEditor.find('textarea').props().value).toBe('test');
         expect(verse.text).toBe('test');
         expect(updateVerse).toHaveBeenCalledTimes(1);
     });
@@ -58,13 +58,88 @@ describe('Test SongEditor', () => {
         let song = new Song('Hello', '0');
         const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
 
-        expect(songEditor.find('textarea').html()).toBe('<textarea>abc</textarea>');
+        expect(songEditor.find('textarea').props().value).toBe('abc');
 
         await verse.updateText('test');
         songEditor.setState({});
 
-        expect(songEditor.find('textarea').html()).toBe('<textarea>test</textarea>');
+        expect(songEditor.find('textarea').props().value).toBe('test');
         expect(verse.text).toBe('test');
     });
+
+    test('Works with no current verse', () => {
+        let song = new Song('Hello', '0');
+        const songEditor = shallow(<SongEditor  currentVerse={undefined} currentSong={song} />);
+
+        expect(songEditor.find('textarea').props().value).toBe('');
+        expect(songEditor.find('textarea').props().disabled).toBe(true);    
+    })
+
+    test('Works when unsetting verse', () => {
+        let song = new Song('Hello', '0');
+        let verse = new Verse('0', '0', 'abc');
+
+        const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
+        expect(songEditor.find('textarea').props().value).toBe('abc');
+        expect(songEditor.find('textarea').props().disabled).toBe(false);    
+
+        songEditor.setProps({currentVerse: undefined});
+
+        expect(songEditor.find('textarea').props().value).toBe('');
+        expect(songEditor.find('textarea').props().disabled).toBe(true);    
+    })
+
+    test('Works with no current song', () => {
+        const songEditor = shallow(<SongEditor  currentVerse={undefined} currentSong={undefined} />);
+
+        expect(songEditor.find('textarea').props().value).toBe('');
+        expect(songEditor.find('textarea').props().disabled).toBe(true);    
+    })
+
+    test('Works when unsetting song', () => {
+        let song = new Song('Hello', '0');
+        let verse = new Verse('0', '0', 'abc');
+
+        const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
+        expect(songEditor.find('textarea').props().value).toBe('abc');
+        expect(songEditor.find('textarea').props().disabled).toBe(false);    
+
+        songEditor.setProps({currentVerse: undefined, currentSong: undefined});
+
+        expect(songEditor.find('textarea').props().value).toBe('');
+        expect(songEditor.find('textarea').props().disabled).toBe(true);    
+    })
+
+    test('Doesn\'t change regular paste', () => {
+        let song = new Song('Hello', '0');
+        let verse = new Verse('0', '0', 'abc');
+
+        const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
+        songEditor.find('textarea').simulate('paste', {clipboardData: {getData: (s) => "test"}});
+
+        expect(songEditor.find('textarea').props().value).toBe('abc');
+
+    })
+
+    test('Changes paste with special characters', () => {
+        let song = new Song('Hello', '0');
+        let verse = new Verse('0', '0', 'abc');
+
+        const songEditor = shallow(<SongEditor  currentVerse={verse} currentSong={song} />);
+
+        try {
+            songEditor.find('textarea').simulate('paste', {clipboardData: {getData: (s) => "testline2"}});
+            expect(songEditor.find('textarea').props().value).toBe('test\nline2');
+        } catch(e) {
+            if (e.name !== TypeError.name) {
+                throw e;
+            }
+            let te = e as TypeError;
+            if (te.message !== "document.queryCommandSupported is not a function") {
+                throw e;
+            }
+        }
+
+    })
 
 })

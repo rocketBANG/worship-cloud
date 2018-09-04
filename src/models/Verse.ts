@@ -1,6 +1,7 @@
 import { action, computed, decorate, observable } from 'mobx';
 import { ModelState } from './ModelState';
 import { SongApi } from '../store/api';
+import { NetworkError } from '../errors/NetworkError';
 
 export class Verse {
     public static findUniqueTitle(verse: Verse, otherVerses: Verse[]): string {
@@ -55,7 +56,12 @@ export class Verse {
         this.state = ModelState.SAVING;
         let type = this.type === "verse" ? "chorus" : "verse";
         this.type = type;
-        return this.songApi.updateVerseType(this.id, this.songId, type).then(() => this.state = ModelState.LOADED);
+        return this.songApi.updateVerseType(this.id, this.songId, type).then(() => this.state = ModelState.LOADED)
+            .catch(() => {
+                this.state = ModelState.LOADED;
+                this.type = this.type === "verse" ? "chorus" : "verse";
+                throw new NetworkError("Chould not set as" + type);
+            });
     }
 
     public setNumberOfPages = (num) => {

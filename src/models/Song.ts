@@ -209,12 +209,15 @@ export class Song {
         })
     };
 
-    public setTitle = (newTitle: string) => {
+    public setTitle = async (newTitle: string) => {
         this.state = ModelState.SAVING;
-        this.api.updateSongTitle(newTitle, this.id).then(() => {
+        return await this.api.updateSongTitle(newTitle, this.id).then(() => {
             this.state = ModelState.LOADED;
             this.title = newTitle;
-        });
+        }).catch(() => {
+            this.state = ModelState.LOADED;
+            throw new NetworkError("Could not update title");
+        })
     }
 
 }

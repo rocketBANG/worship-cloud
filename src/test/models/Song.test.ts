@@ -30,6 +30,11 @@ describe('Test Song', () => {
         return Promise.resolve();
     }
 
+    const updateSongTitle = jest.fn();
+    const defaultUpdateSongTitle = (title: string) => {
+        return Promise.resolve();
+    }
+
     beforeEach(() => {
         // Clear all instances and calls to constructor and all methods:
         songApiMock.mockClear();
@@ -37,17 +42,20 @@ describe('Test Song', () => {
         addVerse.mockClear();
         updateOrder.mockClear();
         removeVerse.mockClear();
+        updateSongTitle.mockClear();
 
         fetchVerses.mockImplementation(defaultFetchVerses);
         addVerse.mockImplementation(defaultAddVerse);
         updateOrder.mockImplementation(defaultUpdateOrder);
         removeVerse.mockImplementation(defaultRemoveVerse);
+        updateSongTitle.mockImplementation(defaultUpdateSongTitle);
         
         songApiMock.mockImplementation(() => ({
             fetchVerses,
             addVerse,
             updateOrder,
-            removeVerse
+            removeVerse,
+            updateSongTitle,
         }))
     });
     
@@ -78,6 +86,37 @@ describe('Test Song', () => {
             song.loadSong().then(() => {
                 expect(song.state).toBe(ModelState.LOADED);
                 expect(song.isLoaded).toBe(true);
+                resolve();
+            })
+        });
+
+        expect(song.state).toBe(ModelState.LOADING);
+
+        await promise;
+    })
+
+    
+    test('loadSong() with payload', async () => {
+        let expectedId = 'song_id';
+        let expectedTitle = 'song title';
+
+        fetchVerses.mockImplementation((songId) => {
+            return Promise.resolve({ verses: [
+                {
+                    _id: 'vid',
+                    text: '',
+                    type: 'verse',
+                }
+            ]}); 
+        });    
+
+        let song = new Song(expectedTitle, expectedId);
+
+        const promise = new Promise(resolve => {
+            song.loadSong().then(() => {
+                expect(song.state).toBe(ModelState.LOADED);
+                expect(song.isLoaded).toBe(true);
+                expect(song.verses.size).toBe(1);
                 resolve();
             })
         });
@@ -1326,13 +1365,13 @@ describe('Test Song', () => {
 
         let song = new Song('title', 'id');
         await song.loadSong();
-        await song.addVerse('test text\n line 2\nthird');
         await song.addVerse('test text\n line 2\n3rd');
+        await song.addVerse('test text\n line 2\nthird');
         await song.addVerse('verse 3\n2\nand 3');
 
         let titles = song.getUniqueVerseTitles;
-        expect(titles.find(v => v.verseId === '123').title).toBe('test text (third)');
-        expect(titles.find(v => v.verseId === '456').title).toBe('test text (3rd)');
+        expect(titles.find(v => v.verseId === '123').title).toBe('test text (3rd)');
+        expect(titles.find(v => v.verseId === '456').title).toBe('test text (third)');
         expect(titles.find(v => v.verseId === '789').title).toBe('verse 3');
 
     })
@@ -1372,5 +1411,52 @@ describe('Test Song', () => {
         expect(titles.find(v => v.verseId === '789').title).toBe('test text (2)');
 
     })
+
+    test('test setTitle() works', async () => {
+        let expectedId = 'song_id';
+        let expectedTitle = 'song title';
+
+        updateSongTitle.mockImplementation((title) => {
+            expect(title).toBe('new title');
+            return Promise.resolve(); 
+        });    
+
+        let song = new Song(expectedTitle, expectedId);
+        song.loadSong();
+
+        let promise = song.setTitle('new title');
+
+        expect(song.state).toBe(ModelState.SAVING);
+
+        await promise;
+
+        expect(song.state).toBe(ModelState.LOADED);
+        expect(song.title).toBe('new title');
+
+    })
+
+    test('setTitle() handles reject', async () => {
+        let expectedId = 'song_id';
+        let expectedTitle = 'song title';
+
+        updateSongTitle.mockImplementation((title) => {
+            return Promise.reject(); 
+        });    
+
+        let song = new Song(expectedTitle, expectedId);
+        song.loadSong();
+
+        try {
+            await song.setTitle('new title');
+            fail("rejected promise should throw a network error");
+        } catch(e) {
+            expect(song.state).toBe(ModelState.LOADED);
+            expect(song.title).toBe(expectedTitle);
+            if(e.name === NetworkError.name) return;
+            throw e;
+        }
+
+    });
+
 
 })
