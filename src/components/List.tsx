@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { FloatingMenu, IFloatingMenuItem } from './FloatingMenu';
+import { ISelectItem, SelectList, ISelectChange } from './general/SelectList';
 
 export interface IOptions {
     altText: string,
@@ -29,7 +30,7 @@ class List extends React.Component<IProps> {
     private keySeperator = "_-";
 
     public state = {
-        selected: [],
+        selected: undefined,
         menuHidden: true,
         menuLeft: 0,
         menuTop: 0
@@ -61,24 +62,19 @@ class List extends React.Component<IProps> {
         this.props.onUpdate(selectedValues, selectedIndexes)
     }
 
-    private onContextMenu = (event: React.MouseEvent, id: string | number, index: number) => {
+    private onContextMenu = (event: React.MouseEvent, item: ISelectItem, index: number) => {
         if(!this.props.contextMenu) {
             return;
         }
 
         event.preventDefault();
-        if(this.props.onItemContextMenu) this.props.onItemContextMenu(id + '', index + '');
+        if(this.props.onItemContextMenu) this.props.onItemContextMenu(item.value + '', index + '');
         
         this.setState({menuLeft: event.pageX, menuTop: event.pageY, menuHidden: false});
     }
 
     private onListClick = (event: React.MouseEvent) => {
         this.setState({menuHidden: true});
-
-        // Workaround for firefox's e.preventDefault() bug
-        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-            this.select.blur();
-        }
 
         if(this.props.onClick) this.props.onClick(event);
     }
@@ -87,20 +83,45 @@ class List extends React.Component<IProps> {
         this.setState({menuHidden: true});
     }
 
-    public render() {
+    private onChange = (change: ISelectChange[], indexes: any) => {
+        let selectedValues = change.map(c => c.value);
+        let selectedIndexes = indexes;
+
+        this.setState({selected: selectedValues});
+        selectedValues = selectedValues.map(v => this.removeUnique(v));
+
+        this.props.onUpdate(selectedValues, selectedIndexes)
+
+    }
+
+    private getUniqueElements(options: IOptions[]) {
         const keyCount = {};
 
-        const optionsKeys = this.props.options.map((element) => {
+        const optionsKeys = options.map((element) => {
             keyCount[element.id] = keyCount[element.id] + 1 || 1;
             const uniqueKey = element.id + this.keySeperator + keyCount[element.id];            
             return uniqueKey;
         });
+
+        return optionsKeys;
+    }
+
+    public render() {
+        const optionsKeys = this.getUniqueElements(this.props.options);
         
-        const options = this.props.options.map((element, index) => (
-            <option key={optionsKeys[index]} value={optionsKeys[index]} onContextMenu={(event) => this.onContextMenu(event, element.id, index)}>{
-                element.text || element.altText
-            }</option>)
+        // const options = this.props.options.map((element, index) => (
+        //     <option key={optionsKeys[index]} value={optionsKeys[index]} onContextMenu={(event) => this.onContextMenu(event, element.id, index)}>{
+        //         element.text || element.altText
+        //     }</option>)
+        // );
+
+        const options: ISelectItem[] = this.props.options.map((element, index) => (
+            {
+                value: optionsKeys[index],
+                label: element.text || element.altText
+            })
         );
+
 
         let selected = this.state.selected;
         if(this.props.selectedIndex !== undefined) {
@@ -129,15 +150,23 @@ class List extends React.Component<IProps> {
         return (
             <React.Fragment>
                 <FloatingMenu onClick={this.onMenuClick} hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
-                    <select value={selected} className="List" multiple ref={(node) => this.select = node} 
-                    onChange={this.returnSelected}
-                    onClick={this.onListClick}
+                <SelectList 
+                    items={options} 
+                    onChange={this.onChange} 
+                    onClick={this.onListClick} 
                     onDoubleClick={this.props.onDoubleClick}
                     onContextMenu={this.props.onContextMenu}
-                    // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
-                    >
-                    {options}
-                </select>
+                    onItemContextMenu={this.onContextMenu}
+                    value={selected}/>
+                {/* //     <select value={selected} className="List" multiple ref={(node) => this.select = node} 
+                //     onChange={this.returnSelected}
+                //     onClick={this.onListClick}
+                //     onDoubleClick={this.props.onDoubleClick}
+                //     onContextMenu={this.props.onContextMenu}
+                //     // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
+                //     >
+                //     {options}
+                // </select> */}
                 </FloatingMenu>
             </React.Fragment>
         )
