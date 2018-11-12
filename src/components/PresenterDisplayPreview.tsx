@@ -3,45 +3,38 @@ import { observer } from 'mobx-react'
 import '../style/PresenterDisplay.css'
 import 'any-resize-event'
 import { Display } from '../components/Display';
-import DisplayControls from './DisplayControls';
 import DisplayOverlay from './DisplayOverlay';
 import { SettingsModel } from '../models/settings/SettingsModel';
-import { DisplaySong } from '../models/DisplaySong';
 import { SongListModel } from '../models/song-lists/SongListModel';
-import { IObservableValue, trace, decorate, observable, extendObservable } from 'mobx';
+import { IObservableValue } from 'mobx';
 import { PresenterModel } from 'src/models/PresenterModel';
-import { IExtraDisplayProps } from './PresenterDisplayPreview';
 
 interface IProps {
     currentList: IObservableValue<SongListModel>,
     presenterModel: PresenterModel
 };
 
-export const PresenterDisplay = observer(class extends React.Component<IProps> {
-    public settingsModel = SettingsModel.settingsModel;
+export interface IExtraDisplayProps {
+    lineHeight: number,
+    indentAmount: number,
+    backgroundColor: string,
+    fontSize: number
+}
 
-    private display;
+export const PresenterDisplayPreview = observer(class extends React.Component<IProps> {
+    public settingsModel = SettingsModel.settingsModel;
 
     constructor(props) {
         super(props);
         this.settingsModel.loadSettings();
     }
 
-    public componentWillReceiveProps(nextProps) {
-        if(nextProps.presenterModel && nextProps.presenterModel.Song) {
-            nextProps.presenterModel.Song.setDisplay(this.display);
-        }
-    }
-
     public render() {
-        const currentSong = this.props.presenterModel.Song || new DisplaySong(undefined);
-
-        const props = this.props.presenterModel.LiveDisplayProps;
+        const props = this.props.presenterModel.PreviewDisplayProps;
 
         return (
             <div className="PresenterDisplay">
                 <Display 
-                    ref={r => this.display = r}
                     {...props}
                 />
                 <DisplayOverlay currentPage={props.currentPage}

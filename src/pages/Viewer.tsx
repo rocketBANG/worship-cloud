@@ -2,14 +2,14 @@ import * as React from 'react';
 import {Display} from '../components/Display';
 import '../style/viewer.css'
 import '../style/Display.css'
-import { IExtraDisplayProps } from '../components/PresenterDisplay';
+import { IDisplayProps } from 'src/models/PresenterModel';
 
 interface IState {
     words: string, 
     title: string,
     isItallic: string,
     isFullscreen: boolean,
-    props: IExtraDisplayProps
+    props: IDisplayProps
 }
 
 class Viewer extends React.Component<{}, IState> {
@@ -40,7 +40,7 @@ class Viewer extends React.Component<{}, IState> {
         });
 
         document.addEventListener("fullscreenchange", () => {
-            if(!document.webkitIsFullScreen) {
+            if(!document.fullscreenElement !== null) {
                 this.setState({isFullscreen: false});
             }
         });
@@ -80,18 +80,6 @@ class Viewer extends React.Component<{}, IState> {
     };
 
     private onUpdateLocalStorage = (event) => {
-        if (localStorage.getItem('display-setWords') !== null) {
-            this.setState({words: localStorage.getItem('display-setWords')});
-        }
-
-        if (localStorage.getItem('display-setTitle') !== null) {
-            this.setState({title: localStorage.getItem('display-setTitle')});
-        }
-
-        if (localStorage.getItem('display-setIsItallic') !== null) {
-            this.setState({isItallic: localStorage.getItem('display-setIsItallic')});
-        }
-
         if (localStorage.getItem('display-setStyle') !== null) {
             this.setState({props: JSON.parse(localStorage.getItem('display-setStyle'))});
         }
