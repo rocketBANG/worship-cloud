@@ -9,7 +9,7 @@ export const WHITE = -1;
 export class DisplaySong {
 
     private settingsModel = SettingsModel.settingsModel
-    private display;
+    public display;
 
     public currentVerse = undefined;
     public currentPage = "";
@@ -28,7 +28,7 @@ export class DisplaySong {
 
         this.settingsModel.loadSettings();
         let auto;
-        auto = autorun(() => {if(song.isLoaded)  { this.nextVerse(); auto() }});
+        auto = autorun(() => {if(song.isLoaded && this.display !== undefined)  { this.nextVerse(); auto() }});
     }
 
     public setDisplay = (display) => {
@@ -43,7 +43,7 @@ export class DisplaySong {
         this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = 0;
-        this.currentPage = this.pageIndex > -1 ? this.currentPages[this.pageIndex] : undefined;
+        this.currentPage = this.currentPages[this.pageIndex];
         return true;
     };
 
@@ -235,5 +235,6 @@ decorate(DisplaySong, {
     verseOrder: computed,
     setDisplay: action,
     getUniqueVerseTitles: computed,
-    completeVerses: computed
+    completeVerses: computed,
+    display: observable
 })
