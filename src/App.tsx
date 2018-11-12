@@ -15,6 +15,7 @@ import { Popup } from './components/general/Popup';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { LoginService } from './services/LoginService';
+import { TestPage } from './pages/TestPage';
 
 class App extends React.Component {
 
@@ -38,6 +39,10 @@ class App extends React.Component {
                     <Route exact={true} path='/settings' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
                     <Route exact={true} path='/sermoneditor' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
                     <Route exact={true} path='/' render={(props) => <Toolbar {...props} loginService={this.loginService} />} />
+
+                    <Route exact={true} path='/test'>
+                        <TestPage />
+                    </Route>
 
                     <ProtectedRoute exact path="/" component={Editor} loginService={this.loginService} />
                     <ProtectedRoute path="/editor" component={Editor} loginService={this.loginService} />
