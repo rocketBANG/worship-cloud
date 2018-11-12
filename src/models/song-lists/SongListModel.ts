@@ -1,5 +1,6 @@
 import { decorate, observable } from "mobx";
 import { SongListApi } from "../../store/SongListApi";
+import { SongLibraryModel } from "../SongLibraryModel";
 
 export class SongListModel {
 
@@ -8,6 +9,13 @@ export class SongListModel {
     constructor(public id: string, public name: string, public songIds: string[] = []) {
         this.api = new SongListApi(id);
     }
+    
+    public async loadAllSongs(songLibrary: SongLibraryModel) {
+        let songs = songLibrary.songs.filter(s => this.songIds.indexOf(s.id) !== -1);
+        
+        songs.forEach(s => s.loadSong());
+    }
+
 
     public async addSong(id: string) {
         await this.api.updateSongList([...this.songIds, id]);

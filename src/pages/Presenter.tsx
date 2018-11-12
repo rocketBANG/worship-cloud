@@ -1,4 +1,4 @@
-import { autorun, IObservableArray, IObservableValue, IReactionDisposer, observable } from 'mobx';
+import { autorun, IObservableArray, IObservableValue, IReactionDisposer, observable, intercept } from 'mobx';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { PresenterDisplayPreview } from 'src/components/PresenterDisplayPreview';
@@ -55,6 +55,13 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         this.currentList.set(undefined);
 
         this.currentSongs = observable.array();
+
+        this.currentList.intercept((change) => {
+            if (change.newValue !== undefined) {
+                change.newValue.loadAllSongs(this.songLibrary);
+            }
+            return change;
+        })
     }
 
     private getNextSongInList = (offset: number = 1): Song => {
