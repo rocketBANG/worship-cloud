@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import { DisplaySong } from '../models/DisplaySong';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import { SettingsModel } from '../models/settings/SettingsModel';
+import { PresenterModel } from 'src/models/PresenterModel';
 
 interface IProps {
     song: DisplaySong,
@@ -10,7 +11,8 @@ interface IProps {
     onNext?: () => void,
     onPrev?: () => void,
     onFullscreen?: () => void,
-    showButtons?: boolean
+    showButtons?: boolean,
+    presenter: PresenterModel
 }
 
 class DisplayControls extends React.Component<IProps> {
@@ -31,22 +33,34 @@ class DisplayControls extends React.Component<IProps> {
 
         if(keyName === 'ArrowRight') {
             keyEvent.preventDefault();
+
+            if (this.props.presenter.Blanked) {
+                this.props.presenter.Blanked = false;
+                return;
+            }
             this.onNext();
+
         } else if(keyName === 'ArrowLeft') {
             keyEvent.preventDefault();
+
+            if (this.props.presenter.Blanked) {
+                this.props.presenter.Blanked = false;
+                return;
+            }
             this.onPrev();
+
         } else if(keyName === 'b') {
             keyEvent.preventDefault();
-            this.props.song.setBlack();
-        } else if(keyName === 'w') {
-            keyEvent.preventDefault();
-            this.props.song.setWhite();
+            this.props.presenter.Blanked = !this.props.presenter.Blanked;
+
         } else if (keyName === 'ArrowUp') {
             keyEvent.preventDefault();
             this.onPrevVerse();
+
         } else if (keyName === 'ArrowDown') {
             keyEvent.preventDefault();
             this.onNextVerse();
+
         }
     }
 
@@ -89,6 +103,10 @@ class DisplayControls extends React.Component<IProps> {
         if(this.props.onFullscreen) this.props.onFullscreen();
     }
 
+    private onSetBlanked = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.presenter.Blanked = event.target.checked;
+    }
+
     public render() {
 
         const buttons = (
@@ -98,6 +116,11 @@ class DisplayControls extends React.Component<IProps> {
                 <button onClick={() => this.onFontChange(false)}>Font-</button>
                 <button onClick={() => this.onFontChange(true)}>Font+</button>
                 <button onClick={this.onFullscreen}>Fullscreen</button>
+
+                <label>
+                    Blanked
+                    <input type='checkbox' checked={this.props.presenter.Blanked} onChange={this.onSetBlanked} />
+                </label>
             </React.Fragment>
         )
 

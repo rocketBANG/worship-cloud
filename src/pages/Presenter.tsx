@@ -15,6 +15,7 @@ import { Song } from '../models/Song';
 import { Verse } from '../models/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import DisplayControls from '../components/DisplayControls';
+import { PresenterModel } from 'src/models/PresenterModel';
 
 interface IState {
     displaySong: DisplaySong,
@@ -41,6 +42,7 @@ const Presenter = observer(class extends React.Component<{}, IState> {
     private currentVerse: IObservableValue<Verse>;
     private currentList: IObservableValue<SongListModel>;
     private currentSongs: IObservableArray<Song>;
+    private presenterModel: PresenterModel;
 
     private presenterDiv: HTMLElement;
 
@@ -49,6 +51,8 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         
         this.songLibrary = new SongLibraryModel();
         this.songLibrary.getAllSongs();
+
+        this.presenterModel = new PresenterModel();
 
         this.currentVerse = observable.box();
         this.currentVerse.set(undefined);
@@ -157,14 +161,21 @@ const Presenter = observer(class extends React.Component<{}, IState> {
                 ref={(el) => this.presenterDiv = el}
                 style={this.state.isFullscreen ? this.fullscreenStyle : {}}>
                 {!this.state.isFullscreen && fullscreenDependant}
-                <PresenterDisplay currentList={this.currentList} currentSong={this.state.displaySong} />
+
+                <PresenterDisplay 
+                currentList={this.currentList} 
+                currentSong={this.state.displaySong} 
+                presenterModel={this.presenterModel}/>
+
                 <DisplayControls 
                     list={this.currentList.get()} 
                     song={this.state.displaySong} 
                     onNext={this.onNextSong} 
                     onPrev={this.onPrevSong}
                     onFullscreen={this.onFullscreen}
-                    showButtons={!this.state.isFullscreen}/>
+                    showButtons={!this.state.isFullscreen}
+                    presenter={this.presenterModel}
+                    />
             </div>
         );
     }

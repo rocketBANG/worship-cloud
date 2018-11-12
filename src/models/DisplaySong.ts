@@ -8,13 +8,9 @@ export const WHITE = -1;
 
 export class DisplaySong {
 
-    // TODO change this to be a wrapper for a song
-    // When a song is selected from the song library, add extra functionality to it using this class
-
     private settingsModel = SettingsModel.settingsModel
     private display;
 
-    public blanked = 0; // 1 = black, -1 = white,
     public currentVerse = undefined;
     public currentPage = "";
     public pageIndex = 0;
@@ -64,43 +60,41 @@ export class DisplaySong {
     }
 
     public nextPage = (): boolean => {
-        if(this.blanked !== 0) {
-            this.blanked = 0;
-            return true;
-        }
-
         if(this.currentPages === undefined) {
             this.setupPages();
         }
+
         if(this.pageIndex >= this.currentPages.length - 1) {
             return this.nextVerse();
+            
         } else {
             this.pageIndex++;
             this.currentPage = this.currentPages[this.pageIndex];
         }
+
         return true;
     };
 
     public prevPage = (): boolean => {
-        if(this.blanked !== 0) {
-            this.blanked = 0;
-            return true;
-        }
-
         if(this.currentPages === undefined) {
             this.setupPages();
         }
+
         if(this.pageIndex <= 0) {
+
             let changedVerse = this.prevVerse();
             if(changedVerse) {
                 this.pageIndex = this.currentPages.length - 1;
                 this.currentPage = this.currentPages[this.pageIndex];
             }
             return changedVerse;
+
         } else {
+
             this.pageIndex--;
             this.currentPage = this.currentPages[this.pageIndex];
         }
+
         return true;
     }
 
@@ -176,35 +170,35 @@ export class DisplaySong {
         this.currentVerse.setNumberOfPages(this.currentPages.length);
     }
 
-    get backgroundColor() {
-        if(this.blanked === BLACKED) {
-            return "#000";
-        } else if (this.blanked === WHITE) {
-            return "#fff";
-        } else {
-            return "#000";
-        }
-    }
+    // get backgroundColor() {
+    //     if(this.blanked === BLACKED) {
+    //         return "#000";
+    //     } else if (this.blanked === WHITE) {
+    //         return "#fff";
+    //     } else {
+    //         return "#000";
+    //     }
+    // }
 
-    public setBlack = () => {
-        if(this.blanked === BLACKED) {
-            this.blanked = 0;
-            return;
-        }
-        this.blanked = BLACKED;
-    }
+    // public setBlack = () => {
+    //     if(this.blanked === BLACKED) {
+    //         this.blanked = 0;
+    //         return;
+    //     }
+    //     this.blanked = BLACKED;
+    // }
 
-    public setWhite = () => {
-        if(this.blanked === WHITE) {
-            this.blanked = 0;
-            return;
-        }
-        this.blanked = WHITE;
-    }
+    // public setWhite = () => {
+    //     if(this.blanked === WHITE) {
+    //         this.blanked = 0;
+    //         return;
+    //     }
+    //     this.blanked = WHITE;
+    // }
 
-    get isBlanked() {
-        return this.blanked !== 0;
-    }
+    // get isBlanked() {
+    //     return this.blanked !== 0;
+    // }
 
     get currentNumPages() {
         return this.currentPages.length;
@@ -225,7 +219,6 @@ export class DisplaySong {
 }
 
 decorate(DisplaySong, {
-    blanked: observable, // 1 = black, -1 = white,
     title: observable,
     currentVerse: observable,
     currentPage: observable,
@@ -238,10 +231,6 @@ decorate(DisplaySong, {
     prevPage: action,
     setVerse: action,
     setupPages: action,
-    setWhite: action,
-    setBlack: action,
-    isBlanked: computed,
-    backgroundColor: computed,
     currentNumPages: computed,
     verseOrder: computed,
     setDisplay: action,

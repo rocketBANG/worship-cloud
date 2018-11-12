@@ -1,5 +1,5 @@
 Doing: 
-    [ ] 65 Rearange songLists the other way around
+    [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
 
 Backlog:
     [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)
@@ -9,11 +9,14 @@ Backlog:
     [ ] 43 Add preview on settings page of how display will look with the current settings
     [ ] 56 Change text to be italic when editing a chorus
     [ ] 57 Add ability to have multiple titles
-    [ ] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked
-    [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
+    [ ] 66 Have text size range so text can be shrunk a bit if only 1 word wraps
+    [ ] 67 Add ability to create blank lines
+    [ ] 68 Add white 'blanked' screen
     
 Done:
+    [x] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked
+    [x] 65 Rearange songLists the other way around
     [x] 64 Page names and favicon
     [x] 63 Fix pasting some unknown newline characters not being parsed correctly
     [x] 33 Authorization

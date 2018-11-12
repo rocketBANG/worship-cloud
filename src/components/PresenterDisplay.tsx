@@ -9,10 +9,12 @@ import { SettingsModel } from '../models/settings/SettingsModel';
 import { DisplaySong } from '../models/DisplaySong';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import { IObservableValue, trace, decorate, observable, extendObservable } from 'mobx';
+import { PresenterModel } from 'src/models/PresenterModel';
 
 interface IProps {
     currentSong: DisplaySong,
-    currentList: IObservableValue<SongListModel>
+    currentList: IObservableValue<SongListModel>,
+    presenterModel: PresenterModel
 };
 
 export interface IExtraDisplayProps {
@@ -46,9 +48,9 @@ export const PresenterDisplay = observer(class extends React.Component<IProps> {
 
         let title = currentSong.verseIndex > 0 || currentSong.pageIndex > 0? "" : currentSong.title || '';
         let words = currentPage || '';
-        const backgroundColor = currentSong.backgroundColor;
+        const backgroundColor = '#000';
 
-        if(currentSong.isBlanked) {
+        if(this.props.presenterModel.Blanked) {
             title = '';
             words = '';
         }
@@ -77,7 +79,7 @@ export const PresenterDisplay = observer(class extends React.Component<IProps> {
                 />
                 <DisplayOverlay currentPage={currentSong && (currentSong.pageIndex+1)}
                     totalPages={currentSong && currentSong.currentNumPages}
-                    blankIndicator={currentSong.isBlanked ? "Blanked" : ""} />
+                    blankIndicator={this.props.presenterModel.Blanked ? "Blanked" : ""} />
             </div>
         );
     }    
