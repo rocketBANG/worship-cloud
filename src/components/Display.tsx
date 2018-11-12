@@ -2,7 +2,6 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import '../style/Display.css'
 import 'any-resize-event'
-import PropTypes from 'prop-types'
 
 const wordFontSize = 0.0011;
 const titleFontSize = 0.0012;

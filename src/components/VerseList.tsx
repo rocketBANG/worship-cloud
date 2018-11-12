@@ -56,7 +56,7 @@ interface IProps {
 
     private onSetChorus = () => {
         let lastVerse = this.props.selectedVerses[this.props.selectedVerses.length - 1];
-        this.props.currentSong.setChorus(lastVerse.id);
+        lastVerse.setChorus();
     };
 
     @computed private get options() {

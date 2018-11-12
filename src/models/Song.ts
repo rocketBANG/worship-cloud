@@ -2,11 +2,14 @@ import { action, computed, decorate, observable, trace } from 'mobx';
 import { SongApi } from '../store/api'
 import { Verse } from './Verse'
 import { ModelState } from './ModelState';
+import { NotLoadedError } from '../errors/NotLoadedError';
+import { NetworkError } from '../errors/NetworkError';
 
+// TODO change Song to use server to update state (to allow cocurrent changes)
+// (Don't update state before request completion) - also means state doesn't need to reset after failed request
 export class Song {
 
     public state: ModelState = ModelState.UNLOADED
-    public chorus = undefined
     public order = []
     public verses = observable(new Map<string, Verse>())
     public isLoaded = false
@@ -20,7 +23,7 @@ export class Song {
         this.api = new SongApi();
     }
 
-    public loadSong = async () => {
+    public async loadSong() {
         if(!this.isLoaded) {
             if(this.loadingPromise !== undefined) {
                 return await this.loadingPromise;
@@ -32,52 +35,78 @@ export class Song {
                     const newVerse = new Verse(verse._id, this.id, verse.text, verse.type);
                     this.verses.set(verse._id, newVerse);
                 });
-                this.order = json.order;
+                this.order = json.order || [];
                 this.state = ModelState.LOADED;
                 this.isLoaded = true;
             }).catch(err => {
                 this.isLoaded = false;
                 this.state = ModelState.UNLOADED;
                 this.loadingPromise = undefined;
+                throw new NetworkError('Could not load song', 'Unable to load song');
             })
             return await this.loadingPromise;
         }
         return await Promise.resolve();
     };
 
-    public addToOrder = (verseId) => {
+    public addToOrder = async (verseIds: string[]) => {
         this.state = ModelState.SAVING;
-        this.order = this.order.concat(verseId);
-        this.api.updateOrder(this.order, this.id).then(() => {
-            this.state = ModelState.LOADED;
+
+        verseIds.forEach(vId => {
+            if(this.verses.get(vId) === undefined) {
+                throw new Error('Incorrect verse Id: ' + vId);
+            }
         });
+
+        let startIndex = this.order.length - 1;
+        this.order = this.order.concat(verseIds);
+        return await this.api.updateOrder(this.order, this.id).then(() => {
+            this.state = ModelState.LOADED;
+        }).catch(error => {
+            this.order.splice(startIndex, verseIds.length);
+            throw new NetworkError('Could not update order')
+        })
     };
 
-    public reorder = (from, to) => {
+    public reorder = async (from: number[], to) => {
         this.state = ModelState.SAVING;
-        if(from.constructor === Array) {
-            // If going down, for loop in reverse order
-            from = to > 0 ? from.slice().reverse() : from;
-            from.forEach(i => this.order.splice(i + to, 0, this.order.splice(i, 1)[0]));
-        } else {
-            this.order.splice(from + to, 0, this.order.splice(from, 1)[0]);
-        }
+        
+        from.forEach(i => {
+            if(i >= this.order.length || i < 0) {
+                throw new Error('Index is out of bounds: ' + i);
+            }
+        })
 
-        this.api.updateOrder(this.order, this.id).then(() => {
+        // If going down, for loop in reverse order
+        let previousOrder = this.order.slice();
+        from = to > 0 ? from.slice().reverse() : from;
+        from.forEach(i => this.order.splice(i + to, 0, this.order.splice(i, 1)[0]));
+
+        return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
-        });
+        }).catch(error => {
+            this.order = previousOrder;
+            throw new NetworkError('Could not update order');
+        })
     };
 
-    public removeFromOrder = (index) => {
+    public removeFromOrder = async (indexes: number[]) => {
         this.state = ModelState.SAVING;
-        if(index.constructor === Array) {
-            this.order = this.order.filter((o, i) => index.indexOf(i) === -1);
-            // this.order.splice(index[0], index.length);
-        } else {
-            this.order.splice(index, 1);
-        }
-        this.api.updateOrder(this.order, this.id).then(() => {
+
+        indexes.forEach(i => {
+            if(i >= this.order.length || i < 0) {
+                throw new Error('Index is out of bounds: ' + i);
+            }
+        })
+
+        let deleted = this.order.map((o, i) => ({o: o, i: i})).filter((o, i) => indexes.indexOf(i) !== -1);
+        this.order = this.order.filter((o, i) => indexes.indexOf(i) === -1);
+
+        return await this.api.updateOrder(this.order, this.id).then(() => {
             this.state = ModelState.LOADED;
+        }).catch(error => {
+            deleted.forEach(d => this.order.splice(d.i, 0, d.o));
+            throw new NetworkError('Could not update order')
         });
     };
 
@@ -95,7 +124,7 @@ export class Song {
         let verseOrder: Verse[] = [];
 
         this.order.forEach((verseId) => {
-            verseOrder.push(this.verses.get(verseId));
+                verseOrder.push(this.verses.get(verseId));
         });
 
         return verseOrder;
@@ -106,7 +135,6 @@ export class Song {
             return [];
         }
 
-        let verseOrder: Verse[] = [];
         let verses = Array.from(this.verses.values());
 
         let verseAndTitle = verses.map(v => ({verse: v, title: v.title}));
@@ -133,52 +161,71 @@ export class Song {
     }
  
     public addVerse = async (text): Promise<Verse> => {
+        if(this.state === ModelState.UNLOADED) throw new NotLoadedError("Song wasn't loaded first");
         this.state = ModelState.SAVING;
+
         return this.api.addVerse(text, this.id).then((verse) => {
             let newVerse = new Verse(verse._id, this.id, verse.text);
             this.verses.set(verse._id, newVerse);
             this.state = ModelState.LOADED;
             return newVerse;
+        }).catch(err => {
+            throw new NetworkError('Could not add verse', 'Could not add verse');
         });
     };
 
-    public removeVerse = (verseIds) => {
+    public removeVerse = async (verseIds: string[]) => {
         this.state = ModelState.SAVING;
+        
+        verseIds.forEach(vId => {
+            if(this.verses.get(vId) === undefined) {
+                throw new Error('Incorrect verse Id: ' + vId);
+            }
+        });
+
+        let previousOrder = this.order.slice();
+        let deletedVerses: Verse[] = [];
+
         this.order = this.order.filter((orderId, index) => {
             return verseIds.indexOf(orderId) === -1;
         });
+
         const promises = [];
         verseIds.forEach(v => { 
+            deletedVerses.push(this.verses.get(v));
             this.verses.delete(v);
             promises.push(this.api.removeVerse(v, this.id));
         });
+
         promises.push(this.api.updateOrder(this.order, this.id));
-        Promise.all(promises).then((json) => {
+
+        return await Promise.all(promises).then((json) => {
             this.state = ModelState.LOADED;
-        });    
+        }).catch(error => {
+            this.state = ModelState.LOADED;
+            this.order = previousOrder;
+            deletedVerses.forEach(v => this.verses.set(v.id, v));
+            throw new NetworkError('Could not remove verse')
+        })
     };
 
-    public setTitle = (newTitle: string) => {
+    public setTitle = async (newTitle: string) => {
         this.state = ModelState.SAVING;
-        this.api.updateSongTitle(newTitle, this.id).then(() => {
+        return await this.api.updateSongTitle(newTitle, this.id).then(() => {
             this.state = ModelState.LOADED;
             this.title = newTitle;
-        });
+        }).catch(() => {
+            this.state = ModelState.LOADED;
+            throw new NetworkError("Could not update title");
+        })
     }
 
-    public setChorus = (verseId: string) => {
-        this.state = ModelState.SAVING;
-        const selectedVerse = this.verses.get(verseId);
-        selectedVerse.setChorus().then(() => this.state = ModelState.LOADED);
-
-    }
 }
 
 decorate(Song, {
     title: observable,
     id: observable,
     state : observable,
-    chorus: observable, 
     order: observable,
     isLoaded: observable,
     completeVerses: computed,
@@ -188,6 +235,6 @@ decorate(Song, {
     addToOrder: action,
     removeFromOrder: action,
     reorder: action,
-    setChorus: action,
-    getUniqueVerseTitles: computed
+    getUniqueVerseTitles: computed,
+    removeVerse: action
 })

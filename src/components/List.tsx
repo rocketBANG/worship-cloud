@@ -74,6 +74,12 @@ class List extends React.Component<IProps> {
 
     private onListClick = (event: React.MouseEvent) => {
         this.setState({menuHidden: true});
+
+        // Workaround for firefox's e.preventDefault() bug
+        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+            this.select.blur();
+        }
+
         if(this.props.onClick) this.props.onClick(event);
     }
 

@@ -51,19 +51,23 @@ export class LoginService {
 
     @action 
     public async setup() {
-        return await this.loginCookie(Cookies.get('worship_login'));
+        return await this.loginCookie();
     }
 
-    private loginCookie = async (cookie) => {
-        const response = await LoginApi.loginCookie(cookie);
-        if(response.success === true) {
-            this.authToken = response.key;
-            this.username = response.username;
-            this.loggedIn = true;
-            return true;
-        } else {
-            this.loggedIn = false;
-            return false;
+    private loginCookie = async () => {
+        try {
+            const response = await LoginApi.loginCookie();
+            if(response.success === true) {
+                this.authToken = response.key;
+                this.username = response.username;
+                this.loggedIn = true;
+                return true;
+            }
         }
+        catch {
+            this.loggedIn = false;
+        }
+
+        return false;
     }
 }

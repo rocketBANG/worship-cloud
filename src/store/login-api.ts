@@ -6,10 +6,9 @@ export interface ILoginResponse {
     username: string;
 }
 
-export const loginCookie = async (cookie: string): Promise<ILoginResponse> => {
+export const loginCookie = async (): Promise<ILoginResponse> => {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    headers.append('auth-token', cookie);
 
     return await fetch(databaseURL + `/logincookie/`, {
 		credentials: 'include', 
