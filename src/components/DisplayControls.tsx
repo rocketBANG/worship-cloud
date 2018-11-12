@@ -6,7 +6,7 @@ import { SettingsModel } from '../models/settings/SettingsModel';
 import { PresenterModel } from 'src/models/PresenterModel';
 
 interface IProps {
-    song: DisplaySong,
+    presenterModel: PresenterModel,
     list: SongListModel,
     onNext?: () => void,
     onPrev?: () => void,
@@ -53,6 +53,10 @@ class DisplayControls extends React.Component<IProps> {
             keyEvent.preventDefault();
             this.props.presenter.Blanked = !this.props.presenter.Blanked;
 
+        } else if(keyName === 'l') {
+            keyEvent.preventDefault();
+            this.props.presenter.Frozen = !this.props.presenter.Frozen;
+
         } else if (keyName === 'ArrowUp') {
             keyEvent.preventDefault();
             this.onPrevVerse();
@@ -65,13 +69,13 @@ class DisplayControls extends React.Component<IProps> {
     }
 
     private onNextVerse = () => {
-        const goNext = this.props.song.nextVerse();
+        const goNext = this.props.presenterModel.Song.nextVerse();
         if(goNext) return;
         if(this.props.onNext) this.props.onNext();
     }
 
     private onPrevVerse = () => {
-        const goPrev = this.props.song.prevVerse();
+        const goPrev = this.props.presenterModel.Song.prevVerse();
         if(goPrev) return;
         if(this.props.onPrev) this.props.onPrev();
     }
@@ -88,13 +92,13 @@ class DisplayControls extends React.Component<IProps> {
 
 
     private onNext = () => {
-        const goNext = this.props.song.nextPage();
+        const goNext = this.props.presenterModel.Song.nextPage();
         if(goNext) return;
         if(this.props.onNext) this.props.onNext();
     };
 
     private onPrev = () => {
-        const goPrev = this.props.song.prevPage();
+        const goPrev = this.props.presenterModel.Song.prevPage();
         if(goPrev) return;
         if(this.props.onPrev) this.props.onPrev();
     };
@@ -111,8 +115,8 @@ class DisplayControls extends React.Component<IProps> {
 
         const buttons = (
             <React.Fragment>
-                <button onClick={this.onPrev} disabled={this.props.song === undefined}>Previous</button>
-                <button onClick={this.onNext} disabled={this.props.song === undefined}>Next</button>
+                <button onClick={this.onPrev} disabled={this.props.presenterModel.Song === undefined}>Previous</button>
+                <button onClick={this.onNext} disabled={this.props.presenterModel.Song === undefined}>Next</button>
                 <button onClick={() => this.onFontChange(false)}>Font-</button>
                 <button onClick={() => this.onFontChange(true)}>Font+</button>
                 <button onClick={this.onFullscreen}>Fullscreen</button>

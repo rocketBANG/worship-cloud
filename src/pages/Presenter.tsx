@@ -1,30 +1,28 @@
-import * as React from 'react';
-import { SongLibrary } from '../components/SongLibrary';
-import '../style/Display.css'
-import '../style/Presenter.css'
-
-import { observable, autorun, IObservableValue, IReactionDisposer, IObservableArray, trace } from 'mobx';
+import { autorun, IObservableArray, IObservableValue, IReactionDisposer, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { SongLibraryModel } from '../models/SongLibraryModel';
-import { DisplaySong } from '../models/DisplaySong';
-import { DisplayVerseList } from '../components/DisplayVerseList';
-import { PresenterDisplay } from '../components/PresenterDisplay';
-import { TabFrame } from '../components/general/TabFrame';
-import { SongLists } from '../components/editor/SongLists';
-import { Song } from '../models/Song';
-import { Verse } from '../models/Verse';
-import { SongListModel } from '../models/song-lists/SongListModel';
-import DisplayControls from '../components/DisplayControls';
+import * as React from 'react';
+import { PresenterDisplayPreview } from 'src/components/PresenterDisplayPreview';
 import { PresenterModel } from 'src/models/PresenterModel';
+import DisplayControls from '../components/DisplayControls';
+import { DisplayVerseList } from '../components/DisplayVerseList';
+import { SongLists } from '../components/editor/SongLists';
+import { TabFrame } from '../components/general/TabFrame';
+import { PresenterDisplay } from '../components/PresenterDisplay';
+import { SongLibrary } from '../components/SongLibrary';
+import { DisplaySong } from '../models/DisplaySong';
+import { Song } from '../models/Song';
+import { SongListModel } from '../models/song-lists/SongListModel';
+import { SongLibraryModel } from '../models/SongLibraryModel';
+import '../style/Display.css';
+import '../style/Presenter.css';
+
 
 interface IState {
-    displaySong: DisplaySong,
     isFullscreen: boolean,
 }
 
 const Presenter = observer(class extends React.Component<{}, IState> {
     public state: IState = {
-        displaySong: undefined,
         isFullscreen: false
     }
 
@@ -39,7 +37,6 @@ const Presenter = observer(class extends React.Component<{}, IState> {
     private displaySongs = [];
 
     private songLibrary: SongLibraryModel;
-    private currentVerse: IObservableValue<Verse>;
     private currentList: IObservableValue<SongListModel>;
     private currentSongs: IObservableArray<Song>;
     private presenterModel: PresenterModel;
@@ -54,8 +51,6 @@ const Presenter = observer(class extends React.Component<{}, IState> {
 
         this.presenterModel = new PresenterModel();
 
-        this.currentVerse = observable.box();
-        this.currentVerse.set(undefined);
         this.currentList = observable.box();
         this.currentList.set(undefined);
 
@@ -66,7 +61,7 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         const currentList = this.currentList.get();
         if(currentList === undefined) return;
 
-        const currentSongIndex = currentList.songIds.findIndex(s => s === this.state.displaySong.id);
+        const currentSongIndex = currentList.songIds.findIndex(s => s === this.presenterModel.Song.id);
         if(currentSongIndex + offset >= currentList.songIds.length || currentSongIndex + offset < 0) return;
 
         return this.songLibrary.songs.find(s => s.id === currentList.songIds[currentSongIndex + offset]);
@@ -95,7 +90,9 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         } else if (this.presenterDiv.mozRequestFullScreen) {
         // @ts-ignore
             this.presenterDiv.mozRequestFullScreen();
+        // @ts-ignore
         } else if (this.presenterDiv.webkitRequestFullScreen) {
+        // @ts-ignore   
             this.presenterDiv.webkitRequestFullScreen();
         }
         this.setState({isFullscreen: true});
@@ -103,12 +100,14 @@ const Presenter = observer(class extends React.Component<{}, IState> {
 
     private exitFullscreen = () => {
         // @ts-ignore
+        if (document.fullscreenElement != null) {
+            this.setState({isFullscreen: false});
+        }
+        // @ts-ignore
         if(document.mozFullScreen === false) {
             this.setState({isFullscreen: false});
         }
-        if(document.webkitIsFullScreen === false) {
-            this.setState({isFullscreen: false});
-        }
+        // @ts-ignore   
         if(document.webkitIsFullScreen === false) {
             this.setState({isFullscreen: false});
         }
@@ -133,10 +132,10 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         this.autorun = autorun(() => {
             const currentSong = this.currentSongs[this.currentSongs.length - 1];
             if(currentSong === undefined) {
-                this.setState({displaySong: undefined });
+                this.presenterModel.Song = undefined;
                 return;
             }
-            this.setState({displaySong: this.getDisplaySong(currentSong) });
+            this.presenterModel.Song = this.getDisplaySong(currentSong);
         });
         document.addEventListener("mozfullscreenchange", this.exitFullscreen);
         document.addEventListener("webkitfullscreenchange", this.exitFullscreen);
@@ -152,7 +151,7 @@ const Presenter = observer(class extends React.Component<{}, IState> {
         const fullscreenDependant = (
             <React.Fragment>
                 <TabFrame tabs={tabs} />
-                <DisplayVerseList currentSong={this.state.displaySong} />
+                <DisplayVerseList currentSong={this.presenterModel.Song} />
             </React.Fragment>
         )
         return (
@@ -164,12 +163,15 @@ const Presenter = observer(class extends React.Component<{}, IState> {
 
                 <PresenterDisplay 
                 currentList={this.currentList} 
-                currentSong={this.state.displaySong} 
                 presenterModel={this.presenterModel}/>
+
+                {/* <PresenterDisplayPreview 
+                currentList={this.currentList} 
+                presenterModel={this.presenterModel}/> */}
 
                 <DisplayControls 
                     list={this.currentList.get()} 
-                    song={this.state.displaySong} 
+                    presenterModel={this.presenterModel} 
                     onNext={this.onNextSong} 
                     onPrev={this.onPrevSong}
                     onFullscreen={this.onFullscreen}
