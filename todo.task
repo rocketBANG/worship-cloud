@@ -1,4 +1,5 @@
 Doing: 
+    [ ] 65 Rearange songLists the other way around
 
 Backlog:
     [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)
@@ -11,9 +12,9 @@ Backlog:
     [ ] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
-    [ ] 64 Page names and favicon
     
 Done:
+    [x] 64 Page names and favicon
     [x] 63 Fix pasting some unknown newline characters not being parsed correctly
     [x] 33 Authorization
     [x] 55 Deal with verses with identical first line -> keep looping until there is a different line and append in brackets()
