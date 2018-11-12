@@ -43,7 +43,7 @@ export class DisplaySong {
         this.currentVerse = this.song.verseOrder[this.verseIndex];
         this.setupPages();
         this.pageIndex = 0;
-        this.currentPage = this.currentPages[this.pageIndex];
+        this.currentPage = this.pageIndex > -1 ? this.currentPages[this.pageIndex] : undefined;
         return true;
     };
 
