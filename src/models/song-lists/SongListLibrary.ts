@@ -13,6 +13,7 @@ class SongListLibrary {
 
     public load = () => {
         this.songApi.getSongLists().then(lists => {
+            lists = lists.reverse();
             lists.forEach(l => {
                 this.lists.push(new SongListModel(l._id, l.name, l.songIds));
             })
@@ -21,7 +22,8 @@ class SongListLibrary {
 
     public addList = (name) => {
         this.songApi.addSongList(name).then(list => {
-            this.lists.push(new SongListModel(list._id, list.name));
+            this.lists.splice(0, 0, new SongListModel(list._id, list.name))
+            // this.lists.push(new SongListModel(list._id, list.name));
         });
     }
 
