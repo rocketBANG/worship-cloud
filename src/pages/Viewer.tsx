@@ -34,12 +34,14 @@ class Viewer extends React.Component<{}, IState> {
         });
 
         document.addEventListener("webkitfullscreenchange", () => {
+            // @ts-ignore
             if(!document.webkitIsFullScreen) {
                 this.setState({isFullscreen: false});
             }
         });
 
         document.addEventListener("fullscreenchange", () => {
+            // @ts-ignore
             if(!document.fullscreenElement !== null) {
                 this.setState({isFullscreen: false});
             }
@@ -72,7 +74,9 @@ class Viewer extends React.Component<{}, IState> {
         } else if (this.viewer.mozRequestFullScreen) {
             // @ts-ignore
             this.viewer.mozRequestFullScreen();
+        // @ts-ignore
         } else if (this.viewer.webkitRequestFullScreen) {
+        // @ts-ignore
             this.viewer.webkitRequestFullScreen();
         }
 
