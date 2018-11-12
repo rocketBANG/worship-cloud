@@ -11,6 +11,7 @@ Backlog:
     [ ] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox)
     [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
+    [ ] 64 Page names and favicon
     
 Done:
     [x] 63 Fix pasting some unknown newline characters not being parsed correctly

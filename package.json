@@ -13,13 +13,14 @@
         "react-dom": "^16.4.0",
         "react-router": "^4.3.1",
         "react-router-dom": "^4.3.1",
-        "react-scripts-ts": "2.16.0",
+        "react-scripts-ts": "2.17.0",
         "socket.io-client": "^2.1.1"
     },
     "scripts": {
         "start": "react-scripts-ts start",
         "build": "react-scripts-ts build",
-        "test": "cross-env CI=true react-scripts-ts test --env=jsdom --coverage",
+        "test": "cross-env CI=true react-scripts-ts test --env=jsdom",
+        "coverage": "cross-env CI=true react-scripts-ts test --env=jsdom --coverage",
         "eject": "react-scripts-ts eject"
     },
     "devDependencies": {
