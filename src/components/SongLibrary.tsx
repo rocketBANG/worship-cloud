@@ -26,10 +26,10 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
     };
 
     private onSongContext = (id: string, index: string) => {
-        this.onSongClick([id], [name]);
+        this.onSongClick([id]);
     }
 
-    private onSongClick = (names, indexes: string[]) => {
+    private onSongClick = (names: string[]) => {
         this.props.selectedSongs.clear();
         if(names.length < 1) {
             return;

@@ -1,5 +1,4 @@
 Doing: 
-    [ ] 70 Create custom list instead of using client-dependent select
     
 Backlog:
     [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)
@@ -19,6 +18,7 @@ Backlog:
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox) with jump back (cancel)
 
 Done:
+    [x] 70 Create custom list instead of using client-dependent select
     [x] 35 Load all songs on presenter view on load
     [x] 69 Change api requests to only send minimum data
     [x] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked

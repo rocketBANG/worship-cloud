@@ -68,7 +68,7 @@ class List extends React.Component<IProps> {
         }
 
         event.preventDefault();
-        if(this.props.onItemContextMenu) this.props.onItemContextMenu(item.value + '', index + '');
+        if(this.props.onItemContextMenu) this.props.onItemContextMenu(this.removeUnique(item.value), index + '');
         
         this.setState({menuLeft: event.pageX, menuTop: event.pageY, menuHidden: false});
     }

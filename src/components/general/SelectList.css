@@ -10,6 +10,8 @@
     width: 100%;
     height: calc(100% - 110px);
     flex: 1;
+
+    border: 1px solid #AAA;
     
     -moz-user-select: none;
     -webkit-user-select: none;
