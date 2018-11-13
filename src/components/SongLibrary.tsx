@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { List, IListContextMenu } from './List';
 import { SongLibraryModel } from '../models/SongLibraryModel';
 import { IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
 import { ModelState } from '../models/ModelState';
+import { IListContextMenu, SelectListIndexContext } from './general/SelectListIndexContext';
+import { ISelectItem } from './general/SelectList';
 
 interface IProps {
     selectedSongs: IObservableArray<Song>,
@@ -25,17 +26,18 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         selectedSongIds: []
     };
 
-    private onSongContext = (id: string, index: string) => {
-        this.onSongClick([id]);
+    private onSongContext = (item: ISelectItem, index: number) => {
+        this.onSongClick([ item ]);
     }
 
-    private onSongClick = (names: string[]) => {
+    private onSongClick = (items: ISelectItem[]) => {
         this.props.selectedSongs.clear();
-        if(names.length < 1) {
+        if(items.length < 1) {
             return;
         }
 
-        this.props.selectedSongs.push(...this.getFilteredSongs().filter(s => names.indexOf(s.id) > -1));
+        console.log(items);
+        this.props.selectedSongs.push(...this.getFilteredSongs().filter(s => items.findIndex(item => item.value === s.id) > -1));
         this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
     };
 
@@ -61,10 +63,10 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
 
     public render() {
         const songs = this.getFilteredSongs();
-        const options = songs.map(song => ({
-            id: song.id,
-            text: song.title,
-            altText: ""
+        const items = songs.map(song => ({
+            value: song.id,
+            label: song.title,
+            altLabel: ""
         }));
 
         const selectedSongs = this.props.selectedSongs.map(s => songs.findIndex(song => song.id === s.id));
@@ -73,12 +75,12 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <List 
+                <SelectListIndexContext 
                     onItemContextMenu={this.onSongContext} 
                     contextMenu={this.props.contextMenu} 
                     onUpdate={this.onSongClick} 
-                    options={options} 
-                    selectedIndex={selectedSongs} />
+                    items={items} 
+                    selected={selectedSongs} />
                 {this.props.library.state === ModelState.LOADING ? "Saving" : ""}
             </div>
         )    

@@ -5,8 +5,8 @@ import { Song } from "../models/Song";
 import * as React from 'react';
 import { observer } from "mobx-react";
 import { SongLibrary } from "./SongLibrary";
-import { IListContextMenu } from "./List";
 import { Popup } from "./general/Popup";
+import { IListContextMenu } from "./general/SelectListIndexContext";
 
 interface IProps {
     library: SongLibraryModel,

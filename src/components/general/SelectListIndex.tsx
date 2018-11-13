@@ -97,10 +97,12 @@ export class SelectListIndex extends React.Component<IProps, IState> {
                 className += 'selectedItem ';
             }
 
+            let onContextMenu = this.props.onItemContextMenu === undefined ? undefined : (e) => this.props.onItemContextMenu(e, item, i);
+
             // Setup each item
             return (
                 <span 
-                    onContextMenu={(e) => this.props.onItemContextMenu(e, item, i)} 
+                    onContextMenu={onContextMenu} 
                     className={className} 
                     key={item.value + i} 
                     onClick={e => this.processClick(e, item)}>

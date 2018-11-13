@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { List, IOptions } from './List';
 import { observer } from 'mobx-react';
 import { DisplaySong } from '../models/DisplaySong';
 import { trace, computed } from 'mobx';
 import { Song } from '../models/Song';
 import { Verse } from '../models/Verse';
 import VerseList from './VerseList';
+import { SelectListIndex } from './general/SelectListIndex';
+import { ISelectItem } from './general/SelectList';
 
 interface IProps {
     currentSong: DisplaySong,
@@ -13,30 +14,13 @@ interface IProps {
 
 @observer class DisplayVerseList extends React.Component<IProps> {
 
-    private onVerseClick = (names, indexes) => {
+    private onVerseClick = (items: ISelectItem[], indexes: number[]) => {
         if(indexes.length < 1) {
             return;
         }
 
         this.props.currentSong.setVerse(indexes[0]);
     };
-
-    private getOptions = computed((): IOptions[] => {
-        let versesWithTitles = this.props.currentSong.getUniqueVerseTitles;
-        return this.props.currentSong.verseOrder.map(verse => {
-            let title = versesWithTitles.find(v => v.verseId === verse.id).title;
-            let verseText = verse.type === "chorus" ? "CHORUS: " + title : title;
-            if(verse.numPages > 1) {
-                verseText += " (" + verse.numPages + ")";
-            }
-            return {
-                altText: "",
-                id: verse.id,
-                text: verseText,
-            }
-        });    
-
-    })
 
     @computed private get options() {
         if(this.props.currentSong === undefined) {
@@ -45,7 +29,7 @@ interface IProps {
         let song = this.props.currentSong;
         let appendText = song.verseOrder.map(v => v.numPages > 1 ? ' (' + v.numPages + ')' : '');
 
-        return VerseList.MapVerseToIOptions(song, song.verseOrder, appendText);
+        return VerseList.MapVerseToISelectItem(song, song.verseOrder, appendText);
     }
 
     public render() {
@@ -55,7 +39,7 @@ interface IProps {
         if(!song || song.verseOrder.length === 0) {
             list = <p>No verses in order</p>;
         } else {
-            list = <List onUpdate={this.onVerseClick} options={this.options} selectedIndex={[song.verseIndex]}/>;
+            list = <SelectListIndex onUpdate={this.onVerseClick} items={this.options} selected={[song.verseIndex]}/>;
         }
     
         return ( 

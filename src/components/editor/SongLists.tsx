@@ -2,13 +2,14 @@ import * as React from 'react';
 import './SongLists.css';
 import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
-import { List, IListContextMenu } from '../List';
 import SongList from '../SongList';
 import { Song } from '../../models/Song';
 import { SongLibraryModel } from '../../models/SongLibraryModel';
 import { observable, IObservableValue, IObservableArray } from 'mobx';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 import { SongApi } from '../../store/api';
+import { IListContextMenu, SelectListIndexContext } from '../general/SelectListIndexContext';
+import { ISelectItem } from '../general/SelectList';
 
 interface IProps {
     library: SongLibraryModel,
@@ -53,7 +54,7 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
         this.songListLibrary.addList(songListName);
     }
 
-    private onListClick = (names, indexes) => {
+    private onListClick = (names: ISelectItem[], indexes: number[]) => {
         if(indexes.length < 1) {
             return;
         }
@@ -95,12 +96,12 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
     public render() {
         const currentList = this.props.currentList.get();
         const options = this.songListLibrary.lists.map(list => ({
-            id: list.id,
-            text: list.name,
-            altText: list.name
+            value: list.id,
+            label: list.name,
+            altLabel: list.name
         }));
 
-        let mainView = <List contextMenu={this.contextMenu} onUpdate={this.onListClick} options={options} />;
+        let mainView = <SelectListIndexContext contextMenu={this.contextMenu} onUpdate={this.onListClick} items={options} />;
         if(currentList !== undefined) {
             mainView = <SongList songList={currentList} selectedSongs={this.props.selectedSongs} library={this.props.library}/>;
         }
