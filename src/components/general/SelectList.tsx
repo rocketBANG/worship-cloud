@@ -20,6 +20,8 @@ interface IState {
 @observer
 export class SelectList extends React.Component<IProps, IState> {
 
+    private firstSelected = -1;
+
     public state: IState = {
         uncontrolled: this.props.value === undefined,
         values: []
@@ -30,20 +32,58 @@ export class SelectList extends React.Component<IProps, IState> {
     }
 
     private processClick = (e: React.MouseEvent<HTMLSpanElement>, item: ISelectItem) => {
-        let items = this.state.uncontrolled ? this.state.values : this.props.value;
+        // Allow uncontrolled
+        let values = this.state.uncontrolled ? this.state.values : this.props.value;
 
-        if(e.shiftKey) {
-            items.push(item.value);
-        } else {
-            items = [item.value];
+        let selectedIndex = this.props.items.indexOf(item);
+
+        // Shift select from first selected point
+        let initialSelected = this.props.items.findIndex(i => i.value === values[0]);
+        if (this.firstSelected > -1 && this.firstSelected < this.props.items.length) {
+            initialSelected = this.firstSelected;
         }
 
-        let indexes = items.map(i => this.props.items.findIndex(thing => thing.value === i));
-        console.log(indexes);
+        if(e.shiftKey) {
 
-        if(this.props.onChange) this.props.onChange(items.map(i => ({value: i})), indexes);
+            if (initialSelected < 0 ) {
+                initialSelected = selectedIndex;
+            }
+            // Keep anchor point at first selected
+            values = [ this.props.items[initialSelected].value ];
+            
+            let from = selectedIndex < initialSelected ? selectedIndex : initialSelected;
+            let to = selectedIndex < initialSelected ? initialSelected : selectedIndex;
+            
+            // Add all items from anchor to selected point
+            for (let i = from; i < to + 1; i++) {
+                if (this.props.items[i].value === values[0]) continue;
+                values.push(this.props.items[i].value);
+            }
 
-        if (this.state.uncontrolled) this.setState({values: items});
+        } else if(e.ctrlKey) {
+            if (values.indexOf(item.value) > -1) {
+                // Deselect if selected
+                values = values.filter(v => v !== item.value);
+
+                if (values.length < 1) this.firstSelected = -1;
+                
+            } else {
+                // Add to selection
+                this.firstSelected = selectedIndex;
+                values.push(item.value);
+            }
+
+        } else {
+            // Only select one
+            this.firstSelected = selectedIndex;
+            values = [item.value];
+        }
+
+        let indexes = values.map(i => this.props.items.findIndex(thing => thing.value === i));
+
+        if(this.props.onChange) this.props.onChange(values.map(i => ({value: i})), indexes);
+
+        if (this.state.uncontrolled) this.setState({values: values});
     }
 
     public render() {
