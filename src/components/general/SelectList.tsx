@@ -109,7 +109,8 @@ export class SelectList extends React.Component<IProps, IState> {
             <div className="selectList"
                 onClick={this.props.onClick}
                 onContextMenu={this.props.onContextMenu}
-                onDoubleClick={this.props.onDoubleClick}>
+                onDoubleClick={this.props.onDoubleClick}
+                tabIndex={-1}>
                 {items}
             </div>
         )

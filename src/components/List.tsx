@@ -21,7 +21,6 @@ interface IProps {
     contextMenu?: IListContextMenu[],
     onClick?: (event: React.MouseEvent<any>) => void,
     onDoubleClick?: (event: React.MouseEvent<any>) => void,
-    onContextMenu?: (event: React.MouseEvent<any>) => void
     onItemContextMenu?: (id: string, index: string) => void
 }
 
@@ -150,23 +149,13 @@ class List extends React.Component<IProps> {
         return (
             <React.Fragment>
                 <FloatingMenu onClick={this.onMenuClick} hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
-                <SelectList 
-                    items={options} 
-                    onChange={this.onChange} 
-                    onClick={this.onListClick} 
-                    onDoubleClick={this.props.onDoubleClick}
-                    onContextMenu={this.props.onContextMenu}
-                    onItemContextMenu={this.onContextMenu}
-                    value={selected}/>
-                {/* //     <select value={selected} className="List" multiple ref={(node) => this.select = node} 
-                //     onChange={this.returnSelected}
-                //     onClick={this.onListClick}
-                //     onDoubleClick={this.props.onDoubleClick}
-                //     onContextMenu={this.props.onContextMenu}
-                //     // onFocus={() => this.props.onUpdate(select.value, select.selectedIndex)}
-                //     >
-                //     {options}
-                // </select> */}
+                    <SelectList 
+                        items={options} 
+                        onChange={this.onChange} 
+                        onClick={this.onListClick} 
+                        onDoubleClick={this.props.onDoubleClick}
+                        onItemContextMenu={this.onContextMenu}
+                        value={selected}/>
                 </FloatingMenu>
             </React.Fragment>
         )

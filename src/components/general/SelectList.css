@@ -17,7 +17,12 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-  }
+}
+
+.selectList:focus .selectedItem {
+    background-color: rgb(22, 150, 255);
+    color: #FFF;
+}
 
 .selectItem {
     display: block;
@@ -29,6 +34,6 @@
 }
 
 .selectedItem {
-    background-color: rgb(22, 150, 255);
-    color: #FFF;
+    background-color: rgb(206, 206, 206);
+    color: #000;
 }
