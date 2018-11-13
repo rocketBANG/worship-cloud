@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { FloatingMenu, IFloatingMenuItem } from './FloatingMenu';
-import { ISelectItem, SelectList, ISelectChange } from './general/SelectList';
+import { ISelectItem } from './general/SelectList';
+import { SelectListIndex } from './general/SelectListIndex';
 
 export interface IOptions {
     altText: string,
     text: string,
-    id: string | number
+    id: string
 }
 
 export interface IListContextMenu {
@@ -16,7 +17,7 @@ export interface IListContextMenu {
 
 interface IProps {
     selectedIndex?: number[],
-    onUpdate: (id: string[], index: string[]) => any,
+    onUpdate: (ids: string[], index: number[]) => any,
     options: IOptions[],
     contextMenu?: IListContextMenu[],
     onClick?: (event: React.MouseEvent<any>) => void,
@@ -24,7 +25,14 @@ interface IProps {
     onItemContextMenu?: (id: string, index: string) => void
 }
 
-class List extends React.Component<IProps> {
+interface IState {
+    selected: boolean,
+    menuHidden: boolean,
+    menuLeft: number,
+    menuTop: number
+}
+
+class List extends React.Component<IProps, IState> {
 
     private keySeperator = "_-";
 
@@ -35,30 +43,9 @@ class List extends React.Component<IProps> {
         menuTop: 0
     }
 
-    private select: HTMLSelectElement = undefined;
-
-    private removeUnique(word) {
-        const endIndex = word.indexOf(this.keySeperator);
+    private removeUnique(word: string) {
+        const endIndex = word.lastIndexOf(this.keySeperator);
         return word.substring(0, endIndex);
-    }
-
-    private returnSelected = () => {
-        const options = this.select.options;
-        let selectedValues = [];
-        const selectedIndexes = [];
-        
-        for(let i = 0; i < options.length; i++) {
-            if(options[i].selected) {
-                selectedValues.push(options[i].value);
-                selectedIndexes.push(i);
-            }
-        }
-
-        this.setState({selected: selectedValues});
-
-        selectedValues = selectedValues.map(v => this.removeUnique(v));
-
-        this.props.onUpdate(selectedValues, selectedIndexes)
     }
 
     private onContextMenu = (event: React.MouseEvent, item: ISelectItem, index: number) => {
@@ -82,12 +69,9 @@ class List extends React.Component<IProps> {
         this.setState({menuHidden: true});
     }
 
-    private onChange = (change: ISelectChange[], indexes: any) => {
-        let selectedValues = change.map(c => c.value);
+    private onChange = (items: ISelectItem[], indexes: number[]) => {
+        let selectedValues = indexes.map(i => this.props.options[i].id);
         let selectedIndexes = indexes;
-
-        this.setState({selected: selectedValues});
-        selectedValues = selectedValues.map(v => this.removeUnique(v));
 
         this.props.onUpdate(selectedValues, selectedIndexes)
 
@@ -108,28 +92,12 @@ class List extends React.Component<IProps> {
     public render() {
         const optionsKeys = this.getUniqueElements(this.props.options);
         
-        // const options = this.props.options.map((element, index) => (
-        //     <option key={optionsKeys[index]} value={optionsKeys[index]} onContextMenu={(event) => this.onContextMenu(event, element.id, index)}>{
-        //         element.text || element.altText
-        //     }</option>)
-        // );
-
         const options: ISelectItem[] = this.props.options.map((element, index) => (
             {
                 value: optionsKeys[index],
                 label: element.text || element.altText
             })
         );
-
-
-        let selected = this.state.selected;
-        if(this.props.selectedIndex !== undefined) {
-            if(this.props.selectedIndex instanceof Array) {
-                selected = optionsKeys.filter((v, i) => this.props.selectedIndex.indexOf(i) !== -1);
-            } else if(this.props.selectedIndex > -1) {
-                selected = [optionsKeys[this.props.selectedIndex]];
-            }
-        }
 
         let menuItems: IFloatingMenuItem[] = [];
 
@@ -149,13 +117,13 @@ class List extends React.Component<IProps> {
         return (
             <React.Fragment>
                 <FloatingMenu onClick={this.onMenuClick} hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
-                    <SelectList 
+                    <SelectListIndex
                         items={options} 
-                        onChange={this.onChange} 
+                        onUpdate={this.onChange} 
                         onClick={this.onListClick} 
                         onDoubleClick={this.props.onDoubleClick}
                         onItemContextMenu={this.onContextMenu}
-                        value={selected}/>
+                        selected={this.props.selectedIndex}/>
                 </FloatingMenu>
             </React.Fragment>
         )

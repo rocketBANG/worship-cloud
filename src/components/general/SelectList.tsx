@@ -95,13 +95,14 @@ export class SelectList extends React.Component<IProps, IState> {
                 className += 'selectedItem ';
             }
 
+            // Setup each item
             return (
                 <span 
                     onContextMenu={(e) => this.props.onItemContextMenu(e, item, values.indexOf(item.value))} 
                     className={className} 
                     key={item.value} 
                     onClick={e => this.processClick(e, item)}>
-                        {item.label}
+                        {item.label || item.altLabel}
                 </span>
             )
         })
@@ -123,5 +124,5 @@ export interface ISelectChange {
 export interface ISelectItem {
     value: any,
     label: string,
-
+    altLabel?: string,
 }
