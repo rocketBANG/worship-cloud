@@ -8,8 +8,8 @@ import { SongLibraryModel } from '../../models/SongLibraryModel';
 import { observable, IObservableValue, IObservableArray } from 'mobx';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 import { SongApi } from '../../store/api';
-import { IListContextMenu, SelectListIndexContext } from '../general/SelectListIndexContext';
-import { ISelectItem } from '../general/SelectList';
+import { IListContextMenu, ScrollListContext } from '../general/ScrollListContext';
+import { IListItem } from '../general/IListItem';
 
 interface IProps {
     library: SongLibraryModel,
@@ -54,7 +54,7 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
         this.songListLibrary.addList(songListName);
     }
 
-    private onListClick = (names: ISelectItem[], indexes: number[]) => {
+    private onListClick = (names: IListItem[], indexes: number[]) => {
         if(indexes.length < 1) {
             return;
         }
@@ -101,7 +101,7 @@ const SongLists = observer(class extends React.Component<IProps, IState> {
             altLabel: list.name
         }));
 
-        let mainView = <SelectListIndexContext contextMenu={this.contextMenu} onUpdate={this.onListClick} items={options} />;
+        let mainView = <ScrollListContext contextMenu={this.contextMenu} onUpdate={this.onListClick} items={options} />;
         if(currentList !== undefined) {
             mainView = <SongList songList={currentList} selectedSongs={this.props.selectedSongs} library={this.props.library}/>;
         }

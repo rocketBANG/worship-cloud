@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
-import './SelectList.css';
-import { ISelectItem } from './SelectList';
+import './ScrollList.css';
+import { IListItem } from './IListItem';
 
 interface IProps {
-    items: ISelectItem[],
+    items: IListItem[],
     selected?: number[],
-    onUpdate?: (values: ISelectItem[], indexes: number[]) => void,
+    onUpdate?: (values: IListItem[], indexes: number[]) => void,
     onClick?: (event: React.MouseEvent) => void,
     onDoubleClick?: (event: React.MouseEvent) => void,
     onContextMenu?: (event: React.MouseEvent) => void,
-    onItemContextMenu?: (event: React.MouseEvent, item: ISelectItem, index: number) => void
+    onItemContextMenu?: (event: React.MouseEvent, item: IListItem, index: number) => void
 }
 
 interface IState {
@@ -19,7 +19,7 @@ interface IState {
 }
 
 @observer
-export class SelectListIndex extends React.Component<IProps, IState> {
+export class ScrollList extends React.Component<IProps, IState> {
 
     private firstSelected = -1;
 
@@ -52,7 +52,7 @@ export class SelectListIndex extends React.Component<IProps, IState> {
 
     }
 
-    private processClick = (e: React.MouseEvent<HTMLSpanElement>, item: ISelectItem) => {
+    private processClick = (e: React.MouseEvent<HTMLSpanElement>, item: IListItem) => {
         // Allow uncontrolled
         let selected = this.state.uncontrolled ? this.state.selected : this.props.selected;
 
@@ -92,9 +92,9 @@ export class SelectListIndex extends React.Component<IProps, IState> {
         let selectedIndexes = this.state.uncontrolled ? this.state.selected : this.props.selected;
 
         let items = this.props.items.map((item, i) => {
-            let className = 'selectItem ';
+            let className = 'listItem ';
             if (selectedIndexes.indexOf(i) !== -1) {
-                className += 'selectedItem ';
+                className += 'selectedListItem ';
             }
 
             let onContextMenu = this.props.onItemContextMenu === undefined ? undefined : (e) => this.props.onItemContextMenu(e, item, i);
@@ -112,7 +112,7 @@ export class SelectListIndex extends React.Component<IProps, IState> {
         })
         
         return (
-            <div className="selectList"
+            <div className="scrollList"
                 onClick={this.props.onClick}
                 onContextMenu={this.props.onContextMenu}
                 onDoubleClick={this.props.onDoubleClick}

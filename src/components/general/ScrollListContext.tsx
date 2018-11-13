@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
-import './SelectList.css';
-import { ISelectItem } from './SelectList';
-import { SelectListIndex } from './SelectListIndex';
-import { FloatingMenu, IFloatingMenuItem } from '../FloatingMenu';
+import './ScrollList.css';
+import { IListItem } from './IListItem';
+import { ScrollList } from './ScrollList';
+import { FloatingMenu, IFloatingMenuItem } from './FloatingMenu';
 
 interface IProps {
-    items: ISelectItem[],
+    items: IListItem[],
     selected?: number[],
-    onUpdate?: (values: ISelectItem[], indexes: number[]) => void,
+    onUpdate?: (values: IListItem[], indexes: number[]) => void,
     onClick?: (event: React.MouseEvent) => void,
     onDoubleClick?: (event: React.MouseEvent) => void,
-    onItemContextMenu?: (item: ISelectItem, index: number) => void,
+    onItemContextMenu?: (item: IListItem, index: number) => void,
     contextMenu?: IListContextMenu[]
 }
 
@@ -22,7 +22,7 @@ interface IState {
 }
 
 @observer
-export class SelectListIndexContext extends React.Component<IProps, IState> {
+export class ScrollListContext extends React.Component<IProps, IState> {
 
     public state = {
         menuHidden: true,
@@ -30,7 +30,7 @@ export class SelectListIndexContext extends React.Component<IProps, IState> {
         menuTop: 0
     }
 
-    private onItemContextMenu = (event: React.MouseEvent, item: ISelectItem, index: number) => {
+    private onItemContextMenu = (event: React.MouseEvent, item: IListItem, index: number) => {
         if(!this.props.contextMenu) {
             return;
         }
@@ -69,7 +69,7 @@ export class SelectListIndexContext extends React.Component<IProps, IState> {
 
         return (
             <FloatingMenu onClick={this.onMenuClick} hidden={this.state.menuHidden} left={this.state.menuLeft} top={this.state.menuTop} items={menuItems}>
-                <SelectListIndex
+                <ScrollList
                     items={this.props.items} 
                     selected={this.props.selected} 
                     onClick={this.onSelectClick} 

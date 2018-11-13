@@ -1,5 +1,5 @@
 Doing: 
-    
+
 Backlog:
     [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)
     [ ] 61 Add the ability to undo certian actions (i.e delete songs) (Gmail style)
@@ -17,11 +17,12 @@ Backlog:
     [ ] 68 Add white 'blanked' screen
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox) with jump back (cancel)
 
-    [ ] 71 REFACTOR (Sort stuff into folders correctly and make interfaces in their own files)
-
     [ ] 72 Limit the amount of things that can get selected
 
+    [ ] 73 Add duplicating (and copy pasting) of songs/verses
+
 Done:
+    [x] 71 REFACTOR (Sort stuff into folders correctly and make interfaces in their own files)
     [x] 70 Create custom list instead of using client-dependent select
     [x] 35 Load all songs on presenter view on load
     [x] 69 Change api requests to only send minimum data

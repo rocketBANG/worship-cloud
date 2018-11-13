@@ -4,8 +4,8 @@ import { IObservableValue, IObservableArray, trace, computed } from 'mobx';
 import { Verse } from '../models/Verse';
 import { Song } from '../models/Song';
 import { DisplaySong } from '../models/DisplaySong';
-import { ISelectItem } from './general/SelectList';
-import { SelectListIndex } from './general/SelectListIndex';
+import { IListItem } from './general/IListItem';
+import { ScrollList } from './general/ScrollList';
 
 interface IProps {
     selectedVerses: IObservableArray<Verse>
@@ -14,11 +14,11 @@ interface IProps {
 
 @observer class VerseList extends React.Component<IProps> {
 
-    public static MapVerseToISelectItem = (song: Song | DisplaySong, verses: Verse[] = song && song.completeVerses, append?: string[]): ISelectItem[] => {
+    public static MapVerseToISelectItem = (song: Song | DisplaySong, verses: Verse[] = song && song.completeVerses, append?: string[]): IListItem[] => {
         if(song === undefined) return [];
 
         let versesWithTitles = song.getUniqueVerseTitles;
-        let options = verses.map((verse, i): ISelectItem => {            
+        let options = verses.map((verse, i): IListItem => {
             let title = (versesWithTitles.find(v => v.verseId === verse.id) || {title: verse.title}).title;
 
             let appendText = append && append.length > i && append[i];
@@ -32,7 +32,7 @@ interface IProps {
         return options;
     }
 
-    private onVerseClick = (items: ISelectItem[], indexes: number[]) => {
+    private onVerseClick = (items: IListItem[], indexes: number[]) => {
 
         this.props.selectedVerses.clear();
         let newVerses = items.map(item => this.props.currentSong.completeVerses.find(v => v.id === item.value));
@@ -72,7 +72,7 @@ interface IProps {
         return (
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Verses:</div>
-                <SelectListIndex selected={selectedIndexes} onUpdate={this.onVerseClick} items={options} />
+                <ScrollList selected={selectedIndexes} onUpdate={this.onVerseClick} items={options} />
                 <div className="ListControls">
                     <button onClick={this.onVerseAdd} >Add Verse</button>
                     <button onClick={this.onVerseRemove}>Remove Verse</button>

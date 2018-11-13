@@ -1,4 +1,4 @@
-.selectList {
+.scrollList {
     overflow-x: hidden;
     overflow-y: scroll;
     align-items: flex-start;
@@ -19,12 +19,12 @@
     user-select: none;
 }
 
-.selectList:focus .selectedItem {
+.scrollList:focus .selectedListItem {
     background-color: rgb(22, 150, 255);
     color: #FFF;
 }
 
-.selectItem {
+.listItem {
     display: block;
     white-space: pre;
     min-height: 1.2em;
@@ -33,7 +33,7 @@
     padding: 10px 5px;
 }
 
-.selectedItem {
+.selectedListItem {
     background-color: rgb(206, 206, 206);
     color: #000;
 }

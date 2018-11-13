@@ -5,12 +5,6 @@ import { Verse } from './Verse';
 import { SongListModel } from './song-lists/SongListModel';
 import { ModelState } from './ModelState';
 
-export interface ISongLibraryState {
-    currentSong: Song,
-    currentVerse: Verse,
-    currentList: SongListModel
-}
-
 export class SongLibraryModel {
 
     public state: ModelState = ModelState.LOADED; // "pending" / "done" / "error",

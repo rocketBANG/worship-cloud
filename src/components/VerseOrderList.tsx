@@ -4,8 +4,8 @@ import { Verse } from '../models/Verse';
 import { IObservableValue, IObservableArray, computed } from 'mobx';
 import { Song } from '../models/Song';
 import VerseList from './VerseList';
-import { SelectListIndex } from './general/SelectListIndex';
-import { ISelectItem } from './general/SelectList';
+import { ScrollList } from './general/ScrollList';
+import { IListItem } from './general/IListItem';
 
 interface IProps {
     selectedVerses: IObservableArray<Verse>
@@ -28,7 +28,7 @@ interface IState {
         }
     }
 
-    private onVerseClick = (items: ISelectItem[], indexes: number[]) => {
+    private onVerseClick = (items: IListItem[], indexes: number[]) => {
         this.props.selectedVerses.clear();
         let newVerses = items.map(item => this.props.currentSong.completeVerses.find(v => v.id === item.value));
         this.props.selectedVerses.push(...newVerses);
@@ -73,7 +73,7 @@ interface IState {
         return (
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Order:</div>
-                <SelectListIndex selected={this.state.indexes} onUpdate={this.onVerseClick} items={this.options} />
+                <ScrollList selected={this.state.indexes} onUpdate={this.onVerseClick} items={this.options} />
                 <div className="ListControls">
                     <button onClick={this.onOrderUp} >up</button>
                     <button onClick={this.onOrderDown}>down</button>

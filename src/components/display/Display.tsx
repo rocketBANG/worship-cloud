@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import '../style/Display.css'
+import '../../style/Display.css'
 import 'any-resize-event'
 
 const wordFontSize = 0.0011;

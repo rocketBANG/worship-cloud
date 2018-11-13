@@ -15,7 +15,6 @@ import { Popup } from './components/general/Popup';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { LoginService } from './services/LoginService';
-import { TestPage } from './pages/TestPage';
 
 class App extends React.Component {
 

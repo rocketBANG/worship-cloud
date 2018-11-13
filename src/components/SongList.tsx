@@ -4,8 +4,8 @@ import { SongLibraryModel } from '../models/SongLibraryModel';
 import { SongListModel } from '../models/song-lists/SongListModel';
 import { IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
-import { SelectListIndex } from './general/SelectListIndex';
-import { ISelectItem } from './general/SelectList';
+import { ScrollList } from './general/ScrollList';
+import { IListItem } from './general/IListItem';
 
 interface IProps {
     library: SongLibraryModel,
@@ -15,7 +15,7 @@ interface IProps {
 
 const SongList = observer(class extends React.Component<IProps> {
 
-    private onSongClick = (items: ISelectItem[], indexes: number[]) => {
+    private onSongClick = (items: IListItem[], indexes: number[]) => {
         this.props.selectedSongs.clear();
 
         if(items.length < 1) {
@@ -72,7 +72,7 @@ const SongList = observer(class extends React.Component<IProps> {
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
-                <SelectListIndex onUpdate={this.onSongClick} items={items} selected={selectedSongs} />
+                <ScrollList onUpdate={this.onSongClick} items={items} selected={selectedSongs} />
                 <div className="ListControls">
                     <button onClick={this.onSongRemove}>Remove Song</button>
                     <button onClick={this.onSongUp}>up</button>

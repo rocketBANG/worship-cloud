@@ -4,8 +4,8 @@ import { SongLibraryModel } from '../models/SongLibraryModel';
 import { IObservableArray } from 'mobx';
 import { Song } from '../models/Song';
 import { ModelState } from '../models/ModelState';
-import { IListContextMenu, SelectListIndexContext } from './general/SelectListIndexContext';
-import { ISelectItem } from './general/SelectList';
+import { IListContextMenu, ScrollListContext } from './general/ScrollListContext';
+import { IListItem } from './general/IListItem';
 
 interface IProps {
     selectedSongs: IObservableArray<Song>,
@@ -26,11 +26,11 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
         selectedSongIds: []
     };
 
-    private onSongContext = (item: ISelectItem, index: number) => {
+    private onSongContext = (item: IListItem, index: number) => {
         this.onSongClick([ item ]);
     }
 
-    private onSongClick = (items: ISelectItem[]) => {
+    private onSongClick = (items: IListItem[]) => {
         this.props.selectedSongs.clear();
         if(items.length < 1) {
             return;
@@ -75,7 +75,7 @@ const SongLibrary = observer(class extends React.Component<IProps, IState> {
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
                 <input onChange={this.searchChange} />
-                <SelectListIndexContext 
+                <ScrollListContext
                     onItemContextMenu={this.onSongContext} 
                     contextMenu={this.props.contextMenu} 
                     onUpdate={this.onSongClick} 

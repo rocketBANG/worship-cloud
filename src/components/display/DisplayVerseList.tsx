@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { DisplaySong } from '../models/DisplaySong';
+import { DisplaySong } from '../../models/DisplaySong';
 import { trace, computed } from 'mobx';
-import { Song } from '../models/Song';
-import { Verse } from '../models/Verse';
-import VerseList from './VerseList';
-import { SelectListIndex } from './general/SelectListIndex';
-import { ISelectItem } from './general/SelectList';
+import { Song } from '../../models/Song';
+import { Verse } from '../../models/Verse';
+import VerseList from '../VerseList';
+import { ScrollList } from '../general/ScrollList';
+import { IListItem } from '../general/IListItem';
 
 interface IProps {
     currentSong: DisplaySong,
@@ -14,7 +14,7 @@ interface IProps {
 
 @observer class DisplayVerseList extends React.Component<IProps> {
 
-    private onVerseClick = (items: ISelectItem[], indexes: number[]) => {
+    private onVerseClick = (items: IListItem[], indexes: number[]) => {
         if(indexes.length < 1) {
             return;
         }
@@ -39,7 +39,7 @@ interface IProps {
         if(!song || song.verseOrder.length === 0) {
             list = <p>No verses in order</p>;
         } else {
-            list = <SelectListIndex onUpdate={this.onVerseClick} items={this.options} selected={[song.verseIndex]}/>;
+            list = <ScrollList onUpdate={this.onVerseClick} items={this.options} selected={[song.verseIndex]}/>;
         }
     
         return ( 
