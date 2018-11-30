@@ -26,17 +26,34 @@ const SongEditor = observer(class extends React.Component<IProps> {
         document.execCommand("insertText", false, newText);
     }
 
+    private getFullSongText = (song: Song) => {
+        let fullText = "";
+        if (song === undefined) return fullText;
+
+        song.verseOrder.forEach(v => {
+            fullText += v.text;
+            fullText += "\n\n";
+        });
+
+        return fullText;
+    }
+
     public render() {
         const disabled = this.props.currentVerse === undefined;
-        const verse = this.props.currentVerse || {state: ModelState.UNLOADED, text: ""};
-        const song = this.props.currentSong || {state: ModelState.UNLOADED};
+        const verse = this.props.currentVerse;
+        const song = this.props.currentSong;
+
+        let text = verse && verse.text;
+        if (text === undefined) {
+            text = this.getFullSongText(song);
+        }
         
         return (
             <div className="SongEditor EditorContainer">
-                <textarea disabled={disabled} value={verse.text} onChange={this.onEdit} onPaste={this.onPaste} />
+                <textarea disabled={disabled} value={text} onChange={this.onEdit} onPaste={this.onPaste} />
                 <br/>
                 <div className="SaveProgress">
-                    {StateToString(song.state)} - {StateToString(verse.state)}
+                    {StateToString(song ? song.state : ModelState.UNLOADED)} - {StateToString(verse ? verse.state : ModelState.UNLOADED)}
                 </div>
             </div>
         )    
