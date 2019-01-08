@@ -5,6 +5,8 @@ Backlog:
     [ ] 61 Add the ability to undo certian actions (i.e delete songs) (Gmail style)
     [ ] 32 Add checking for pending changes on tab close
 
+    [ ] 74 Allow accounts to have different organisations and assign songs/song lists to those organisations
+
     [ ] 43 Add preview on settings page of how display will look with the current settings
 
     [ ] 56 Change text to be italic when editing a chorus
