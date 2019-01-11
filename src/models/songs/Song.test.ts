@@ -1,7 +1,7 @@
-import { Song } from "../../models/Song";
+import { Song } from "./Song";
 import { SongApi } from '../../store/api';
-import { ModelState } from "../../models/ModelState";
-import { delay } from "../TestUtils";
+import { ModelState } from "../general/ModelState";
+import { delay } from "../../utils/TestUtils";
 import { NotLoadedError } from "../../errors/NotLoadedError";
 import { NetworkError } from "../../errors/NetworkError";
 

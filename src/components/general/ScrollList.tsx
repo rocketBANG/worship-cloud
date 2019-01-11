@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
-import './ScrollList.css';
+import '../../style/ScrollList.css';
 import { IListItem } from './IListItem';
 
 interface IProps {

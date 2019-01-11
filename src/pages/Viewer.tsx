@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Display} from '../components/display/Display';
 import '../style/viewer.css'
 import '../style/Display.css'
-import { IDisplayProps } from 'src/models/PresenterModel';
+import { IDisplayProps } from 'src/models/display/PresenterModel';
 
 interface IState {
     words: string, 

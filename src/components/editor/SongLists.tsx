@@ -1,10 +1,9 @@
 import * as React from 'react';
-import './SongLists.css';
 import { SongListLibrary } from '../../models/song-lists/SongListLibrary';
 import { observer } from 'mobx-react';
-import SongList from '../SongList';
-import { Song } from '../../models/Song';
-import { SongLibraryModel } from '../../models/SongLibraryModel';
+import SongList from './SongList';
+import { Song } from '../../models/songs/Song';
+import { SongLibraryModel } from '../../models/songs/SongLibraryModel';
 import { observable, IObservableValue, IObservableArray } from 'mobx';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 import { SongApi } from '../../store/api';

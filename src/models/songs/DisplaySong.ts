@@ -1,6 +1,6 @@
 import { observable, action, computed, autorun, decorate, trace } from 'mobx';
 import { Song } from './Song'
-import { SettingsModel } from './settings/SettingsModel';
+import { SettingsModel } from '../settings/SettingsModel';
 import { Verse } from './Verse';
 
 export const BLACKED = 1;

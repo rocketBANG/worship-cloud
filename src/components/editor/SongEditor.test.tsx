@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {shallow} from 'enzyme';
-import SongEditor from '../../components/SongEditor';
-import { Verse } from '../../models/Verse';
-import { Song } from '../../models/Song';
-import { delay } from '../TestUtils';
+import SongEditor from './SongEditor';
+import { Verse } from '../../models/songs/Verse';
+import { Song } from '../../models/songs/Song';
+import { delay } from '../../utils/TestUtils';
 
 import { configure } from 'enzyme';
 import * as Adapter from 'enzyme-adapter-react-16';

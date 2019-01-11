@@ -1,9 +1,9 @@
 import { action, computed, decorate, observable, trace } from 'mobx';
-import { SongApi } from '../store/api'
+import { SongApi } from '../../store/api'
 import { Verse } from './Verse'
-import { ModelState } from './ModelState';
-import { NotLoadedError } from '../errors/NotLoadedError';
-import { NetworkError } from '../errors/NetworkError';
+import { ModelState } from '../general/ModelState';
+import { NotLoadedError } from '../../errors/NotLoadedError';
+import { NetworkError } from '../../errors/NetworkError';
 
 // TODO change Song to use server to update state (to allow cocurrent changes)
 // (Don't update state before request completion) - also means state doesn't need to reset after failed request

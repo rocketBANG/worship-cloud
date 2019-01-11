@@ -7,7 +7,7 @@ import DisplayOverlay from './DisplayOverlay';
 import { SettingsModel } from '../../models/settings/SettingsModel';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 import { IObservableValue } from 'mobx';
-import { PresenterModel } from 'src/models/PresenterModel';
+import { PresenterModel } from 'src/models/display/PresenterModel';
 
 interface IProps {
     currentList: IObservableValue<SongListModel>,

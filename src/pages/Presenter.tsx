@@ -2,17 +2,17 @@ import { autorun, IObservableArray, IObservableValue, IReactionDisposer, observa
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { PresenterDisplayPreview } from 'src/components/display/PresenterDisplayPreview';
-import { PresenterModel } from 'src/models/PresenterModel';
+import { PresenterModel } from 'src/models/display/PresenterModel';
 import DisplayControls from '../components/display/DisplayControls';
 import { DisplayVerseList } from '../components/display/DisplayVerseList';
 import { SongLists } from '../components/editor/SongLists';
 import { TabFrame } from '../components/general/TabFrame';
 import { PresenterDisplay } from '../components/display/PresenterDisplay';
-import { SongLibrary } from '../components/SongLibrary';
-import { DisplaySong } from '../models/DisplaySong';
-import { Song } from '../models/Song';
+import { SongLibrary } from '../components/editor/SongLibrary';
+import { DisplaySong } from '../models/songs/DisplaySong';
+import { Song } from '../models/songs/Song';
 import { SongListModel } from '../models/song-lists/SongListModel';
-import { SongLibraryModel } from '../models/SongLibraryModel';
+import { SongLibraryModel } from '../models/songs/SongLibraryModel';
 import '../style/Display.css';
 import '../style/Presenter.css';
 

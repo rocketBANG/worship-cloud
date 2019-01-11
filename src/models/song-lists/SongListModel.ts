@@ -1,6 +1,6 @@
 import { decorate, observable } from "mobx";
 import { SongListApi } from "../../store/SongListApi";
-import { SongLibraryModel } from "../SongLibraryModel";
+import { SongLibraryModel } from "../songs/SongLibraryModel";
 
 export class SongListModel {
 

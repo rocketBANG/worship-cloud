@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { DisplaySong } from '../../models/DisplaySong';
+import { DisplaySong } from '../../models/songs/DisplaySong';
 import { trace, computed } from 'mobx';
-import { Song } from '../../models/Song';
-import { Verse } from '../../models/Verse';
+import { Song } from '../../models/songs/Song';
+import { Verse } from '../../models/songs/Verse';
 import VerseList from '../VerseList';
 import { ScrollList } from '../general/ScrollList';
 import { IListItem } from '../general/IListItem';

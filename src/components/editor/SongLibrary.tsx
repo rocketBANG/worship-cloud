@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { SongLibraryModel } from '../models/SongLibraryModel';
+import { SongLibraryModel } from '../../models/songs/SongLibraryModel';
 import { IObservableArray } from 'mobx';
-import { Song } from '../models/Song';
-import { ModelState } from '../models/ModelState';
-import { IListContextMenu, ScrollListContext } from './general/ScrollListContext';
-import { IListItem } from './general/IListItem';
+import { Song } from '../../models/songs/Song';
+import { ModelState } from '../../models/general/ModelState';
+import { IListContextMenu, ScrollListContext } from '../general/ScrollListContext';
+import { IListItem } from '../general/IListItem';
 
 interface IProps {
     selectedSongs: IObservableArray<Song>,

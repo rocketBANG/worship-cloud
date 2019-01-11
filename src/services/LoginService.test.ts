@@ -1,7 +1,7 @@
-import * as LoginApi from '../../store/login-api'
-import { LoginService } from '../../services/LoginService';
+import * as LoginApi from '../store/login-api'
+import { LoginService } from './LoginService';
 
-jest.mock('../../store/login-api');
+jest.mock('../store/login-api');
 
 describe('Test Login service', () => {
     const loginCookie = LoginApi.loginCookie as jest.Mock;

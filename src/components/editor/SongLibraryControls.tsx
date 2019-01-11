@@ -1,12 +1,12 @@
-import { SongLibraryModel } from "../models/SongLibraryModel";
+import { SongLibraryModel } from "../../models/songs/SongLibraryModel";
 import { IObservableValue, IObservableArray } from "mobx";
-import { SongListModel } from "../models/song-lists/SongListModel";
-import { Song } from "../models/Song";
+import { SongListModel } from "../../models/song-lists/SongListModel";
+import { Song } from "../../models/songs/Song";
 import * as React from 'react';
 import { observer } from "mobx-react";
 import { SongLibrary } from "./SongLibrary";
-import { Popup } from "./general/Popup";
-import { IListContextMenu } from "./general/ScrollListContext";
+import { Popup } from "../general/Popup";
+import { IListContextMenu } from "../general/ScrollListContext";
 
 interface IProps {
     library: SongLibraryModel,

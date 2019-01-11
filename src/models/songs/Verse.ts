@@ -1,7 +1,7 @@
 import { action, computed, decorate, observable } from 'mobx';
-import { ModelState } from './ModelState';
-import { SongApi } from '../store/api';
-import { NetworkError } from '../errors/NetworkError';
+import { ModelState } from '../general/ModelState';
+import { SongApi } from '../../store/api';
+import { NetworkError } from '../../errors/NetworkError';
 
 export class Verse {
     public static findUniqueTitle(verse: Verse, otherVerses: Verse[]): string {

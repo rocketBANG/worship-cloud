@@ -1,16 +1,16 @@
 import * as React from 'react';
 import VerseList from '../components/VerseList';
 import VerseOrderList from '../components/VerseOrderList';
-import SongEditor from '../components/SongEditor';
+import SongEditor from '../components/editor/SongEditor';
 import '../style/Editor.css';
-import { SongLibraryModel } from '../models/SongLibraryModel'
+import { SongLibraryModel } from '../models/songs/SongLibraryModel'
 import { observable, IObservableValue, IObservableArray, autorun, IReactionDisposer } from 'mobx';
 import { TabFrame } from '../components/general/TabFrame';
 import { SongLists } from '../components/editor/SongLists';
-import { Song } from '../models/Song';
-import { Verse } from '../models/Verse';
+import { Song } from '../models/songs/Song';
+import { Verse } from '../models/songs/Verse';
 import { SongListModel } from '../models/song-lists/SongListModel';
-import { SongLibraryControls } from '../components/SongLibraryControls';
+import { SongLibraryControls } from '../components/editor/SongLibraryControls';
 
 export default class Editor extends React.Component<{}, {currentSong: Song, currentVerse: Verse}> {
 

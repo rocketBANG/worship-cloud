@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { Verse } from '../models/Verse';
-import { Song } from '../models/Song';
-import { StateToString, ModelState } from '../models/ModelState';
+import { Verse } from '../../models/songs/Verse';
+import { Song } from '../../models/songs/Song';
+import { StateToString, ModelState } from '../../models/general/ModelState';
 
 interface IProps {
     currentVerse: Verse,

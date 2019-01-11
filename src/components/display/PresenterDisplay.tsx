@@ -6,10 +6,10 @@ import { Display } from './Display';
 import DisplayControls from './DisplayControls';
 import DisplayOverlay from './DisplayOverlay';
 import { SettingsModel } from '../../models/settings/SettingsModel';
-import { DisplaySong } from '../../models/DisplaySong';
+import { DisplaySong } from '../../models/songs/DisplaySong';
 import { SongListModel } from '../../models/song-lists/SongListModel';
 import { IObservableValue, trace, decorate, observable, extendObservable } from 'mobx';
-import { PresenterModel } from 'src/models/PresenterModel';
+import { PresenterModel } from 'src/models/display/PresenterModel';
 import { IExtraDisplayProps } from './PresenterDisplayPreview';
 
 interface IProps {

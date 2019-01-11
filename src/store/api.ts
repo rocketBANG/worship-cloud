@@ -1,5 +1,5 @@
 import openSocket from 'socket.io-client';
-import { Verse } from '../models/Verse';
+import { Verse } from '../models/songs/Verse';
 
 export const databaseURL = process.env.REACT_APP_API_URL;
 
