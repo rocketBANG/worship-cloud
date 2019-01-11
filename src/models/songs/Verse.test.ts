@@ -1,6 +1,6 @@
 import { SongApi } from '../../store/api';
-import { Verse } from '../../models/Verse';
-import { ModelState } from '../../models/ModelState';
+import { Verse } from './Verse';
+import { ModelState } from '../general/ModelState';
 import { NetworkError } from '../../errors/NetworkError';
 
 jest.mock('../../store/api');

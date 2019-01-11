@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { List } from './List'
-import { SongLibraryModel } from '../models/SongLibraryModel';
-import { SongListModel } from '../models/song-lists/SongListModel';
+import { SongLibraryModel } from '../../models/songs/SongLibraryModel';
+import { SongListModel } from '../../models/song-lists/SongListModel';
 import { IObservableArray } from 'mobx';
-import { Song } from '../models/Song';
+import { Song } from '../../models/songs/Song';
+import { ScrollList } from '../general/ScrollList';
+import { IListItem } from '../general/IListItem';
 
 interface IProps {
     library: SongLibraryModel,
@@ -14,13 +15,14 @@ interface IProps {
 
 const SongList = observer(class extends React.Component<IProps> {
 
-    private onSongClick = (names, indexes) => {
+    private onSongClick = (items: IListItem[], indexes: number[]) => {
         this.props.selectedSongs.clear();
 
-        if(names.length < 1) {
+        if(items.length < 1) {
             return;
         }
-        this.props.selectedSongs.push(...this.props.library.songs.filter(s => names.indexOf(s.id) > -1));
+        // this.props.selectedSongs.push(...this.props.library.songs.filter(s => items.findIndex(i => i.value === s.id) > -1));
+        this.props.selectedSongs.push(...items.map(item => this.props.library.songs.find(s => s.id === item.value)));
         this.props.selectedSongs[this.props.selectedSongs.length - 1].loadSong();
     };
 
@@ -38,6 +40,7 @@ const SongList = observer(class extends React.Component<IProps> {
 
     private onSongUp = () => {
         let selectedIndexes = this.getSelectedIndexes();
+        selectedIndexes.sort();
         if(selectedIndexes[0] < 1) {
             return;
         }
@@ -47,6 +50,7 @@ const SongList = observer(class extends React.Component<IProps> {
 
     private onSongDown = () => {
         let selectedIndexes = this.getSelectedIndexes();
+        selectedIndexes.sort();
         let lastIndex = selectedIndexes[selectedIndexes.length - 1];
         if(lastIndex >= this.props.songList.songIds.length - 1) {
             return;
@@ -58,10 +62,9 @@ const SongList = observer(class extends React.Component<IProps> {
         let songs = this.props.songList.songIds.map(songId => this.props.library.songs.find(s => s.id === songId));
         songs = songs.filter(s => s !== undefined); // Remove missing songs
 
-        const options = songs.map(song => ({
-            id: song.id,
-            text: song.title,
-            altText: ""
+        const items = songs.map(song => ({
+            value: song.id,
+            label: song.title
         }));
 
         const selectedSongs = this.props.selectedSongs.map(s => songs.findIndex(song => song.id === s.id));
@@ -69,7 +72,7 @@ const SongList = observer(class extends React.Component<IProps> {
         return (
             <div className="SongList EditorContainer">
                 <div className="ListHeader">Songs:</div>
-                <List onUpdate={this.onSongClick} options={options} selectedIndex={selectedSongs} />
+                <ScrollList onUpdate={this.onSongClick} items={items} selected={selectedSongs} />
                 <div className="ListControls">
                     <button onClick={this.onSongRemove}>Remove Song</button>
                     <button onClick={this.onSongUp}>up</button>

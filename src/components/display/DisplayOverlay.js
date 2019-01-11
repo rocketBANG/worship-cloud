@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import '../style/DisplayOverlay.css'
+import '../../style/DisplayOverlay.css'
 
 const DisplayOverlay = observer(class extends React.Component {
 

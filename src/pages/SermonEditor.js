@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import '../style/SermonEditor.css';
 import { ComponentEditor } from '../components/sermon/ComponentEditor';
 import ComponentList from '../components/sermon/ComponentList';
-import { SermonComponent } from '../components/SermonComponent';
-import { SermonComponentModel } from '../models/SermonComponentModel'
-import { SermonComponentControllerModel } from '../models/SermonComponentControllerModel';
-import { SermonPageList } from '../components/SermonPageList';
+import { SermonComponent } from '../components/sermon/SermonComponent';
+import { SermonComponentModel } from '../models/sermon/SermonComponentModel'
+import { SermonComponentControllerModel } from '../models/sermon/SermonComponentControllerModel';
+import { SermonPageList } from '../components/sermon/SermonPageList';
 import { PageListModel } from '../models/sermon/PageListModel';
-import { SermonPageModel } from '../models/SermonPageModel';
+import { SermonPageModel } from '../models/sermon/SermonPageModel';
 import { observer } from 'mobx-react';
 import PageListControls from '../components/sermon/PageListControls';
 
@@ -158,7 +158,7 @@ export default observer(class extends Component {
                 <div className='topPage'>
                     <div ref={ref => this.sermonViewDiv = ref} className='sermonView' onClick={this.onViewClick} onMouseDown={this.onViewMouseDown} onMouseUp={this.onViewMouseUp} onMouseMove={this.onViewMouseMove}>
                         {componentRender}
-                        <div className='selectBox' 
+                        <div className='selectBox'
                         style={{left: this.state.selectX, top: this.state.selectY, width: this.state.selectWidth, height: this.state.selectHeight}}></div>
                     </div>
                     <div className='pageList'>

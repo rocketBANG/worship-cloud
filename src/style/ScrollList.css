@@ -1,0 +1,39 @@
+.scrollList {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    align-items: flex-start;
+    white-space: nowrap;
+    vertical-align: text-bottom;
+    text-align: start;
+    box-sizing: border-box;
+    /* width: fit-content; */
+    width: 100%;
+    height: calc(100% - 110px);
+    flex: 1;
+
+    border: 1px solid #AAA;
+    
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.scrollList:focus .selectedListItem {
+    background-color: rgb(22, 150, 255);
+    color: #FFF;
+}
+
+.listItem {
+    display: block;
+    white-space: pre;
+    min-height: 1.2em;
+    padding: 0px 2px 1px;
+    cursor: default;
+    padding: 10px 5px;
+}
+
+.selectedListItem {
+    background-color: rgb(206, 206, 206);
+    color: #000;
+}

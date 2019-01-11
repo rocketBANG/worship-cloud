@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { DisplaySong } from '../models/DisplaySong';
-import { SongListModel } from '../models/song-lists/SongListModel';
-import { SettingsModel } from '../models/settings/SettingsModel';
-import { PresenterModel } from 'src/models/PresenterModel';
+import { DisplaySong } from '../../models/songs/DisplaySong';
+import { SongListModel } from '../../models/song-lists/SongListModel';
+import { SettingsModel } from '../../models/settings/SettingsModel';
+import { PresenterModel } from 'src/models/display/PresenterModel';
 
 interface IProps {
     presenterModel: PresenterModel,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './Popup.css';
+import '../../style/Popup.css';
 
 interface IState {
     title: string,

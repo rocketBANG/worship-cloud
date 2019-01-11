@@ -1,15 +1,7 @@
 import { action, decorate, observable, IObservableArray } from 'mobx';
 import { Song } from './Song';
-import { SongLibraryApi } from '../store/SongLibraryApi';
-import { Verse } from './Verse';
-import { SongListModel } from './song-lists/SongListModel';
-import { ModelState } from './ModelState';
-
-export interface ISongLibraryState {
-    currentSong: Song,
-    currentVerse: Verse,
-    currentList: SongListModel
-}
+import { SongLibraryApi } from '../../store/SongLibraryApi';
+import { ModelState } from '../general/ModelState';
 
 export class SongLibraryModel {
 

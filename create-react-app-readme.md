@@ -734,7 +734,7 @@ In JavaScript code, you can use `process.env.PUBLIC_URL` for similar purposes:
 
 ```js
 render() {
-  // Note: this is an escape hatch and should be used sparingly!
+  // this is an escape hatch and should be used sparingly!
   // Normally we recommend using `import` for getting asset URLs
   // as described in “Adding Images and Fonts” above this section.
   return <img src={process.env.PUBLIC_URL + '/img/logo.png'} />;
@@ -1113,7 +1113,7 @@ If you restart the development server now and load the app from the specified ho
 If you are still having issues or if you’re using a more exotic environment like a cloud editor, you can bypass the host check completely by adding a line to `.env.development.local`. **Note that this is dangerous and exposes your machine to remote code execution from malicious websites:**
 
 ```
-# NOTE: THIS IS DANGEROUS!
+#  THIS IS DANGEROUS!
 # It exposes your machine to attacks from the websites you visit.
 DANGEROUSLY_DISABLE_HOST_CHECK=true
 ```

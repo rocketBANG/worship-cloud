@@ -1,16 +1,16 @@
-import React from 'react'
-import { observer } from 'mobx-react'
+// import React from 'react'
+// import { observer } from 'mobx-react'
 
-const PageListControls = observer(class extends React.Component {
+// const PageListControls = observer(class extends React.Component {
 
-    render() {
+//     render() {
         
-        return (
-            <div className="PageListControls">
-                <button onClick={this.props.addPage}>+</button>
-            </div>
-        )    
-    }
-});
+//         return (
+//             <div className="PageListControls">
+//                 <button onClick={this.props.addPage}>+</button>
+//             </div>
+//         )    
+//     }
+// });
 
-export default PageListControls;
+// export default PageListControls;

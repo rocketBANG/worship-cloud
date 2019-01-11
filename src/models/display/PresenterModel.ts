@@ -1,6 +1,6 @@
 import { autorun, computed, observable } from "mobx";
-import { DisplaySong } from "./DisplaySong";
-import { SettingsModel } from "./settings/SettingsModel";
+import { DisplaySong } from "../songs/DisplaySong";
+import { SettingsModel } from "../settings/SettingsModel";
 
 export class PresenterModel {
     @observable private blanked = false;

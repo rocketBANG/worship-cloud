@@ -4,16 +4,28 @@ Backlog:
     [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)
     [ ] 61 Add the ability to undo certian actions (i.e delete songs) (Gmail style)
     [ ] 32 Add checking for pending changes on tab close
+
+    [ ] 74 Allow accounts to have different organisations and assign songs/song lists to those organisations
+
     [ ] 43 Add preview on settings page of how display will look with the current settings
+
     [ ] 56 Change text to be italic when editing a chorus
     [ ] 57 Add ability to have multiple titles
-    [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
-    [ ] 66 Have text size range so text can be shrunk a bit if only 1 word wraps
     [ ] 67 Add ability to create blank lines
+
+    [ ] 7 Add a Controls react component for VerseList, SongList and OrderList to use
+
+    [ ] 66 Have text size range so text can be shrunk a bit if only 1 word wraps
     [ ] 68 Add white 'blanked' screen
     [ ] 59 Add live display and checkbox to sync current with live (Maybe implement with freeze checkbox) with jump back (cancel)
 
+    [ ] 72 Limit the amount of things that can get selected
+
+    [ ] 73 Add duplicating (and copy pasting) of songs/verses
+
 Done:
+    [x] 71 REFACTOR (Sort stuff into folders correctly and make interfaces in their own files)
+    [x] 70 Create custom list instead of using client-dependent select
     [x] 35 Load all songs on presenter view on load
     [x] 69 Change api requests to only send minimum data
     [x] 58 Make a checkbox for blanked so it can be permanent and run through songs while display is blanked

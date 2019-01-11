@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { List } from './List'
-import { Verse } from '../models/Verse';
+import { Verse } from '../models/songs/Verse';
 import { IObservableValue, IObservableArray, computed } from 'mobx';
-import { Song } from '../models/Song';
+import { Song } from '../models/songs/Song';
 import VerseList from './VerseList';
+import { ScrollList } from './general/ScrollList';
+import { IListItem } from './general/IListItem';
 
 interface IProps {
     selectedVerses: IObservableArray<Verse>
@@ -12,35 +13,35 @@ interface IProps {
 }
 
 interface IState {
-    index: number,
     indexes: number[],
 }
 
 @observer class VerseOrderList extends React.Component<IProps, IState> {
 
     public state = {
-        index: -1,
         indexes: []
     };
 
     public componentWillReceiveProps(props: IProps) {
         if(props.currentSong !== this.props.currentSong) {
-            this.setState({index: -1, indexes: []});
+            this.setState({indexes: []});
         }
     }
 
-    private onVerseClick = (names, indexes) => {
+    private onVerseClick = (items: IListItem[], indexes: number[]) => {
         this.props.selectedVerses.clear();
-        this.props.selectedVerses.push(...this.props.currentSong.completeVerses.filter(v => names.indexOf(v.id) !== -1));
+        let newVerses = items.map(item => this.props.currentSong.completeVerses.find(v => v.id === item.value));
+        this.props.selectedVerses.push(...newVerses);
 
         this.setState({
-            index: indexes[0],
-            indexes
+            indexes: indexes.slice().sort()
         })
+
     };
 
     private onOrderRemove = () => {
         this.props.currentSong.removeFromOrder(this.state.indexes)
+        this.setState({indexes: this.state.indexes.filter(i => i < this.props.currentSong.verseOrder.length)});
     };
 
     private onOrderUp = () => {
@@ -59,8 +60,12 @@ interface IState {
         this.setState({indexes: this.state.indexes.map(i => i + 1)});
     };
 
+    @computed private get indexes(): number[] {
+        return this.props.selectedVerses.map(item => this.options.findIndex(v => v.value === item.id)).sort();
+    }
+
     @computed private get options() {
-        return VerseList.MapVerseToIOptions(this.props.currentSong, this.props.currentSong && this.props.currentSong.verseOrder);
+        return VerseList.MapVerseToISelectItem(this.props.currentSong, this.props.currentSong && this.props.currentSong.verseOrder);
     }
     
     public render() {
@@ -68,12 +73,12 @@ interface IState {
         return (
             <div className="VerseList EditorContainer">
                 <div className="ListHeader">Order:</div>
-                <List selectedIndex={this.state.indexes} onUpdate={this.onVerseClick} options={this.options} />
+                <ScrollList selected={this.state.indexes} onUpdate={this.onVerseClick} items={this.options} />
                 <div className="ListControls">
-                <button onClick={this.onOrderUp} >up</button>
-                <button onClick={this.onOrderDown}>down</button>
-                <button onClick={this.onOrderRemove}>x</button>
-            </div>
+                    <button onClick={this.onOrderUp} >up</button>
+                    <button onClick={this.onOrderDown}>down</button>
+                    <button onClick={this.onOrderRemove}>x</button>
+                </div>
             </div>
         )    
     }

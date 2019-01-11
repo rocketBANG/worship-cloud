@@ -1,6 +1,6 @@
 import { action, decorate, observable } from "mobx";
 import { SongApi } from '../../store/api';
-import { ModelState } from "../ModelState";
+import { ModelState } from "../general/ModelState";
 
 export class SettingsModel {
 
