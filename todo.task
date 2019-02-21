@@ -23,6 +23,10 @@ Backlog:
 
     [ ] 73 Add duplicating (and copy pasting) of songs/verses
 
+    [ ] 75 Add landing page/splash page for new visitors not logged in
+
+    [ ] 76 Style everything nice
+
 Done:
     [x] 71 REFACTOR (Sort stuff into folders correctly and make interfaces in their own files)
     [x] 70 Create custom list instead of using client-dependent select
