@@ -14,17 +14,16 @@ interface IProps {
     selectedSongs: IObservableArray<Song>
 };
 
-interface IState {
-    songText: string,
-}
+const SongLibraryControls = observer(class extends React.Component<IProps, {}> {
 
-const SongLibraryControls = observer(class extends React.Component<IProps, IState> {
-    public state = {
-        songText: '',
-    };
+    private onSongAdd = () => {
+        Popup.showPopup("Add song", "", this.onSongAddFinish);
+    }
     
-    private onSongAdd = async () => {
-        const newSong = await this.props.library.addSong(this.state.songText);
+    private onSongAddFinish = async (newTitle: string) => {
+        if (!newTitle || newTitle === "") return;
+
+        const newSong = await this.props.library.addSong(newTitle);
         this.props.selectedSongs.clear();
         this.props.selectedSongs.push(newSong);
         newSong.loadSong();
@@ -35,12 +34,6 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
             this.props.library.removeSong(song.id);
         })
     };
-
-    private handleChange = (event) => {
-        this.setState({
-            songText: event.target.value
-        })
-    };
     
     private onSongListAdd = () => {
         this.props.selectedSongs.forEach(s => {
@@ -49,7 +42,7 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
     };
 
     private onRenameFinish = (newTitle: string) => {
-        if(newTitle === this.props.selectedSongs[0].title) return;
+        if(!newTitle || newTitle === this.props.selectedSongs[0].title) return;
          
         this.props.selectedSongs[0].setTitle(newTitle);
     }
@@ -69,7 +62,6 @@ const SongLibraryControls = observer(class extends React.Component<IProps, IStat
             <div style={{flexDirection: 'column', display: 'flex'}}>
                 <SongLibrary contextMenu={this.contextMenu} library={this.props.library} selectedSongs={this.props.selectedSongs}/>
                 <div className="ListControls">
-                    <input value={this.state.songText} onChange={this.handleChange} />
                     <button onClick={this.onSongAdd} >Add Song</button>
                     <button onClick={this.onSongRemove}>Remove Song</button>
                     <button onClick={this.onSongListAdd} disabled={this.props.currentList.get() === undefined}>Add to Song List</button>

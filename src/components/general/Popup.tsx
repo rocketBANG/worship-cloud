@@ -38,6 +38,10 @@ export class Popup extends React.Component<{}, IState> {
         this.setState(Popup.initialState);
     }
 
+    private cancelPopup = () => {
+        this.setState(Popup.initialState);
+    }
+
     public componentDidMount() {
         PopupManager.popup = this;
     }
@@ -63,8 +67,9 @@ export class Popup extends React.Component<{}, IState> {
                 <div className='popup'>
                     <p>{this.state.title}</p>
                     <form onSubmit={this.finishPopup}>
-                        <input onChange={this.onInputChange} value={this.state.inputText} />
+                        <input onChange={this.onInputChange} value={this.state.inputText} autoFocus />
                         <input type="submit" value='Ok' />
+                        <input type="button" value='Cancel' onClick={this.cancelPopup} />
                     </form>
                 </div>
             );
