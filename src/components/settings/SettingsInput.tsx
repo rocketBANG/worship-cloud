@@ -1,9 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 import '../../style/SettingsInput.css';
 
-export class SettingsInput extends React.Component {
+export enum SettingsType {
+    Number, 
+}
 
-    state = {
+interface IProps {
+    onChange: (changeData: {name: string, value: number}) => void;
+    name: string;
+    value: string;
+    type?: SettingsType
+}
+
+export class SettingsInput extends React.Component<IProps> {
+
+    public state = {
         value: "",
         isError: false,
     }
@@ -13,27 +24,27 @@ export class SettingsInput extends React.Component {
         this.state = {value: props.value, isError: false};
     }
 
-    componentWillReceiveProps = (nextProps) => {
+    public componentWillReceiveProps = (nextProps) => {
         this.setState({value: nextProps.value});
     }
 
-    onChange = (e) => {
+    private onChange = (e) => {
         this.setState({value: e.target.value});
-        if(parseFloat(e.target.value)) {
-            this.props.onChange({name: e.target.name, value: parseFloat(e.target.value)});
-            this.setState({isError: false});
+        const parsed = parseFloat(e.target.value);
+        if(parsed) {
+            this.props.onChange({name: e.target.name, value: parsed});
         } else {
             this.setState({isError: true});
         }
     }
 
-    render() {
+    public render() {
         return (
             <div className="SettingsInput">
                 <label htmlFor={this.props.name}>{this.props.name + 
                     (this.state.isError ? "!" : "")}</label>
                 <br />
-                <input id={this.props} className={this.props.name} name={this.props.name}
+                <input className={this.props.name} name={this.props.name}
                     type="text" value={this.state.value} onChange={this.onChange} />
             </div>
         )

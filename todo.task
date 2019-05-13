@@ -1,4 +1,14 @@
 Doing: 
+    Settings -> background image
+                custom font
+                copywrite
+                safe zones
+                font size
+                font align
+                ratio (4:3, 16:9)
+    Settings profiles (church, home, nightchurch)
+    Preview for settings (as well as on display screen)
+
 
 Backlog:
     [ ] 62 Change ModelState to use an actual ModelState instance (with loading: boolean, saving: boolean, and loaded: boolean)

@@ -107,7 +107,7 @@ const Display = observer(class extends React.Component<IProps, IState> {
         };
     }
 
-    private measureLines = (textArray) => {
+    public measureLines = (textArray) => {
         let div = document.createElement("div");
         document.body.appendChild(div);
 
