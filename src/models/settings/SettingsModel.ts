@@ -7,7 +7,7 @@ export class SettingsModel {
     private songApi: SongApi = new SongApi();
 
     private static settingsModelObject;
-    public static get settingsModel() {
+    public static get settingsModel(): SettingsModel {
         if(this.settingsModelObject === undefined) {
             this.settingsModelObject = new SettingsModel();
         }
@@ -16,7 +16,6 @@ export class SettingsModel {
 
     public static settingsList = [
         "wordFontSize", 
-        "titleFontSize", 
         "lineHeight", 
         "minimumPageLines", 
         "maximumPageLines", 
@@ -25,6 +24,7 @@ export class SettingsModel {
         "rightMargin", 
         "titleMargin", 
         "indentAmount",
+        "backgroundImage",
     ];
 
     private savedSettingsObj = {};
@@ -41,6 +41,7 @@ export class SettingsModel {
     public titleMargin = 0
     public indentAmount = 1.0
     public state = ModelState.UNLOADED
+    public backgroundImage: string;
 
 
     public loadSettings = () => {
@@ -79,7 +80,7 @@ export class SettingsModel {
         });
     }
 
-    public changeWordFont = (amount) => {
+    public changeWordFont = (amount: number) => {
         this.changeSetting("wordFontSize", this.wordFontSize + amount);
     }
 }

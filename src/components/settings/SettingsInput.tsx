@@ -33,6 +33,7 @@ export class SettingsInput extends React.Component<IProps> {
         const parsed = parseFloat(e.target.value);
         if(parsed) {
             this.props.onChange({name: e.target.name, value: parsed});
+            this.setState({isError: false});
         } else {
             this.setState({isError: true});
         }

@@ -16,6 +16,7 @@
 .Display {
     background-color: black;
     color: white;
+    background-size: cover;
 }
 
 .DisplayWrapper {

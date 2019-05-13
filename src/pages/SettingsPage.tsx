@@ -18,6 +18,17 @@ const SettingsPage = observer(class extends React.Component {
         this.settingsModel.changeSetting(changeEvent.name, changeEvent.value);
     }
 
+    private handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const reader = new FileReader();
+        const file = e.target.files[0];
+
+        reader.onloadend = () => {
+            this.settingsModel.changeSetting("backgroundImage", reader.result);
+        }
+
+        reader.readAsDataURL(file);
+    }
+
     public render() {
 
         const allSettings = SettingsModel.settingsList.map((setting) => 
@@ -31,6 +42,8 @@ const SettingsPage = observer(class extends React.Component {
             <div className="SettingsPage">
                 <div className="SettingsList">
                     {allSettings}
+                    <input type="file" onChange={this.handleUploadFile} />
+                    <img src={this.settingsModel.backgroundImage} alt="" style={{maxWidth: "300px"}}/>
                 </div>
             </div>
         )

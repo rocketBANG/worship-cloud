@@ -37,7 +37,8 @@ export class PresenterModel {
                 words,
                 isItallic: currentSong.currentVerse && currentSong.currentVerse.type === 'chorus',
                 currentPage: currentSong.pageIndex+1,
-                pagesInVerse: currentSong.currentNumPages
+                pagesInVerse: currentSong.currentNumPages,
+                backgroundImage: "url(\"" + this.settingsModel.backgroundImage + "\")",
             }
             
             if (!this.frozen) {
@@ -106,6 +107,7 @@ export interface IDisplayProps {
     words: string,
     isItallic: boolean,
     currentPage: number,
-    pagesInVerse: number
+    pagesInVerse: number,
+    backgroundImage: string,
 }
 

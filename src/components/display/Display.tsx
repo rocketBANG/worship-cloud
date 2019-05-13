@@ -21,6 +21,7 @@ interface IProps {
     words: string,
     isItallic: boolean,
     backgroundColor: string,
+    backgroundImage?: string,
     title: string,
 }
 
@@ -141,7 +142,8 @@ const Display = observer(class extends React.Component<IProps, IState> {
             <div className="DisplayWrapper"
             ref={(node) => {this.wrapper = node }}>
                 <div className="Display" style={{
-                    backgroundColor: this.props.backgroundColor,
+                    backgroundColor: this.props.backgroundImage ? this.props.backgroundColor : "",
+                    backgroundImage: this.props.backgroundImage,
                     height: this.state.height, 
                     width: this.state.width, 
                 }}>
