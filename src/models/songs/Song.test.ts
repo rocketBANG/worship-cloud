@@ -56,7 +56,7 @@ describe('Test Song', () => {
             updateOrder,
             removeVerse,
             updateSongTitle,
-        }))
+        } as any))
     });
     
     test('Song create', () => {

@@ -20,7 +20,7 @@ describe('Test SongEditor', () => {
         updateVerse: (text: string, songId: string, verseId: string) => {
             return Promise.resolve();
         }
-    }));
+    } as any));
 
 
     const updateVerse = jest.fn();
@@ -34,7 +34,7 @@ describe('Test SongEditor', () => {
         updateVerse.mockImplementation(defaultUpdateVerse);
         songApiMock.mockImplementation(() => ({
             updateVerse
-        }))
+        } as any))
 
     })
 

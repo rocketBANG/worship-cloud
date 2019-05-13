@@ -52,5 +52,9 @@ export const login = async (username: string, password: string): Promise<ILoginR
         response => response.json(),
 
         error => console.log('An error occured.', error)
-    )
+    ).catch(() => {
+        return {
+            success: false,
+        }
+    })
 }
