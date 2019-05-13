@@ -31,7 +31,7 @@ describe('Test Verse', () => {
         songApiMock.mockImplementation(() => ({
             fetchVerses,
             updateVerseType
-        }))
+        } as any))
     });
 
     test('Verse create default', () => {
